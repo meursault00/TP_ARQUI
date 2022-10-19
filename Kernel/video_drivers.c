@@ -42,11 +42,11 @@ typedef struct vbe_mode_info_structure {
 
 
 void put_pixel(uint32_t x , uint32_t y, uint32_t color){
-uint32_t pixel_offset =x*3 + y*info->pitch; //(y) * (info->pitch) + ((x) * ((info->bpp)/8)) + (info->framebuffer);
-uint8_t* screen=(uint8_t*) info->framebuffer;
+	uint32_t pixel_offset =(y) * (info->pitch) + ((x) * ((info->bpp)/8)) ;
+	uint8_t* screen=(uint8_t*) info->framebuffer;
 
-screen[pixel_offset]=(uint8_t)color & 255;
-screen[pixel_offset+1]=(uint8_t)((color>>8) & 255);
-screen[pixel_offset+2]=(uint8_t)((color>>16) & 255);
+	screen[pixel_offset]=(uint8_t)color & 0xFF; // B 
+	screen[pixel_offset+1]=(uint8_t)((color>>8) & 0xFF); // G
+	screen[pixel_offset+2]=(uint8_t)((color>>16) & 0xFF); // R
 
 }

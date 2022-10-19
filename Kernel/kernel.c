@@ -88,6 +88,7 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	load_idt();
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
@@ -107,11 +108,13 @@ int main()
 	printTime();
 	ncNewline();
 	ncPrint("ashe");
-	for(int x =0;x<800;x++)
-		for(int y=0;y<600;y++){
-			put_pixel(x,y,0xFF00FF);
+	for(int x =0;x<1024;x++)
+		for(int y=0;y<768;y++){
+			if ( x % 16 == 0 || y % 16 == 0 )
+				put_pixel(x,y,0xFF00FF);
 		}
 	
 	ncPrint("[Finished]");
+	while(1);
 	return 0;
 }
