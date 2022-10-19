@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <interrupts.h>
+#include <video_driver.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -105,9 +106,11 @@ int main()
 	ncNewline();
 	printTime();
 	ncNewline();
-	ncClear();
-
-	while (1);
+	ncPrint("ashe");
+	for(int x =0;x<800;x++)
+		for(int y=0;y<600;y++){
+			put_pixel(x,y,0xFF00FF);
+		}
 	
 	ncPrint("[Finished]");
 	return 0;
