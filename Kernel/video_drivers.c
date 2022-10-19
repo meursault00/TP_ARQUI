@@ -50,3 +50,8 @@ void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 	screen[pixel_offset+2]=(uint8_t)((color>>16) & 0xFF); // R
 
 }
+void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
+	for(int i=0;i<tam;i++)
+		for(int j =0;j<tam;j++)
+			put_pixel(x+i,y+j,color);
+}
