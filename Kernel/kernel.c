@@ -113,6 +113,11 @@ int main()
 			if ( x % 16 == 0 || y % 16 == 0 )
 				put_pixel(x,y,0xFF00FF);
 		}
+
+	
+	// put_word("CHRIS SE LA RE COME DOBLADA", 100, 100, 2, 0xFFFFFF);
+
+
 	
 	ncPrint("[Finished]");
 	while(1);

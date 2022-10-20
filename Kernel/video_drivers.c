@@ -1,4 +1,5 @@
 #include <video_driver.h>
+#include <fonts.h>
 
 typedef struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -54,4 +55,47 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	for(int i=0;i<tam;i++)
 		for(int j =0;j<tam;j++)
 			put_pixel(x+i,y+j,color);
+}
+
+
+// entre "A" 65 - 33
+
+int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
+	int a = x;
+	int start = letter -33;
+	if ( letter == ' ' ){
+		return a + tam*8;
+	}
+	for ( int i = 0; i < 32; i++ ){
+		if ( i % 2 == 0 && i != 0){
+			y+= tam;
+			a = x;
+		}
+		font[i]&(char)0x01 ? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x02)>>1? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x04)>>2? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x08)>>3? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x10)>>4? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x20)>>5? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+        ((uint8_t)font[i+ (start*32)]&(uint8_t)0x40)>>6? put_square(a,y,tam,color) : 0 ;
+		a+=tam;
+		((uint8_t)font[i+ (start*32)]&(uint8_t)0x80)>>7 ? put_square(a,y,tam,color) : 0 ; 
+	}
+	return a;
+}
+
+void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
+	int accum;
+	for ( int i = 0; string[i] != 0; i++ ){
+		accum=  i*tam*8;
+		put_letter(string[i], x + accum, y, tam, color);
+
+	}
+
 }
