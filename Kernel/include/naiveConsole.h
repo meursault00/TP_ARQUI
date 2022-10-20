@@ -5,6 +5,7 @@
 
 void ncPrint(const char * string);
 void printWColor(char* str,char colorcode);
+void VideoPrintChar(char character);
 void ncPrintChar(char character);
 void ncNewline();
 void printTime();

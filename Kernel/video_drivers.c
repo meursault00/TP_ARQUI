@@ -1,6 +1,6 @@
 #include <video_driver.h>
 #include <fonts.h>
-
+//pr
 typedef struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
 	uint8_t window_a;			// deprecated
@@ -57,9 +57,16 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 			put_pixel(x+i,y+j,color);
 }
 
-
 // entre "A" 65 - 33
 
+
+/* parametros: 
+	letra 
+	x -> posicion horizontal inicial
+	y -> posicion vertical inicial
+	tamaño de la letra
+	color
+*/
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;
 	int start = letter -33;
@@ -87,7 +94,7 @@ int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 		a+=tam;
 		((uint8_t)font[i+ (start*32)]&(uint8_t)0x80)>>7 ? put_square(a,y,tam,color) : 0 ; 
 	}
-	return a;
+	return a+tam; //posicion horizontal final 
 }
 
 void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
@@ -99,3 +106,4 @@ void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 	}
 
 }
+

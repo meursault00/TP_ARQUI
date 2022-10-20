@@ -89,6 +89,7 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
+	/*
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
@@ -119,7 +120,11 @@ int main()
 
 
 	
-	ncPrint("[Finished]");
+	ncPrint("[Finished]"); 
+	*/
+	int a =put_letter('A',0,50,2,0xFFFFFF);
+	a=put_letter('B',a,50,2,0xFFFFFF);
+	put_letter('C',a,50,2,0xFFFFFF);
 	while(1);
 	return 0;
 }
