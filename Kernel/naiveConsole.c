@@ -1,5 +1,6 @@
 #include <naiveConsole.h>
 #include <stdio.h>
+#include <video_driver.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
@@ -10,6 +11,7 @@ static int cursorX=0;
 static int cursorY=0;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
+
 extern uint64_t timeUTC(char mode);
 extern int getkey();
 
@@ -40,6 +42,22 @@ void VideoPrintChar(char character){
 	cursorX = aux ;
 	cursorY = (cursorX / 1024)*16*fontSize;
 	//put_letter('A',cursorX,10,1,0xFFFFFF);
+}
+
+void VideoBackSpace(){
+	cursorX -= fontSize * 8;
+	cursorY = (cursorX / 1024)*16*fontSize;
+	put_square(cursorX,cursorY,fontSize*8,0x000000);
+	put_square(cursorX,cursorY+fontSize*8,fontSize*8,0x000000);
+}
+
+void VideoNewLine(){
+	int aux = cursorY;
+	do
+	{
+		VideoPrintChar(' ');
+	}
+	while(cursorY == aux);
 }
 
 void ncPrintChar(char character)

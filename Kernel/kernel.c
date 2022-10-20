@@ -122,9 +122,9 @@ int main()
 	
 	ncPrint("[Finished]"); 
 	*/
-	int a =put_letter('A',0,50,2,0xFFFFFF);
-	a=put_letter('B',a,50,2,0xFFFFFF);
-	put_letter('C',a,50,2,0xFFFFFF);
+	//int a =put_letter('A',0,50,2,0xFFFFFF);
+	//a=put_letter('B',a,50,2,0xFFFFFF);
+	//put_letter('C',a,50,2,0xFFFFFF);
 	while(1);
 	return 0;
 }
