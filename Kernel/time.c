@@ -4,15 +4,23 @@
 static unsigned long ticks = 0;
 static unsigned long cursorTicks = 9;
 static int actualColor = 0x000000;
+static int actualSeconds = -1;
+
+#define SECONDS 0
+#define MINUTES 2
+#define HOURS 4
+
+extern timeUTC(int op);
 
 static void cursor_handler();
+static void clock_handler();
 
 void timer_handler() {
 	ticks++;
 
 	cursor_handler();
 
-	//clock_handler();
+	clock_handler();
 	
 }
 
@@ -35,8 +43,9 @@ void cursor_handler(){
 	}
 }
 
-/*
-clock_handler(){
-
+void clock_handler(){
+	if(seconds_elapsed() > actualSeconds){
+		VideoPrintTime();
+		actualSeconds = seconds_elapsed();
+	}
 }
-*/

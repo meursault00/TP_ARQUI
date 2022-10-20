@@ -2,21 +2,25 @@
 #include <stdio.h>
 #include <video_driver.h>
 
+#define fontSize 2
+#define fontColor 0xFFFFCC
+
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 static char buffer[64] = { '0' };
 static uint8_t  *  video = (uint8_t*)0xB8000;
 static uint8_t * currentVideo = (uint8_t*)0xB8000;
-static int cursorX=0;
-static int cursorY=0;
+static int cursorX = 1024;
+static int cursorY = 16 * fontSize ;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
 extern uint64_t timeUTC(char mode);
 extern int getkey();
 
-#define fontSize 2
-#define fontColor 0xFFFFCC
+int isupdateinfprogress(){
+	return timeUTC(0x0A) & 0x80;
+}
 
 int getFontColor(){
 	return fontColor;
@@ -51,7 +55,7 @@ void VideoPrintChar(char character){
 }
 
 void VideoBackSpace(){
-	if(cursorX != 0){
+	if(cursorX != 1024){
 		drawCursor(0x000000);
 		cursorX -= fontSize * 8;
 		cursorY = (cursorX / 1024)*16*fontSize;
@@ -73,6 +77,24 @@ void VideoNewLine(){
 		VideoPrintChar(' ');
 	}
 	while(cursorY == aux);
+}
+
+void VideoPrintTime(int seconds, int minutes, int hours){
+	for(int i=0; i<8; i++){
+		put_square(fontSize*8*i,0,fontSize*8,0x000000);
+		put_square(fontSize*8*i,fontSize*8,fontSize*8,0x000000);
+	}
+	while (isupdateinfprogress());
+	VideoPrintHex(timeUTC(0x04),0,0,0x00FF00);
+	put_letter(':',fontSize*16,0,fontSize,0x00FF00);
+	VideoPrintHex(timeUTC(0x02),fontSize*24,0,0x00FF00);
+	put_letter(':',fontSize*40,0,fontSize,0x00FF00);
+	VideoPrintHex(timeUTC(0x00),fontSize*48,0,0x00FF00);
+}
+
+void VideoPrintHex(int value, int x, int y, int color){
+	uintToBase(value,buffer,16);
+	put_word(buffer,x,y,fontSize,color);
 }
 
 void ncPrintChar(char character)
@@ -118,11 +140,6 @@ void ncClear()
 	for (i = 0; i < height * width; i++)
 		video[i * 2] = ' ';
 	currentVideo = video;
-}
-
-
-int isupdateinfprogress(){
-	return timeUTC(0x0A) & 0x80;
 }
 
 void printTime(){

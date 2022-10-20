@@ -10,6 +10,8 @@ void VideoPrintChar(char character);
 void VideoBackSpace();
 void drawCursor();
 void VideoNewLine();
+void VideoPrintTime();
+void VideoPrintHex(int value,  int x, int y, int color);
 void ncPrintChar(char character);
 void ncNewline();
 void printTime();
