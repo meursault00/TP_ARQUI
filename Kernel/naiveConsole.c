@@ -18,6 +18,8 @@ static const uint32_t height = 25;
 extern uint64_t timeUTC(char mode);
 extern int getkey();
 
+#define IN_BOUNDS ((cursorX+fontSize*8)/1024)*16*fontSize < 736 // no termino de entender porque con 768 se pasa, REVISAR
+
 int isupdateinfprogress(){
 	return timeUTC(0x0A) & 0x80;
 }
@@ -43,15 +45,18 @@ void printWColor(char* str,char colorcode){
 		
 	
 }
+
 void VideoPrintChar(char character){
-	drawCursor(0x000000);
-	//static int cursorX=0;
-	int aux;
-	aux = put_letter(character,cursorX,cursorY,fontSize,0xFFFFCC);
-	cursorX = aux ;
-	cursorY = (cursorX / 1024)*16*fontSize;
-	//put_letter('A',cursorX,10,1,0xFFFFFF);
-	drawCursor(fontColor);
+	if(IN_BOUNDS){
+		drawCursor(0x000000);
+		//static int cursorX=0;
+		int aux;
+		aux = put_letter(character,cursorX,cursorY,fontSize,0xFFFFCC);
+		cursorX = aux ;
+		cursorY = (cursorX / 1024)*16*fontSize;
+		//put_letter('A',cursorX,10,1,0xFFFFFF);
+		drawCursor(fontColor);
+	}
 }
 
 void VideoBackSpace(){
@@ -71,12 +76,12 @@ void drawCursor(int color){
 }
 
 void VideoNewLine(){
-	int aux = cursorY;
-	do
-	{
-		VideoPrintChar(' ');
-	}
-	while(cursorY == aux);
+		int aux = cursorY;
+		do
+		{
+			VideoPrintChar(' ');
+		}
+		while(cursorY == aux && IN_BOUNDS);
 }
 
 void VideoPrintTime(int seconds, int minutes, int hours){
