@@ -16,7 +16,11 @@ extern uint64_t timeUTC(char mode);
 extern int getkey();
 
 #define fontSize 2
+#define fontColor 0xFFFFCC
 
+int getFontColor(){
+	return fontColor;
+}
 
 void ncPrint(const char * string)
 {
@@ -36,19 +40,30 @@ void printWColor(char* str,char colorcode){
 	
 }
 void VideoPrintChar(char character){
+	drawCursor(0x000000);
 	//static int cursorX=0;
 	int aux;
 	aux = put_letter(character,cursorX,cursorY,fontSize,0xFFFFCC);
 	cursorX = aux ;
 	cursorY = (cursorX / 1024)*16*fontSize;
 	//put_letter('A',cursorX,10,1,0xFFFFFF);
+	drawCursor(fontColor);
 }
 
 void VideoBackSpace(){
-	cursorX -= fontSize * 8;
-	cursorY = (cursorX / 1024)*16*fontSize;
-	put_square(cursorX,cursorY,fontSize*8,0x000000);
-	put_square(cursorX,cursorY+fontSize*8,fontSize*8,0x000000);
+	if(cursorX != 0){
+		drawCursor(0x000000);
+		cursorX -= fontSize * 8;
+		cursorY = (cursorX / 1024)*16*fontSize;
+		put_square(cursorX,cursorY,fontSize*8,0x000000);
+		put_square(cursorX,cursorY+fontSize*8,fontSize*8,0x000000);
+		drawCursor(fontColor);
+	}
+}
+
+void drawCursor(int color){
+	for(int i=0; i<8; i++)
+		put_square(cursorX,cursorY+fontSize*2*i,fontSize*2,color);
 }
 
 void VideoNewLine(){

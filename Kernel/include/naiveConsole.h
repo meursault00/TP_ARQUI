@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 
+int getFontColor();
 void ncPrint(const char * string);
 void printWColor(char* str,char colorcode);
 void VideoPrintChar(char character);
 void VideoBackSpace();
+void drawCursor();
 void VideoNewLine();
 void ncPrintChar(char character);
 void ncNewline();
