@@ -71,8 +71,13 @@ void VideoBackSpace(){
 }
 
 void drawCursor(int color){
-	for(int i=0; i<8; i++)
-		put_square(cursorX,cursorY+fontSize*2*i,fontSize*2,color);
+	/* cursor editor de texto
+	for(int i=0; i<8; i++){
+		put_square(cursorX+fontSize*2,cursorY+fontSize*2*i,fontSize*2,color);
+	*/
+	// CURSOR TERMINAL
+	put_square(cursorX,cursorY,fontSize*8,color);
+	put_square(cursorX,cursorY+fontSize*8,fontSize*8,color);	
 }
 
 void VideoNewLine(){
