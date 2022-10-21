@@ -71,12 +71,21 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.alive=1;
     p2.direction=UP;
     p2.score=0;
-
     //board = {{0}}; causa un error
-    for(int i=0; i<125; i++)
-        for(int j=0; j<93; j++)
+    for(int i=0; i<125; i++){
+        for(int j=0; j<93; j++){
+            if(i==0)
+                put_square(i*8,j*8,12,0x00FF00);
+            if(i==124)
+                put_square(i*8+20,j*8,12,0x00FF00);
+            if(j==0)
+                 put_square(i*8,j+11,12,0x00FF00);
+            //todo el de abajo no lo puedo ver por limites de hardware -bruzo 
             board[i][j] = 0;
+        }
+    }
 }
+
 
 /*
 void moveSwitch(int value){
@@ -110,8 +119,8 @@ int checkPlayersPosition(){
             p1.score++; // si uno sobrevivio aumento su puntaje
         else if(p2.alive)
             p2.score++;
-        tronSwitch = 0; 
-        VideoClearScreen();
+        tronSwitch = 0;
+        VideoClearScreen(); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
         restartCursor();
         return 0;
     }

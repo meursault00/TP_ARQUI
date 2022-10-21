@@ -51,9 +51,17 @@ void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 	screen[pixel_offset+2]=(uint8_t)((color>>16) & 0xFF); // R
 
 }
+/**
+ * @brief los cuadrados se arman de arriba a la izq hacia abajo a la derecha
+ * 
+ * @param x pos en x
+ * @param y pos en y
+ * @param tam tamaño de 1 lado
+ * @param color 
+ */
 void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	for(int i=0;i<tam;i++)
-		for(int j =0;j<tam;j++)
+		for(int j =0;j<tam+1;j++)//TODO bruzo: nose su para aabajo en el tron funciona mi pantalla no llega a tanto
 			put_pixel(x+i,y+j,color);
 }
 

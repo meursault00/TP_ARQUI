@@ -70,6 +70,7 @@ void commandTron(){
 	VideoClearScreen();
 	initialize_players();
 	tronMotherfucker(1);
+	
 }
 void commandClear(){
 	VideoClearScreen();
