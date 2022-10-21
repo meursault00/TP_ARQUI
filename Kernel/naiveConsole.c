@@ -104,16 +104,35 @@ void VideoNewLine(){
 }
 
 void VideoPrintTime(int seconds, int minutes, int hours){
-	for(int i=0; i<8; i++){
-		put_square(fontSize*8*i,0,fontSize*8,0x000000);
-		put_square(fontSize*8*i,fontSize*8,fontSize*8,0x000000);
-	}
-	while (isupdateinfprogress());
-	VideoPrintHex(timeUTC(0x04),0,0,0x00FF00);
-	put_letter(':',fontSize*16,0,fontSize,0x00FF00);
-	VideoPrintHex(timeUTC(0x02),fontSize*24,0,0x00FF00);
-	put_letter(':',fontSize*40,0,fontSize,0x00FF00);
-	VideoPrintHex(timeUTC(0x00),fontSize*48,0,0x00FF00);
+    for(int i=0; i<8; i++){
+        put_square(fontSize*8*i,0,fontSize*8,0x000000);
+        put_square(fontSize*8*i,fontSize*8,fontSize*8,0x000000);
+    }
+    while (isupdateinfprogress());
+
+    if(timeUTC(0x04) < 10){
+        VideoPrintHex(0, 0, 0,0x00FF00 );
+        VideoPrintHex(timeUTC(0x04), 16, 0,0x00FF00 );    
+    }
+    else{
+        VideoPrintHex(timeUTC(0x04), 0, 0,0x00FF00 );
+    }
+    put_letter(':',fontSize*16,0,fontSize,0x00FF00);
+    if(timeUTC(0x02) < 10){
+        VideoPrintHex(0, fontSize*24, 0,0x00FF00 );
+        VideoPrintHex(timeUTC(0x02), fontSize *32, 0,0x00FF00 );    
+    }
+    else{
+        VideoPrintHex(timeUTC(0x02), fontSize*24, 0,0x00FF00 );
+    }
+    put_letter(':',fontSize*40,0,fontSize,0x00FF00);
+    if(timeUTC(0x00) < 10){
+        VideoPrintHex(0, fontSize*48, 0,0x00FF00 );
+        VideoPrintHex(timeUTC(0x00), fontSize*56, 0,0x00FF00 );
+    }
+    else{
+        VideoPrintHex(timeUTC(0x00), fontSize*48, 0,0x00FF00 );
+    }
 }
 
 void VideoPrintHex(int value, int x, int y, int color){

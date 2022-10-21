@@ -1,6 +1,7 @@
 #ifndef TRON_H_
 #define TRON_H_
 
+void gameSwitch();
 void play();
 void create_board();
 void movePlayers();

@@ -1,4 +1,5 @@
 #include <video_driver.h>
+#include <naiveConsole.h>
 
 static int tronSwitch = 0;
 static int gameOn = 0;
@@ -30,10 +31,10 @@ static int gameOn = 0;
 #define LEFT 4
 
 //se usa para evitar switchs al mover jugadores
-static const int mover[4][2] = {{0,1},{1,0},{0,-1},{-1,0}}; //potencial problema
+static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
 
 // BOARD_WIDTH x BOARD_HEIGHT
-static int board[125][93] = {0}; // warning: missing braces around initializer [-Wmissing-braces]
+static int board[125][93] = {{0}}; // warning: missing braces around initializer [-Wmissing-braces]
 
 typedef struct player_t{
     int color;
@@ -139,21 +140,20 @@ void movePlayers(){
 }
 
 // se usa en el irq dispatcher para activar la partida mediante el espacio
-int gameSwitch(int value){ //warning: control reaches end of non-void function [-Wreturn-type]
+void gameSwitch(int value){ //warning: control reaches end of non-void function [-Wreturn-type]
     gameOn = value;
 }
 
 // para prender tron por el kernel
-void tronMotherfucker(){
-    tronSwitch = 1;
+void tronMotherfucker(int value){
+    tronSwitch = value;
 }
 
 /*
 void drawPlayers(){
     put_square(p1.currX*SQUARE_SIDE+1024*p1.currY,p1.currY*SQUARE_SIDE,SQUARE_SIDE,P1_COLOR);
     put_square(p2.currX*SQUARE_SIDE+1024*p2.currY,p2.currY*SQUARE_SIDE,SQUARE_SIDE,P2_COLOR);
-}
-*/
+}*/
 
 void play(){
 
@@ -172,19 +172,21 @@ void play(){
     }
     */
 
+    VideoClearScreen(); // una vez arrancada la partida limpio la pantalla
+    initialize_players();
+    put_square(p1.currX*SQUARE_SIDE+1024*p1.currY, p1.currY*SQUARE_SIDE, SQUARE_SIDE, P1_COLOR);
+    put_square(p2.currX*SQUARE_SIDE+1024*p2.currY, p2.currY*SQUARE_SIDE, SQUARE_SIDE, P2_COLOR);
    // repite por la cantidad de matches que tengo definidos
-    for(int i=0; i<MATCHES; i++){
+    for(int i=0; i<MATCHES && tronSwitch; i++){
         while(!gameOn) // no arranco hasta prendida el
         VideoClearScreen(); // una vez arrancada la partida limpio la pantalla
         initialize_players();
         //drawPlayers();
-        put_square(p1.currX*SQUARE_SIDE+1024*p1.currY, p1.currY*SQUARE_SIDE, SQUARE_SIDE, P1_COLOR);
-        put_square(p2.currX*SQUARE_SIDE+1024*p2.currY, p2.currY*SQUARE_SIDE, SQUARE_SIDE, P2_COLOR);
         while(gameOn); // se juega hasta que se apague el flag
     }
-    while(1); // para testing
-    VideoClearScreen();
-
+    
     tronSwitch = 0;
+    VideoClearScreen();
+    restartCursor();
 
 }

@@ -8,6 +8,7 @@ void ncPrint(const char * string);
 void printWColor(char* str,char colorcode);
 void VideoPrintChar(char character);
 void VideoBackSpace();
+void videoPrintWord( char * string );
 void drawCursor();
 void VideoNewLine();
 void VideoPrintTime();
