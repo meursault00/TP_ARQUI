@@ -60,6 +60,10 @@ void commandHelp(){
 	videoPrintWord("- SNAPSHOT");
 	VideoNewLine();
 	videoPrintWord("- MEMACCESS ( MEM ADDRESS )");
+	VideoNewLine();
+	videoPrintWord("- CLEAR");
+	VideoNewLine();
+	videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
 void commandTron(){
@@ -67,12 +71,17 @@ void commandTron(){
 	initialize_players();
 	tronMotherfucker(1);
 }
-
+void commandClear(){
+	VideoClearScreen();
+	restartCursor();
+}
 void checkCommand( char * command ){
-	if(strcmp(command, "HELP"))
+	if(strcmp(command, "HELP") || strcmp(command, "- HELP") )
 		commandHelp();
-	else if(strcmp(command, "TRON"))
+	else if(strcmp(command, "TRON") || strcmp(command, "- TRON") )
 		commandTron();
+	if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") )
+		commandClear();
 }
 
 void initialize(){
