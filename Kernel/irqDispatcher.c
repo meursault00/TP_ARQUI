@@ -4,6 +4,10 @@
 #include <tron.h>
 extern uint64_t getkey();
 
+#define UP 1
+#define RIGHT 2
+#define DOWN 3
+#define LEFT 4
 
 static void int_20();
 static void int_21();
@@ -14,7 +18,6 @@ static void tron();
 
 static char buffer[80] = {0};
 static int lastChar = 0;
-static int randomthing = 1;
 
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
 void (*fun_inter[256])(uint64_t,uint64_t,char*,uint64_t);
@@ -76,7 +79,19 @@ void int_21(){
 
 	uint8_t aux = charHexMap[teclahex];
 	
+	if(tronOn)
+		tron(aux);
+	else
+		write(aux);
 	
+}
+
+void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
+	(*fun_sys[rdi])(rsi,rdx,rcx);
+	return;
+}
+
+void write(int aux){
 	if(aux!=0){
 		if(aux == 8)
 			VideoBackSpace();
@@ -101,11 +116,35 @@ void int_21(){
 	//
 }
 
-void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
-	(*fun_sys[rdi])(rsi,rdx,rcx);
-	return;
-}
-
-void write(){
-	
+void tron(int aux){
+	switch(aux){
+		case ' ':
+			gameSwitch(1);
+			break;
+		case 'W':
+			changePlayerDirection(1,UP);
+			break;
+		case 'A':
+			changePlayerDirection(1,LEFT);
+			break;
+		case 'S':
+			changePlayerDirection(1,DOWN);
+			break;
+		case 'D':
+			changePlayerDirection(1,RIGHT);
+			break;
+		
+		case 'I':
+			changePlayerDirection(2,UP);
+			break;
+		case 'J':
+			changePlayerDirection(2,LEFT);
+			break;
+		case 'K':
+			changePlayerDirection(2,DOWN);
+			break;
+		case 'L':
+			changePlayerDirection(2,RIGHT);
+			break;
+	}
 }

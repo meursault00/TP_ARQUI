@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 #include <interrupts.h>
 #include <video_driver.h>
+#include <tron.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -125,6 +126,11 @@ int main()
 	//int a =put_letter('A',0,50,2,0xFFFFFF);
 	//a=put_letter('B',a,50,2,0xFFFFFF);
 	//put_letter('C',a,50,2,0xFFFFFF);
+	put_word("CLEAR TEST",0,0,2,0xFFFFFF); //no hace nada?
+
+	tronMotherfucker();
+	play();
+	restartCursor();
 	while(1);
 	return 0;
 }

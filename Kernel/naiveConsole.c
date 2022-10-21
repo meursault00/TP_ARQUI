@@ -77,6 +77,7 @@ void videoPrintWord( char * string ){
 }
 
 // shit may be scuffed es medio dificil testear, inaki deberia revisar esto
+/*
 void clearScreen(){
 	cursorX = 1024;
 	cursorY = 16*fontSize;
@@ -87,7 +88,8 @@ void clearScreen(){
 				 put_letter(' ',cursorX,cursorY,fontSize,0xFFFFCC);
 			}
 		}
-}	
+}
+*/
 
 void drawCursor(int color){
 	/* cursor editor de texto
@@ -211,4 +213,9 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	}
 
 	return digits;
+}
+
+void restartCursor(){
+	cursorX = 1024;
+	cursorY = 16*fontSize;
 }

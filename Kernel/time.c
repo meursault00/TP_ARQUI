@@ -20,12 +20,12 @@ static void tron_handler();
 void timer_handler() {
 	ticks++;
 
-	if(!tronOn()){
+	if(tronOn())
+		tron_handler();
+	else{
 		cursor_handler();
 		clock_handler();
 	}
-	else
-		tron_handler();
 }
 
 int ticks_elapsed() {
@@ -55,5 +55,6 @@ void clock_handler(){
 }
 
 void tron_handler(){
-
+	if(ticks % 5 == 0)
+		movePlayers();
 }
