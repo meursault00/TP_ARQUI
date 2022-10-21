@@ -51,15 +51,15 @@ void commandHelp(){
 	clearScreen();
 	videoPrintWord("BIENVENIDO AL MENU HELP");
 	VideoNewLine();
-	videoPrintWord("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS");
+	videoPrintWord("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
 	VideoNewLine();
-	videoPrintWord("HELP");
+	videoPrintWord("- HELP");
 	VideoNewLine();
-	videoPrintWord("TRON");
+	videoPrintWord("- TRON");
 	VideoNewLine();
-	videoPrintWord("SNAPSHOT");
+	videoPrintWord("- SNAPSHOT");
 	VideoNewLine();
-	videoPrintWord("MEMACCESS ( MEM ADDRESS )");
+	videoPrintWord("- MEMACCESS ( MEM ADDRESS )");
 }
 
 void commandTron(){

@@ -72,7 +72,10 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.direction=UP;
     p2.score=0;
 
-    board = {{0}};
+    //board = {{0}}; causa un error
+    for(int i=0; i<125; i++)
+        for(int j=0; j<93; j++)
+            board[i][j] = 0;
 }
 
 /*
@@ -134,6 +137,11 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
         p2.direction = direction;
 }
 
+void drawPlayers(){
+    put_square(p1.currX*SQUARE_SIDE+1024*(p1.currY + OFFSET_Y)+ OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
+    put_square(p2.currX*SQUARE_SIDE+1024*(p2.currY + OFFSET_Y) + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
+}
+
 void movePlayers(){
     //actualizo poiscion de ambos jugadors
     p1.currX += mover[p1.direction][0];
@@ -162,19 +170,14 @@ void tronMotherfucker(int value){
     tronSwitch = value;
 }
 
-
-void drawPlayers(){
-    put_square(p1.currX*SQUARE_SIDE+1024*p1.currY + OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
-    put_square(p2.currX*SQUARE_SIDE+1024*p2.currY + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
-}
-
+/*
 void play(){
 
     //tronSwitch = 1;
 
     //display_menu();
 
-    /*
+    
     for(int y = 0; y < BOARD_HEIGHT; y++){
         board[y][0] = 1; // ocupado
         board[y][BOARD_WIDTH-1] = 1; //ocupado
@@ -183,7 +186,7 @@ void play(){
         board[0][x] = 1; // ocupado
         board[0][BOARD_HEIGHT-1] = 1; //ocupado
     }
-    */
+    
 
     VideoClearScreen(); // una vez arrancada la partida limpio la pantalla
     initialize_players();
@@ -204,4 +207,6 @@ void play(){
     VideoClearScreen();
     restartCursor();
 
+
 }
+*/
