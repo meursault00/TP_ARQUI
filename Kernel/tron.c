@@ -31,6 +31,8 @@ static int canMove = 0;
 #define DOWN 2
 #define LEFT 3
 
+#define MOD(x) ((x)>0? (x) : (x)*(-1))
+
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
 
@@ -69,6 +71,8 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.alive=1;
     p2.direction=UP;
     p2.score=0;
+
+    board = {{0}};
 }
 
 /*
@@ -124,9 +128,9 @@ int tronOn(){
 
 void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
     //cambio dir del jugador que corresponda
-    if(player == 1)
+    if(player == 1 && MOD(direction - p1.direction) != 2) // para q no pueda invertir su direccion
         p1.direction = direction;
-    else
+    else if(MOD(direction - p2.direction) != 2)
         p2.direction = direction;
 }
 
@@ -160,8 +164,8 @@ void tronMotherfucker(int value){
 
 
 void drawPlayers(){
-    put_square(p1.currX*SQUARE_SIDE+1024*p1.currY,p1.currY*SQUARE_SIDE,SQUARE_SIDE,P1_COLOR);
-    put_square(p2.currX*SQUARE_SIDE+1024*p2.currY,p2.currY*SQUARE_SIDE,SQUARE_SIDE,P2_COLOR);
+    put_square(p1.currX*SQUARE_SIDE+1024*p1.currY + OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
+    put_square(p2.currX*SQUARE_SIDE+1024*p2.currY + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
 }
 
 void play(){

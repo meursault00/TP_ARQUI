@@ -112,10 +112,12 @@ void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 // 1024 -> ancho pantalla
 // 768 -> alto pantalla
 void VideoClearScreen(){
+	/*
 	for(int i=0; i<3; i++){
 		for(int j=0; j<4; j++){
 			put_square((i*4+j)*256,i*256,256,0x000000);
 		}
-	}
+	}*/
+	put_square(0,0,1024,0);
 }
 

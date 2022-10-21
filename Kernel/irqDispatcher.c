@@ -117,8 +117,10 @@ void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
 
 void write(int aux){ // escritura usando funciones de video
 	if(aux!=0){
-		if(aux == 8)
+		if(aux == 8){
 			VideoBackSpace();
+			buffer[lastChar--] = 0;
+		}
 		else if(aux == '\n'){
 			if ( buffer != 0 && buffer[0] != 0 )
 			checkCommand(buffer);

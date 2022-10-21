@@ -23,8 +23,8 @@ void timer_handler() {
 	if(tronOn())
 		tron_handler();
 	else{ // si no esta prendido el tron habilito terminal como vista hasta ahora
-		cursor_handler();
 		clock_handler();
+			cursor_handler();
 	}
 }
 
@@ -56,6 +56,6 @@ void clock_handler(){
 }
 
 void tron_handler(){
-	if(ticks % 5 == 0) // dictara la velocidad
+	if(ticks % 3 == 0) // dictara la velocidad
 		movePlayers();
 } // aca me tira dos errores pero lo mas probable es que sea un bug del visual
