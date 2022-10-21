@@ -70,6 +70,25 @@ void VideoBackSpace(){
 	}
 }
 
+void videoPrintWord( char * string ){
+	for ( int i = 0; string[i] != 0; i++ ){
+		VideoPrintChar(string[i]);
+	}
+}
+
+// shit may be scuffed es medio dificil testear, inaki deberia revisar esto
+void clearScreen(){
+	cursorX = 1024;
+	cursorY = 16*fontSize;
+	drawCursor;
+	for ( int i = 0; i < 1024 ; i++)
+		for ( int j = 0; j < 768; j++ ){
+			while ( IN_BOUNDS ){
+				 put_letter(' ',cursorX,cursorY,fontSize,0xFFFFCC);
+			}
+		}
+}	
+
 void drawCursor(int color){
 	/* cursor editor de texto
 	for(int i=0; i<8; i++){

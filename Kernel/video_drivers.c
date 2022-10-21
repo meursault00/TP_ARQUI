@@ -61,11 +61,11 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 
 
 /* parametros: 
-	letra 
-	x -> posicion horizontal inicial
-	y -> posicion vertical inicial
-	tamaño de la letra
-	color
+	@param letra 
+	@param x -> posicion horizontal inicial
+	@param y -> posicion vertical inicial
+	@param tamaño de la letra
+	@param color
 */
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;

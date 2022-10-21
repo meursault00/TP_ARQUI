@@ -1,12 +1,16 @@
 #include <irqDispatcher.h>
 #include <syscalls.h>
 #include <video_driver.h>
+#include <tron.h>
 extern uint64_t getkey();
 
 
 static void int_20();
 static void int_21();
 static void int_80();
+
+static void write();
+static void tron();
 
 static char buffer[80] = {0};
 static int lastChar = 0;
@@ -100,4 +104,8 @@ void int_21(){
 void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
 	(*fun_sys[rdi])(rsi,rdx,rcx);
 	return;
+}
+
+void write(){
+	
 }

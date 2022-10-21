@@ -1,5 +1,6 @@
 #include <time.h>
 #include <naiveConsole.h>
+#include <tron.h>
 
 static unsigned long ticks = 0;
 static unsigned long cursorTicks = 9;
@@ -14,14 +15,17 @@ extern timeUTC(int op);
 
 static void cursor_handler();
 static void clock_handler();
+static void tron_handler();
 
 void timer_handler() {
 	ticks++;
 
-	cursor_handler();
-
-	clock_handler();
-	
+	if(!tronOn()){
+		cursor_handler();
+		clock_handler();
+	}
+	else
+		tron_handler();
 }
 
 int ticks_elapsed() {
@@ -48,4 +52,8 @@ void clock_handler(){
 		VideoPrintTime();
 		actualSeconds = seconds_elapsed();
 	}
+}
+
+void tron_handler(){
+
 }
