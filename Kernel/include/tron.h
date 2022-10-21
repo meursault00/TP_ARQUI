@@ -10,6 +10,6 @@ int checkPlayersPosition();
 void gameSwitch(int value);
 void tronMotherfucker(); //prende el tron, despues se borra
 //void drawPlayers();
-int isGameOn();
+//int isGameOn();
 
 #endif

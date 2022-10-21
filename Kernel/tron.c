@@ -5,45 +5,55 @@ static int gameOn = 0;
 
 #define MATCHES 1
 
-#define SQUARE_SIDE 8
+#define SQUARE_SIDE 8 //largo del lado del cuadrado con el cual se dibujan las lineas
 
-#define BOARD_WIDTH 125
-#define BOARD_HEIGTH 93
+#define BOARD_WIDTH 125 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
+#define BOARD_HEIGTH 93 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
+
+// para que se imprima en la porrcion de pantalla elegida
+// estaria centrada y los margenes (para poner menu y etc) serian de 12 pixeles
+#define OFFSET_X 12
+#define OFFSET_Y 12
+
 
 #define P1_STARTING_X 63
-#define P1_STARTING_Y 20
+#define P1_STARTING_Y 19
 #define P2_STARTING_X 63
-#define P2_STARTING_Y 65
+#define P2_STARTING_Y 64
 
-#define P1_COLOR 0x0000FF
-#define P2_COLOR 0xFF0000
+#define P1_COLOR 0x0000FF //azul
+#define P2_COLOR 0xFF0000 //rojo
 
 #define UP 1
 #define RIGHT 2
 #define DOWN 3
 #define LEFT 4
 
-static int mover[4][2] = {{0,1},{1,0},{0,-1},{-1,0}};
-static int board[1000][744] = {0};
+//se usa para evitar switchs al mover jugadores
+static const int mover[4][2] = {{0,1},{1,0},{0,-1},{-1,0}}; //potencial problema
+
+// BOARD_WIDTH x BOARD_HEIGHT
+static int board[125][93] = {0}; // warning: missing braces around initializer [-Wmissing-braces]
 
 typedef struct player_t{
     int color;
     int currX;
     int currY;
     int alive;
-    int direction;
-    int score;    
+    int direction; // sera usada en conjunto con la matriz mover
+    int score; //puntaje
 } player_t;
 
 static player_t p1,p2;
 
-
+/*
 void display_menu(){
     // escribir intro al juego
     
 }
+*/
 
-static void initialize_players(){
+static void initialize_players(){ // se pasan los parametros default a cada jugador
     p1.color=P1_COLOR;
     p1.currX=P1_STARTING_X;
     p1.currY=P1_STARTING_Y;
@@ -59,15 +69,18 @@ static void initialize_players(){
     p2.score=0;
 }
 
+// chequeo si jugador se encuentra en la matriz (que representa la pantalla)
+// la macro usada anteriormente no terminaba de convencer
 static int insideBoard(int x, int y){
     return (x >= 0) && (x <= BOARD_WIDTH) && (y >= 0) && (y <= BOARD_HEIGTH);
 }
 
 /**
 @param player tiene current position en X e Y
-@returns boolean 0 si algun jugador ha muerto
+@returns boolean 0 si algun jugador ha muerto, 1 si ambos viven
 */
 int checkPlayersPosition(){
+    // si pasa no esta en el tablero o esta en una posicion pisada los mato
     if(!insideBoard(p1.currX,p1.currY || board[p1.currX][p1.currY])){
         p1.alive =0;
     }
@@ -78,7 +91,7 @@ int checkPlayersPosition(){
         return 1;
     else{
         if(p1.alive)
-            p1.score++;
+            p1.score++; // si uno sobrevivio aumento su puntaje
         else if(p2.alive)
             p2.score++;
         gameOn = 0; 
@@ -98,32 +111,39 @@ int tronOn(){
     return tronSwitch;
 }
 
-void changePlayerDirection(int player, int direction){
+void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
+    //cambio dir del jugador que corresponda
     if(player == 1)
         p1.direction = direction;
     else
         p2.direction = direction;
 }
 
-//retorna 1 mientras sigan vivos
 void movePlayers(){
+    //actualizo poiscion de ambos jugadors
     p1.currX += mover[p1.direction][1];
     p1.currY += mover[p1.direction][2];
     p2.currX += mover[p2.direction][1];
     p2.currY += mover[p2.direction][2];
 
-    if(checkPlayersPosition()){
+    if(checkPlayersPosition()){ //si es que estan vivos marco respectivos cuadros y dibujo
         board[p1.currX][p1.currY] = 1;
         board[p2.currX][p2.currY] = 1;
-        put_square(p1.currX*SQUARE_SIDE+1024*p1.currY,p1.currY*SQUARE_SIDE,SQUARE_SIDE,P1_COLOR);
-        put_square(p2.currX*SQUARE_SIDE+1024*p2.currY,p2.currY*SQUARE_SIDE,SQUARE_SIDE,P2_COLOR);
+        // x -> ya que el cursor en x es acumulativo le sumo la cantidad de renglones multiplicada por su ancho
+        // y -> simplemente le paso la cantidad de renglones multiplicada por la altura
+        // tamaño es el definido arriba
+        // paso los colores correspondientes
+        put_square(p1.currX*SQUARE_SIDE+1024*p1.currY + OFFSET_X, p1.currY*SQUARE_SIDE + OFFSET_Y, SQUARE_SIDE, P1_COLOR);
+        put_square(p2.currX*SQUARE_SIDE+1024*p2.currY + OFFSET_X, p2.currY*SQUARE_SIDE + OFFSET_Y, SQUARE_SIDE, P2_COLOR);
     }
 }
 
-int gameSwitch(int value){
+// se usa en el irq dispatcher para activar la partida mediante el espacio
+int gameSwitch(int value){ //warning: control reaches end of non-void function [-Wreturn-type]
     gameOn = value;
 }
 
+// para prender tron por el kernel
 void tronMotherfucker(){
     tronSwitch = 1;
 }
@@ -151,20 +171,20 @@ void play(){
         board[0][BOARD_HEIGHT-1] = 1; //ocupado
     }
     */
+
+   // repite por la cantidad de matches que tengo definidos
     for(int i=0; i<MATCHES; i++){
-        while(!gameOn)
-        VideoClearScreen();
+        while(!gameOn) // no arranco hasta prendida el
+        VideoClearScreen(); // una vez arrancada la partida limpio la pantalla
         initialize_players();
-        drawPlayers();
-        while(gameOn);
+        //drawPlayers();
+        put_square(p1.currX*SQUARE_SIDE+1024*p1.currY, p1.currY*SQUARE_SIDE, SQUARE_SIDE, P1_COLOR);
+        put_square(p2.currX*SQUARE_SIDE+1024*p2.currY, p2.currY*SQUARE_SIDE, SQUARE_SIDE, P2_COLOR);
+        while(gameOn); // se juega hasta que se apague el flag
     }
     while(1); // para testing
     VideoClearScreen();
 
     tronSwitch = 0;
 
-}
-
-int isGameOn(){
-    return gameOn;
 }

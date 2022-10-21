@@ -22,7 +22,7 @@ void timer_handler() {
 
 	if(tronOn())
 		tron_handler();
-	else{
+	else{ // si no esta prendido el tron habilito terminal como vista hasta ahora
 		cursor_handler();
 		clock_handler();
 	}
@@ -37,24 +37,25 @@ int seconds_elapsed() {
 }
 
 void cursor_handler(){
+	// doy la ilusion de titilacion al imprimir el cursor negro y blanco en intervalos alternantes
 	if(ticks == cursorTicks){
 		if(actualColor == getFontColor())
 			actualColor = 0x000000;
 		else
 			actualColor = getFontColor();
 		drawCursor(actualColor);
-		cursorTicks += 9;	
+		cursorTicks += 9; // 0,5 segundos
 	}
 }
 
 void clock_handler(){
-	if(seconds_elapsed() > actualSeconds){
+	if(seconds_elapsed() > actualSeconds){ //reimprimo el reloj cada segundo
 		VideoPrintTime();
 		actualSeconds = seconds_elapsed();
 	}
 }
 
 void tron_handler(){
-	if(ticks % 5 == 0)
+	if(ticks % 5 == 0) // dictara la velocidad
 		movePlayers();
-}
+} // aca me tira dos errores pero lo mas probable es que sea un bug del visual

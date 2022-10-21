@@ -35,6 +35,7 @@ void ncPrint(const char * string)
 	for (i = 0; string[i] != 0; i++)
 		ncPrintChar(string[i]);
 }
+
 void printWColor(char* str,char colorcode){
 	int i;
 
@@ -43,8 +44,7 @@ void printWColor(char* str,char colorcode){
 		*currentVideo++ =colorcode;
 	}
 		
-	
-}
+} // aca tambien señala error
 
 void VideoPrintChar(char character){
 	if(IN_BOUNDS){

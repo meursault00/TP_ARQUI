@@ -79,7 +79,7 @@ void int_21(){
 
 	uint8_t aux = charHexMap[teclahex];
 	
-	if(tronOn)
+	if(tronOn()) //chequeo en que modo estoy y envio el char obtenido a la funcion apropiada
 		tron(aux);
 	else
 		write(aux);
@@ -91,7 +91,7 @@ void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
 	return;
 }
 
-void write(int aux){
+void write(int aux){ // escritura usando funciones de video
 	if(aux!=0){
 		if(aux == 8)
 			VideoBackSpace();
@@ -117,9 +117,10 @@ void write(int aux){
 }
 
 void tron(int aux){
+	// asigno WASD para el jugador 1 y IJKL para el jugador 2
 	switch(aux){
 		case ' ':
-			gameSwitch(1);
+			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
 			break;
 		case 'W':
 			changePlayerDirection(1,UP);

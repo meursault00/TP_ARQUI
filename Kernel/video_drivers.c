@@ -107,6 +107,10 @@ void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 
 }
 
+// "borro" usando cuadrados negros de lado 256 
+// 256 -> mcd de 1024 y 768
+// 1024 -> ancho pantalla
+// 768 -> alto pantalla
 void VideoClearScreen(){
 	for(int i=0; i<3; i++){
 		for(int j=0; j<4; j++){
