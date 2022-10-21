@@ -151,8 +151,10 @@ void tron(int aux){
 	// asigno WASD para el jugador 1 y IJKL para el jugador 2
 	switch(aux){
 		case 27:
-			gameSwitch(0);
+			//gameSwitch(0);
 			tronMotherfucker(0);
+			VideoClearScreen();
+			restartCursor();
 
 		case ' ':
 			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego

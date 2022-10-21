@@ -19,9 +19,9 @@ static int canMove = 0;
 
 
 #define P1_STARTING_X 63
-#define P1_STARTING_Y 19
+#define P1_STARTING_Y 10
 #define P2_STARTING_X 63
-#define P2_STARTING_Y 64
+#define P2_STARTING_Y 70
 
 #define P1_COLOR 0x0000FF //azul
 #define P2_COLOR 0xFF0000 //rojo
@@ -87,7 +87,7 @@ void moveSwitch(int value){
 // chequeo si jugador se encuentra en la matriz (que representa la pantalla)
 // la macro usada anteriormente no terminaba de convencer
 static int insideBoard(int x, int y){
-    return (x >= 0) && (x <= BOARD_WIDTH) && (y >= 0) && (y <= BOARD_HEIGTH);
+    return (x >= 0) && (x < BOARD_WIDTH) && (y >= 0) && (y < BOARD_HEIGTH);
 }
 
 /**
