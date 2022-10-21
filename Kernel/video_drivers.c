@@ -78,7 +78,7 @@ int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 			y+= tam;
 			a = x;
 		}
-		font[i]&(char)0x01 ? put_square(a,y,tam,color) : 0 ;
+		font[i+ (start*32)]&(char)0x01 ? put_square(a,y,tam,color) : 0 ;
 		a+=tam;
         ((uint8_t)font[i+ (start*32)]&(uint8_t)0x02)>>1? put_square(a,y,tam,color) : 0 ;
 		a+=tam;

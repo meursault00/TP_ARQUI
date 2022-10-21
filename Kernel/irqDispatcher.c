@@ -5,10 +5,10 @@
 #include <naiveConsole.h>
 extern uint64_t getkey();
 
-#define UP 1
-#define RIGHT 2
-#define DOWN 3
-#define LEFT 4
+#define UP 0
+#define RIGHT 1
+#define DOWN 2
+#define LEFT 3
 
 static void int_20();
 static void int_21();
@@ -63,8 +63,9 @@ void commandHelp(){
 }
 
 void commandTron(){
+	VideoClearScreen();
+	initialize_players();
 	tronMotherfucker(1);
-	play();
 }
 
 void checkCommand( char * command ){

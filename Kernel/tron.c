@@ -2,7 +2,8 @@
 #include <naiveConsole.h>
 
 static int tronSwitch = 0;
-static int gameOn = 0;
+static int gameOn = 1;
+static int canMove = 0;
 
 #define MATCHES 1
 
@@ -25,10 +26,10 @@ static int gameOn = 0;
 #define P1_COLOR 0x0000FF //azul
 #define P2_COLOR 0xFF0000 //rojo
 
-#define UP 1
-#define RIGHT 2
-#define DOWN 3
-#define LEFT 4
+#define UP 0
+#define RIGHT 1
+#define DOWN 2
+#define LEFT 3
 
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
@@ -54,7 +55,7 @@ void display_menu(){
 }
 */
 
-static void initialize_players(){ // se pasan los parametros default a cada jugador
+void initialize_players(){ // se pasan los parametros default a cada jugador
     p1.color=P1_COLOR;
     p1.currX=P1_STARTING_X;
     p1.currY=P1_STARTING_Y;
@@ -70,6 +71,12 @@ static void initialize_players(){ // se pasan los parametros default a cada juga
     p2.score=0;
 }
 
+/*
+void moveSwitch(int value){
+    canMove = value;
+}
+*/
+
 // chequeo si jugador se encuentra en la matriz (que representa la pantalla)
 // la macro usada anteriormente no terminaba de convencer
 static int insideBoard(int x, int y){
@@ -82,12 +89,13 @@ static int insideBoard(int x, int y){
 */
 int checkPlayersPosition(){
     // si pasa no esta en el tablero o esta en una posicion pisada los mato
-    if(!insideBoard(p1.currX,p1.currY || board[p1.currX][p1.currY])){
+    if(!insideBoard(p1.currX,p1.currY) || board[p1.currX][p1.currY]){
         p1.alive =0;
     }
     if(!insideBoard(p2.currX,p2.currY) || board[p2.currX][p2.currY]){
         p2.alive =0;
     }
+
     if(p1.alive && p2.alive)
         return 1;
     else{
@@ -95,7 +103,9 @@ int checkPlayersPosition(){
             p1.score++; // si uno sobrevivio aumento su puntaje
         else if(p2.alive)
             p2.score++;
-        gameOn = 0; 
+        tronSwitch = 0; 
+        VideoClearScreen();
+        restartCursor();
         return 0;
     }
 }
@@ -122,10 +132,10 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
 
 void movePlayers(){
     //actualizo poiscion de ambos jugadors
-    p1.currX += mover[p1.direction][1];
-    p1.currY += mover[p1.direction][2];
-    p2.currX += mover[p2.direction][1];
-    p2.currY += mover[p2.direction][2];
+    p1.currX += mover[p1.direction][0];
+    p1.currY += mover[p1.direction][1];
+    p2.currX += mover[p2.direction][0];
+    p2.currY += mover[p2.direction][1];
 
     if(checkPlayersPosition()){ //si es que estan vivos marco respectivos cuadros y dibujo
         board[p1.currX][p1.currY] = 1;
@@ -134,8 +144,7 @@ void movePlayers(){
         // y -> simplemente le paso la cantidad de renglones multiplicada por la altura
         // tamaño es el definido arriba
         // paso los colores correspondientes
-        put_square(p1.currX*SQUARE_SIDE+1024*p1.currY + OFFSET_X, p1.currY*SQUARE_SIDE + OFFSET_Y, SQUARE_SIDE, P1_COLOR);
-        put_square(p2.currX*SQUARE_SIDE+1024*p2.currY + OFFSET_X, p2.currY*SQUARE_SIDE + OFFSET_Y, SQUARE_SIDE, P2_COLOR);
+        drawPlayers();
     }
 }
 
@@ -149,11 +158,11 @@ void tronMotherfucker(int value){
     tronSwitch = value;
 }
 
-/*
+
 void drawPlayers(){
     put_square(p1.currX*SQUARE_SIDE+1024*p1.currY,p1.currY*SQUARE_SIDE,SQUARE_SIDE,P1_COLOR);
     put_square(p2.currX*SQUARE_SIDE+1024*p2.currY,p2.currY*SQUARE_SIDE,SQUARE_SIDE,P2_COLOR);
-}*/
+}
 
 void play(){
 
@@ -178,11 +187,13 @@ void play(){
     put_square(p2.currX*SQUARE_SIDE+1024*p2.currY, p2.currY*SQUARE_SIDE, SQUARE_SIDE, P2_COLOR);
    // repite por la cantidad de matches que tengo definidos
     for(int i=0; i<MATCHES && tronSwitch; i++){
-        while(!gameOn) // no arranco hasta prendida el
+        //while(!gameOn); // no arranco hasta prendida el
         VideoClearScreen(); // una vez arrancada la partida limpio la pantalla
         initialize_players();
         //drawPlayers();
-        while(gameOn); // se juega hasta que se apague el flag
+        while(gameOn){ // se juega hasta que se apague el flag
+            movePlayers();
+        }
     }
     
     tronSwitch = 0;
