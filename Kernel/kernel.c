@@ -126,12 +126,12 @@ int main()
 	//int a =put_letter('A',0,50,2,0xFFFFFF);
 	//a=put_letter('B',a,50,2,0xFFFFFF);
 	//put_letter('C',a,50,2,0xFFFFFF);
-	put_word("CLEAR TEST",0,0,2,0xFFFFFF); //no hace nada?
+	
 
-	tronMotherfucker(); // prendo flag de tron
-	play();
-
-	restartCursor(); // una vez terminado deberia poder volver a utilizar el modo terminal
+	//tronMotherfucker(); // prendo flag de tron
+	//play();
+//
+	//restartCursor(); // una vez terminado deberia poder volver a utilizar el modo terminal
 	while(1);
 	return 0;
 }

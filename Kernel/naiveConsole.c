@@ -77,19 +77,12 @@ void videoPrintWord( char * string ){
 }
 
 // shit may be scuffed es medio dificil testear, inaki deberia revisar esto
-/*
+
 void clearScreen(){
-	cursorX = 1024;
-	cursorY = 16*fontSize;
-	drawCursor;
-	for ( int i = 0; i < 1024 ; i++)
-		for ( int j = 0; j < 768; j++ ){
-			while ( IN_BOUNDS ){
-				 put_letter(' ',cursorX,cursorY,fontSize,0xFFFFCC);
-			}
-		}
+	put_square(0, 16*fontSize, 1280, 0x000000);
+	restartCursor();
 }
-*/
+
 
 void drawCursor(int color){
 	/* cursor editor de texto

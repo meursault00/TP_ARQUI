@@ -46,11 +46,27 @@ char strcmp( const char* stringA,const char* stringB)
  	return 0;  
 }  
 
+void commandHelp(){
+	clearScreen();
+	videoPrintWord("BIENVENIDO AL MENU HELP");
+	VideoNewLine();
+	videoPrintWord("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS");
+	VideoNewLine();
+	videoPrintWord("HELP");
+	VideoNewLine();
+	videoPrintWord("TRON");
+	VideoNewLine();
+	videoPrintWord("SNAPSHOT");
+	VideoNewLine();
+	videoPrintWord("MEMACCESS ( MEM ADDRESS )");
+}
+
 void checkCommand( char * command ){
 	if ( strcmp(command, "HELP")){
-		put_word("DESREFERENCIAR PUNTERO DE LA FUNCION HELP", 500, 500, 2, 0xff00ff);
+		commandHelp();
 	}
 }
+
 void initialize(){
 	(fun_inter[0])=int_20;
 	(fun_inter[1])=int_21;
@@ -96,6 +112,7 @@ void write(int aux){ // escritura usando funciones de video
 		if(aux == 8)
 			VideoBackSpace();
 		else if(aux == '\n'){
+			if ( buffer != 0 && buffer[0] != 0 )
 			checkCommand(buffer);
 			clearBuffer();
 			VideoNewLine();
