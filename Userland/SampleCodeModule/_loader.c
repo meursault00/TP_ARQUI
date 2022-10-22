@@ -8,10 +8,10 @@ int main();
 
 void * memset(void * destiny, int32_t c, uint64_t length);
 
-int _start() {
+
+int _start() { // este es el main mas main
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
-
 	return main();
 
 }

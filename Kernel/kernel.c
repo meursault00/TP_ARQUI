@@ -16,7 +16,7 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
+static void * const sampleCodeModuleAddress = (void*)0x400000; //punteros a user land
 static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
@@ -92,7 +92,10 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	videoPrintDec(10000);
-	while(1);
+	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land
+
+	while (1);
+
+
 	return 0;
 }

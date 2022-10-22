@@ -7,5 +7,6 @@
 #include <syscalls.h>
 
 void initialize();
+char * getBuffer();
 
 #endif
