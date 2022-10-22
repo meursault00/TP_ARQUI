@@ -20,12 +20,15 @@ static void int_80();
 static void write();
 static void tron();
 
-static char buffer[80] = {0};
+static char buffer[500] = {0};
 static int lastChar = 0;
 
+char * getBuffer(){
+	return buffer;
+}
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
-void (*fun_inter[256])(uint64_t,uint64_t,char*,uint64_t);
-void (*fun_sys[256])(uint64_t,char*,uint64_t);
+void (*fun_inter[256])(uint64_t,uint64_t,uint64_t,uint64_t);
+uint64_t (*fun_sys[256])(uint64_t,uint64_t,uint64_t);
 
 void clearBuffer ( void ){
 	for ( int i = 0; i < 80; i++ )
@@ -98,7 +101,11 @@ void initialize(){
 	(fun_inter[0])=int_20;
 	(fun_inter[1])=int_21;
 	(fun_inter[0x60])=int_80; // pasasr 60 en el asm
+
+	//agreago syscalls
+	(fun_sys[0])=sys_read;
 	(fun_sys[1])=sys_write;
+	(fun_sys[2])=sys_time;
 }
 
 void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx) {
@@ -144,7 +151,7 @@ void write(int aux){ // escritura usando funciones de video
 		}
 		else if(aux == '\n'){
 			if ( buffer != 0 && buffer[0] != 0 )
-			checkCommand(buffer);
+				checkCommand(buffer);
 			clearBuffer();
 			videoNewLine();
 
@@ -167,6 +174,8 @@ void write(int aux){ // escritura usando funciones de video
 	//		ncPrintChar (charHexMap[ teclahex]);
 	//
 }
+
+
 
 void tron(int aux){
 	// asigno WASD para el jugador 1 y IJKL para el jugador 2

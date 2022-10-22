@@ -72,7 +72,7 @@ void videoPrintWordWColor( char * string ,int color){
 // shit may be scuffed es medio dificil testear, inaki deberia revisar esto
 
 void clearScreen(){
-	put_square(0, 16*FONTSIZE, 1280, 0x000000);
+	put_square(0, 16*FONTSIZE, 2000, 0x000000);//put_square(0, 16*FONTSIZE, 1280, 0x000000);
 	restartCursor();
 }
 

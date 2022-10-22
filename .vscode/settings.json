@@ -2,6 +2,7 @@
     "files.associations": {
         "stdio.h": "c",
         "irqdispatcher.h": "c",
-        "video_driver.h": "c"
+        "video_driver.h": "c",
+        "unistd.h": "c"
     }
 }
