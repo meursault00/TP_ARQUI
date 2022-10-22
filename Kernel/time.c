@@ -59,3 +59,10 @@ void tron_handler(){
 	if(ticks % 9 == 0) // dictara la velocidad
 		movePlayers();
 } // aca me tira dos errores pero lo mas probable es que sea un bug del visual
+
+void timer_wait(int ticks) {
+	
+	for(int i= 0; i < ticks; i++){
+		_hlt();
+	}
+}
