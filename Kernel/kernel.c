@@ -93,14 +93,11 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-<<<<<<< HEAD
-	while(1);
-=======
-	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land
+	soviet_anthem(); //hola
+	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land amigos
 
 	while (1);
 
 
->>>>>>> a9be3319c4599e7cbece9ef523287f5fd9b7ef56
 	return 0;
 }

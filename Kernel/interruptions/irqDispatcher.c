@@ -48,6 +48,9 @@ char strcmp( const char* stringA,const char* stringB)
        }  
        i++;  
     }  
+	if(stringA[i] != 0 || stringB[i] != 0){
+		return 0;
+	}
     if(flag==0)  
     	return 1;  
  	return 0;  
@@ -68,6 +71,10 @@ void commandHelp(){
 	videoPrintWord("- MEMACCESS ( MEM ADDRESS )");
 	videoNewLine();
 	videoPrintWord("- CLEAR");
+	videoNewLine();
+	videoPrintWord("- BEEP");
+	videoNewLine();
+	videoPrintWord("- ANTHEM");
 	videoNewLine();
 	videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
@@ -93,8 +100,24 @@ void checkCommand( char * command ){
 		commandClear();
 	}
 	else if(strcmp(command, "BEEP") || strcmp(command, "- BEEP") ){
-		//beep();
+		beep();
+	}else if(strcmp(command, "ANTHEM") || strcmp(command, "- ANTHEM") ){
+		soviet_anthem();
 	}
+	/*
+	else if(strcmp(command, "SNAPSHOT") || strcmp(command, "- SNAPSHOT") ){
+		snapshot();
+	}
+	else if(strcmp(command, "MEMACCESS") || strcmp(command, "- MEMACCESS") ){
+		memaccess();
+	}*/
+	else{
+		clearScreen();
+		videoPrintWord("COMANDO NO VALIDO");
+		videoNewLine();
+		videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
+	}
+
 }
 
 void initialize(){
@@ -127,7 +150,6 @@ void int_21(){
         'B',  'N',  'M',  ',',  '.',  '/',    0,  '*',     0,  ' ',    0,     0,     0,    0,       0,         0,
     };
 	uint8_t aux = charHexMap[teclahex];
-	soviet_anthem();
 	if(tronOn()){
 		tron(aux);
 

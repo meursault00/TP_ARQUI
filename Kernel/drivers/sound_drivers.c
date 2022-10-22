@@ -6,7 +6,7 @@
 #include <interrupts.h>
 
 enum chords2{A=880, AS= 932, B=988, C=523, CS=554, D=587, DS=622, 
-E=659, F=698, FS=740, G=784, GS=831, S=250000 };
+E=659, F=698, FS=740, G=784, GS=831, S=250000 , D7 = 2349};
  //Play sound using built in speaker
 static void play_sound(uint32_t nFrequence) {
 	uint32_t Div;
@@ -57,50 +57,27 @@ void beeep(uint16_t nFrequence, uint16_t time) {
 }
 
 void soviet_anthem(){
-	beeep(A, 10);
-	beeep(B, 10);
-	beeep(C, 10);
-	beeep(D, 10);
-	beeep(E, 10);
-	beeep(F, 10);
-	beeep(G, 10);
-/*
-	beeep(C5, 4);
-	beeep(C5, 4);
-	beeep(C5,4);
-	beeep(C5,4);
-	beeep(E4,4);
-	beeep(F5,4);
-	beeep(C5,4);
-	beeep(D4,4);
-	beeep(D4,4);
-	beeep(G5,4);
-	beeep(C5,4);
-	beeep(G5,4);
-	beeep(A4,4);
-	beeep(E4,4);
-	beeep(F5,4);
-	beeep(C5,4);
-	beeep(D7,4);
-	beeep(G5,4);
-
-	beeep(C5,4);
-	beeep(G5,4);
-	beeep(A4,4);
-	beeep(E4,4);
-	beeep(F5,4);
-	beeep(D4,4);
-	beeep(G5,4);
-	beeep(C5,4);
-	beeep(D4,4);
-	beeep(G5,4);
-	beeep(C5,4);
-	beeep(D4,4);
-	beeep(E5,4);
-	beeep(A4,4);
-	beeep(F5,4);
-	beeep(C5,4);
-	beeep(D7,4);
-	beeep(G5,4);
-*/
+	beeep(392 ,375 /50); 
+	beeep(523 ,750 /50); 
+	beeep(392 ,463 /50); 
+	beeep(440 ,187 /50); 
+	beeep(494 ,750 /50); 
+	beeep(330 ,375 /50); 
+	beeep(330 ,375 /50); 
+	beeep(440 ,750 /50); 
+	beeep(392 ,463 /50); 
+	beeep(349 ,187 /50); 
+	beeep(392 ,750 /50); 
+	beeep(262 ,463 /50); 
+	beeep(262 ,187 /50); 
+	beeep(294 ,750 /50); 
+	beeep(294 ,463 /50); 
+	beeep(330 ,187 /50); 
+	beeep(349 ,750 /50); 
+	beeep(349 ,463 /50); 
+	beeep(392 ,187 /50); 
+	beeep(440 ,750 /50); 
+	beeep(494 ,375 /50); 
+	beeep(523 ,375 /50); 
+	beeep( 587,1125/50);
 }
