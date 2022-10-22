@@ -50,7 +50,7 @@ void cursor_handler(){
 
 void clock_handler(){
 	if(seconds_elapsed() > actualSeconds){ //reimprimo el reloj cada segundo
-		VideoPrintTime();
+		videoPrintTime();
 		actualSeconds = seconds_elapsed();
 	}
 }

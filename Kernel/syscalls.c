@@ -6,12 +6,12 @@
 void sys_write(uint64_t fd,char * buffer, uint64_t length){
     switch (fd){
     case STDOUT:
-        ncPrint(buffer);
-        ncNewline();
+        videoPrintWord(buffer);
+        videoNewLine();
         break;
     case STDRED:
-        printWColor(buffer,0x04);
-        ncNewline();
+        videoPrintWordWColor(buffer,0xFF0000);
+        videoNewLine();
         break;
     default:
         break;

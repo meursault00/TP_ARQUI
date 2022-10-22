@@ -2,6 +2,7 @@
 #include <syscalls.h>
 #include <video_driver.h>
 #include <tron.h>
+#include <interrupts.h>
 #include <naiveConsole.h>
 extern uint64_t getkey();
 
@@ -9,6 +10,7 @@ extern uint64_t getkey();
 #define RIGHT 1
 #define DOWN 2
 #define LEFT 3
+
 
 static void int_20();
 static void int_21();
@@ -50,30 +52,30 @@ char strcmp( const char* stringA,const char* stringB)
 void commandHelp(){
 	clearScreen();
 	videoPrintWord("BIENVENIDO AL MENU HELP");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("- HELP");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("- TRON");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("- SNAPSHOT");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("- MEMACCESS ( MEM ADDRESS )");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("- CLEAR");
-	VideoNewLine();
+	videoNewLine();
 	videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
 void commandTron(){
-	VideoClearScreen();
+	clearScreen();
 	initialize_players();
 	tronMotherfucker(1);
 	
 }
 void commandClear(){
-	VideoClearScreen();
+	clearScreen();
 	restartCursor();
 }
 void checkCommand( char * command ){
@@ -128,22 +130,22 @@ void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
 void write(int aux){ // escritura usando funciones de video
 	if(aux!=0){
 		if(aux == 8){
-			VideoBackSpace();
+			videoBackSpace();
 			buffer[lastChar--] = 0;
 		}
 		else if(aux == '\n'){
 			if ( buffer != 0 && buffer[0] != 0 )
 			checkCommand(buffer);
 			clearBuffer();
-			VideoNewLine();
+			videoNewLine();
 
 		}
 		else if(aux == 27){ //escape
-			VideoClearScreen();
+			clearScreen();
 			restartCursor();
 		}
 		else{
-			VideoPrintChar(aux);
+			videoPrintChar(aux);
 			buffer[lastChar] = aux;
 			lastChar+=1;
 		}
@@ -163,12 +165,14 @@ void tron(int aux){
 		case 27:
 			//gameSwitch(0);
 			tronMotherfucker(0);
-			VideoClearScreen();
+			clearScreen();
 			restartCursor();
 
+		/*
 		case ' ':
 			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
 			break;
+		*/
 		case 'W':
 			changePlayerDirection(1,UP);
 			break;

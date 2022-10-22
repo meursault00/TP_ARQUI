@@ -2,84 +2,77 @@
 #include <stdio.h>
 #include <video_driver.h>
 
-#define fontSize 2
-#define fontColor 0xFFFFCC
+#define FONTSIZE 1
+#define FONTCOLOR 0xFFFFCC
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 static char buffer[64] = { '0' };
-static uint8_t  *  video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
+
 static int cursorX = 1024;
-static int cursorY = 16 * fontSize ;
+static int cursorY = 16 * FONTSIZE ;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
 extern uint64_t timeUTC(char mode);
 extern int getkey();
 
-#define IN_BOUNDS ((cursorX+fontSize*8)/1024)*16*fontSize < 736 // no termino de entender porque con 768 se pasa, REVISAR
+#define IN_BOUNDS ((cursorX+FONTSIZE*8)/1024)*16*FONTSIZE < 736 // no termino de entender porque con 768 se pasa, REVISAR
 
 int isupdateinfprogress(){
 	return timeUTC(0x0A) & 0x80;
 }
 
 int getFontColor(){
-	return fontColor;
+	return FONTCOLOR;
 }
 
-void ncPrint(const char * string)
-{
-	int i;
-
-	for (i = 0; string[i] != 0; i++)
-		ncPrintChar(string[i]);
-}
-
-void printWColor(char* str,char colorcode){
-	int i;
-
-	for (i = 0; str[i] != 0; i++){
-		*currentVideo++ = str[i];
-		*currentVideo++ =colorcode;
-	}
-		
-} // aca tambien señala error
-
-void VideoPrintChar(char character){
+void videoPrintCharWColor(char character,int color){
 	if(IN_BOUNDS){
 		drawCursor(0x000000);
 		//static int cursorX=0;
 		int aux;
-		aux = put_letter(character,cursorX,cursorY,fontSize,0xFFFFCC);
+		aux = put_letter(character,cursorX,cursorY,FONTSIZE,color);
 		cursorX = aux ;
-		cursorY = (cursorX / 1024)*16*fontSize;
+		cursorY = (cursorX / 1024)*16*FONTSIZE;
 		//put_letter('A',cursorX,10,1,0xFFFFFF);
-		drawCursor(fontColor);
+		drawCursor(FONTCOLOR);
 	}
 }
 
-void VideoBackSpace(){
+void videoPrintChar(char character){
+	videoPrintCharWColor(character,FONTCOLOR);
+}
+
+
+
+void videoBackSpace(){
 	if(cursorX != 1024){
 		drawCursor(0x000000);
-		cursorX -= fontSize * 8;
-		cursorY = (cursorX / 1024)*16*fontSize;
-		put_square(cursorX,cursorY,fontSize*8,0x000000);
-		put_square(cursorX,cursorY+fontSize*8,fontSize*8,0x000000);
-		drawCursor(fontColor);
+		cursorX -= FONTSIZE * 8;
+		cursorY = (cursorX / 1024)*16*FONTSIZE;
+		put_square(cursorX,cursorY,FONTSIZE*8,0x000000);
+		put_square(cursorX,cursorY+FONTSIZE*8,FONTSIZE*8,0x000000);
+		drawCursor(FONTCOLOR);
 	}
 }
 
 void videoPrintWord( char * string ){
 	for ( int i = 0; string[i] != 0; i++ ){
-		VideoPrintChar(string[i]);
+		videoPrintChar(string[i]);
+	}
+}
+
+void videoPrintWordWColor( char * string ,int color){
+	for(int i=0;string[i]!='\0';i++){
+		videoPrintCharWColor(string[i],color);
 	}
 }
 
 // shit may be scuffed es medio dificil testear, inaki deberia revisar esto
 
 void clearScreen(){
-	put_square(0, 16*fontSize, 1280, 0x000000);
+	put_square(0, 16*FONTSIZE, 1280, 0x000000);
 	restartCursor();
 }
 
@@ -90,109 +83,80 @@ void drawCursor(int color){
 		put_square(cursorX+fontSize*2,cursorY+fontSize*2*i,fontSize*2,color);
 	*/
 	// CURSOR TERMINAL
-	put_square(cursorX,cursorY,fontSize*8,color);
-	put_square(cursorX,cursorY+fontSize*8,fontSize*8,color);	
+	put_square(cursorX,cursorY,FONTSIZE*8,color);
+	put_square(cursorX,cursorY+FONTSIZE*8,FONTSIZE*8,color);	
 }
 
-void VideoNewLine(){
+void videoNewLine(){
 		int aux = cursorY;
 		do
 		{
-			VideoPrintChar(' ');
+			videoPrintChar(' ');
 		}
 		while(cursorY == aux && IN_BOUNDS);
 }
 
-void VideoPrintTime(int seconds, int minutes, int hours){
+void videoPrintTime(int seconds, int minutes, int hours){
     for(int i=0; i<8; i++){
-        put_square(fontSize*8*i,0,fontSize*8,0x000000);
-        put_square(fontSize*8*i,fontSize*8,fontSize*8,0x000000);
+        put_square(FONTSIZE*8*i,0,FONTSIZE*8,0x000000);
+        put_square(FONTSIZE*8*i,FONTSIZE*8,FONTSIZE*8,0x000000);
     }
     while (isupdateinfprogress());
 
     if(timeUTC(0x04) < 10){
-        VideoPrintHex(0, 0, 0,0x00FF00 );
-        VideoPrintHex(timeUTC(0x04), 16, 0,0x00FF00 );    
+        videoPrintHex(0, 0, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x04), 16, 0,0x00FF00 );    
     }
     else{
-        VideoPrintHex(timeUTC(0x04), 0, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x04), 0, 0,0x00FF00 );
     }
-    put_letter(':',fontSize*16,0,fontSize,0x00FF00);
+    put_letter(':',FONTSIZE*16,0,FONTSIZE,0x00FF00);
     if(timeUTC(0x02) < 10){
-        VideoPrintHex(0, fontSize*24, 0,0x00FF00 );
-        VideoPrintHex(timeUTC(0x02), fontSize *32, 0,0x00FF00 );    
+        videoPrintHex(0, FONTSIZE*24, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x02), FONTSIZE *32, 0,0x00FF00 );    
     }
     else{
-        VideoPrintHex(timeUTC(0x02), fontSize*24, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x02), FONTSIZE*24, 0,0x00FF00 );
     }
-    put_letter(':',fontSize*40,0,fontSize,0x00FF00);
+    put_letter(':',FONTSIZE*40,0,FONTSIZE,0x00FF00);
     if(timeUTC(0x00) < 10){
-        VideoPrintHex(0, fontSize*48, 0,0x00FF00 );
-        VideoPrintHex(timeUTC(0x00), fontSize*56, 0,0x00FF00 );
+        videoPrintHex(0, FONTSIZE*48, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x00), FONTSIZE*56, 0,0x00FF00 );
     }
     else{
-        VideoPrintHex(timeUTC(0x00), fontSize*48, 0,0x00FF00 );
+        videoPrintHex(timeUTC(0x00), FONTSIZE*48, 0,0x00FF00 );
     }
 }
 
-void VideoPrintHex(int value, int x, int y, int color){
+void videoPrintHex(int value, int x, int y, int color){
 	uintToBase(value,buffer,16);
-	put_word(buffer,x,y,fontSize,color);
+	put_word(buffer,x,y,FONTSIZE,color);
 }
 
-void ncPrintChar(char character)
+
+
+void videoPrintHexa(int value){
+	videoPrintHex(value,cursorX,cursorY,FONTCOLOR);
+}
+
+void videoPrintDec(uint64_t value)
 {
-	*currentVideo = character;
-	currentVideo += 2; // salteaa el caracter y el byte de los colores
+	videoPrintBase(value, 10);
 }
 
-void ncNewline()
+
+void videoPrintBin(uint64_t value)
 {
-	do
-	{
-		ncPrintChar(' ');
-	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	videoPrintBase(value, 2);
 }
 
-void ncPrintDec(uint64_t value)
-{
-	ncPrintBase(value, 10);
-}
-
-void ncPrintHex(uint64_t value)
-{
-	ncPrintBase(value, 16);
-}
-
-void ncPrintBin(uint64_t value)
-{
-	ncPrintBase(value, 2);
-}
-
-void ncPrintBase(uint64_t value, uint32_t base)
+void videoPrintBase(uint64_t value, uint32_t base)
 {
     uintToBase(value, buffer, base);
-    ncPrint(buffer);
+    videoPrintWord(buffer);
 }
 
-void ncClear()
-{
-	int i;
 
-	for (i = 0; i < height * width; i++)
-		video[i * 2] = ' ';
-	currentVideo = video;
-}
-
-void printTime(){
-	while (isupdateinfprogress());
-	ncPrintHex(timeUTC(0x04));
-	ncPrintChar(':');
-	ncPrintHex(timeUTC(0x02));
-	ncPrintChar(':');
-	ncPrintHex(timeUTC(0x00));
-}
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 {
@@ -229,5 +193,5 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 
 void restartCursor(){
 	cursorX = 1024;
-	cursorY = 16*fontSize;
+	cursorY = 16*FONTSIZE;
 }
