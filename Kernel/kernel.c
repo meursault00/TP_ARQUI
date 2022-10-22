@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <interrupts.h>
+#include <sound_driver.h>
 #include <video_driver.h>
 #include <tron.h>
 
@@ -38,7 +39,7 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	char buffer[10];
+	//char buffer[10];
 /*
 	videoPrintWord("[x64BareBones]");
 	videoNewLine();
@@ -92,7 +93,6 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	videoPrintDec(10000);
 	while(1);
 	return 0;
 }

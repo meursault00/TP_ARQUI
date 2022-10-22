@@ -1,6 +1,7 @@
 #include <time.h>
 #include <naiveConsole.h>
 #include <tron.h>
+#include <interrupts.h>
 
 static unsigned long ticks = 0;
 static unsigned long cursorTicks = 9;
@@ -11,7 +12,7 @@ static int actualSeconds = -1;
 #define MINUTES 2
 #define HOURS 4
 
-extern timeUTC(int op);
+extern int timeUTC(int op);
 
 static void cursor_handler();
 static void clock_handler();

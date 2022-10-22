@@ -1,5 +1,6 @@
 #include <irqDispatcher.h>
 #include <syscalls.h>
+#include <sound_driver.h>
 #include <video_driver.h>
 #include <tron.h>
 #include <interrupts.h>
@@ -79,12 +80,18 @@ void commandClear(){
 	restartCursor();
 }
 void checkCommand( char * command ){
-	if(strcmp(command, "HELP") || strcmp(command, "- HELP") )
+	if(strcmp(command, "HELP") || strcmp(command, "- HELP") ){
 		commandHelp();
-	else if(strcmp(command, "TRON") || strcmp(command, "- TRON") )
+	}
+	else if(strcmp(command, "TRON") || strcmp(command, "- TRON") ){
 		commandTron();
-	if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") )
+	}
+	else if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") ){
 		commandClear();
+	}
+	else if(strcmp(command, "BEEP") || strcmp(command, "- BEEP") ){
+		//beep();
+	}
 }
 
 void initialize(){
@@ -112,13 +119,15 @@ void int_21(){
         'D',  'F',  'G',  'H',  'J',  'K',  'L',  ';',  '\'',    0,    0,  '\\',   'Z',  'X',     'C',       'V',
         'B',  'N',  'M',  ',',  '.',  '/',    0,  '*',     0,  ' ',    0,     0,     0,    0,       0,         0,
     };
-
 	uint8_t aux = charHexMap[teclahex];
-	
-	if(tronOn()) //chequeo en que modo estoy y envio el char obtenido a la funcion apropiada
+	soviet_anthem();
+	if(tronOn()){
 		tron(aux);
-	else
+
+	} //chequeo en que modo estoy y envio el char obtenido a la funcion apropiada
+	else{
 		write(aux);
+	}
 	
 }
 

@@ -3,7 +3,7 @@
 
 static int tronSwitch = 0;
 static int gameOn = 1;
-static int canMove = 0;
+//static int canMove = 0;
 
 #define MATCHES 1
 

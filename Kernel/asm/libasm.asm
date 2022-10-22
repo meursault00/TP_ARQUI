@@ -1,6 +1,8 @@
 GLOBAL cpuVendor
 GLOBAL timeUTC
 GLOBAL getkey
+GLOBAL inb
+GLOBAL outb
 section .text
 	
 cpuVendor:
@@ -44,7 +46,7 @@ timeUTC:
 	mov rsp, rbp
 	pop rbp
 	ret
-
+;
 getkey:
 	push rbp
 	mov rbp, rsp
@@ -59,4 +61,21 @@ loop:
 	mov rsp, rbp
 	pop rbp
 	ret
-
+;
+inb:
+	push rbp
+	mov rbp, rsp
+	mov rdx,rdi	;puerto
+	in al,dx	;valor del puerto
+	leave
+	ret
+;
+outb:
+	push rbp
+	mov rbp, rsp
+	mov rax, rsi ;valor	
+	mov rdx, rdi ;puerto
+	out dx, al
+	leave
+	ret
+;
