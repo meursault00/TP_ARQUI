@@ -61,7 +61,7 @@ loop:
 	mov rsp, rbp
 	pop rbp
 	ret
-;
+
 inb:
 	push rbp
 	mov rbp, rsp
@@ -69,7 +69,7 @@ inb:
 	in al,dx	;valor del puerto
 	leave
 	ret
-;
+
 outb:
 	push rbp
 	mov rbp, rsp
@@ -78,4 +78,3 @@ outb:
 	out dx, al
 	leave
 	ret
-;
