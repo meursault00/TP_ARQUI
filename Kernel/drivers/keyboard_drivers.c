@@ -62,8 +62,6 @@ static char asccode[MAX_SCANCODE][2] ={
     {   0,0   },
     {   0,0   },
     { ' ',' ' },
-   
-
 };
 static int shiftActivated = 0;
 static int capsActivated = 0;
