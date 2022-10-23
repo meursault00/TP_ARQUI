@@ -30,3 +30,4 @@ snapshot:
 
 section .bss
 snapshotBuffer resb 128 
+memaccessBuffer resb 32

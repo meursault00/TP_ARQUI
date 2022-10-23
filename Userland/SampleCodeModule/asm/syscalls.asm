@@ -1,5 +1,5 @@
 GLOBAL sys_time
-GLOBAL sys_Write
+GLOBAL sys_write
 GLOBAL sys_read
 
 section .text
@@ -39,7 +39,7 @@ section .text
 	pop rbx
 	pop rax
 %endmacro
-systemWrite:
+sys_write:
     push rbp 
     mov rbp,rsp
 
