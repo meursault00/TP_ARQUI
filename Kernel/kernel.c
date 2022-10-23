@@ -39,18 +39,7 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	//char buffer[10];
-/*
-	videoPrintWord("[x64BareBones]");
-	videoNewLine();
 
-	videoPrintWord("CPU Vendor:");
-	videoPrintWord(cpuVendor(buffer));
-	videoNewLine();
-
-	videoPrintWord("[Loading modules]");
-	videoNewLine();
-*/
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
@@ -58,42 +47,18 @@ void * initializeKernelBinary()
 
 	
 	loadModules(&endOfKernelBinary, moduleAddresses);
-	/*
-	videoPrintWord("[Done]");
-	videoNewLine();
-	videoNewLine();
 
-	videoPrintWord("[Initializing kernel's binary]");
-	videoNewLine();
- */
 	clearBSS(&bss, &endOfKernel - &bss);
-/*
-	videoPrintWord("  text: 0x");
-	videoPrintHexa((uint64_t)&text);
-	videoNewLine();
-	videoPrintWord("  rodata: 0x");
-	videoPrintWord((uint64_t)&rodata);
-	videoNewLine();
-	videoPrintWord("  data: 0x");
-	videoPrintHexa((uint64_t)&data);
-	videoNewLine();
-	videoPrintWord("  bss: 0x");
-	videoPrintHexa((uint64_t)&bss);
-	videoNewLine();
-	*/
-	load_idt();
-/*
-	videoPrintWord("[Done]");
-	videoNewLine();
-	videoNewLine();
-	*/
+
+	
+
 	return getStackBase();
 }
 
 int main()
 {	
 	load_idt();
-	//soviet_anthem(); //hola
+	soviet_anthem(); //hola
 	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land amigos
 
 	while (1);

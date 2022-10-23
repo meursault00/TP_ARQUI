@@ -77,6 +77,8 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;
 	int start = letter -33;
+	if(letter>='a' && letter<='z')
+		start=letter-65;
 	if ( letter == ' ' ){
 		return a + tam*8;
 	}
