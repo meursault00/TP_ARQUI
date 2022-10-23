@@ -1,5 +1,8 @@
 #include <video_driver.h>
 #include <fonts.h>
+
+#define isMinusc(x) ((x)<='a'?(((x)>='z')?1:0):0)
+
 typedef struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
 	uint8_t window_a;			// deprecated
@@ -77,7 +80,7 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;
 	int start = letter -33;
-	if(letter>='a' && letter<='z')
+	if(isMinusc(letter))
 		start=letter-65;
 	if ( letter == ' ' ){
 		return a + tam*8;
