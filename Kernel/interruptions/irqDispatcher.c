@@ -5,9 +5,9 @@
 #include <tron.h>
 #include <interrupts.h>
 #include <naiveConsole.h>
+#include <keyboard_driver.h>
 
 extern char* snapshot();
-extern uint64_t getkey();
 
 #define UP 0
 #define RIGHT 1
@@ -20,7 +20,7 @@ static void int_21();
 static void int_80();
 
 static void write();
-static void tron();
+static void tron(int);
 
 static char snapshotBuffer[128]; 
 static char buffer[500] = {0};
@@ -266,12 +266,7 @@ void checkCommand( char * command ){
 	else if(strcmp(command, "MEMACCESS") || strcmp(command, "- MEMACCESS") ){
 		memaccess();
 	}*/
-	else{
-		clearScreen();
-		videoPrintWord("COMANDO NO VALIDO");
-		videoNewLine();
-		videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
-	}
+	
 
 }
 
@@ -296,23 +291,17 @@ void int_20() {
 }
 
 void int_21(){
-	uint8_t teclahex=getkey();
-	static const uint8_t charHexMap[256] = 
-    {       
-          0,    27,  '1',  '2',  '3',  '4',  '5',  '6',   '7',  '8',  '9',   '0',   '-',  '=',    8,    '    ',
-        'Q',  'W',  'E',  'R',  'T',  'Y',  'U',  'I',   'O',  'P',  '[',   ']',  '\n',    0,     'A',       'S',
-        'D',  'F',  'G',  'H',  'J',  'K',  'L',  ';',  '\'',    0,    0,  '\\',   'Z',  'X',     'C',       'V',
-        'B',  'N',  'M',  ',',  '.',  '/',    0,  '*',     0,  ' ',    0,     0,     0,    0,       0,         0,
-    };
-	uint8_t aux = charHexMap[teclahex];
+	storeKey();
+	//write(getKey());
+	char key=getKey();
+	
 	if(tronOn()){
-		tron(aux);
+		tron(key);
 
 	} //chequeo en que modo estoy y envio el char obtenido a la funcion apropiada
 	else{
-		write(aux);
+		write(key);
 	}
-	
 }
 
 void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
@@ -358,10 +347,11 @@ void write(int aux){ // escritura usando funciones de video
 
 
 
+
 void tron(int aux){
 	// asigno WASD para el jugador 1 y IJKL para el jugador 2
 	switch(aux){
-		case 27:
+		case ESC:
 			//gameSwitch(0);
 			tronMotherfucker(0);
 			clearScreen();
@@ -372,29 +362,29 @@ void tron(int aux){
 			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
 			break;
 		*/
-		case 'W':
+		case 'w':
 			changePlayerDirection(1,UP);
 			break;
-		case 'A':
+		case 'a':
 			changePlayerDirection(1,LEFT);
 			break;
-		case 'S':
+		case 's':
 			changePlayerDirection(1,DOWN);
 			break;
-		case 'D':
+		case 'd':
 			changePlayerDirection(1,RIGHT);
 			break;
 		
-		case 'I':
+		case 'i':
 			changePlayerDirection(2,UP);
 			break;
-		case 'J':
+		case 'j':
 			changePlayerDirection(2,LEFT);
 			break;
-		case 'K':
+		case 'k':
 			changePlayerDirection(2,DOWN);
 			break;
-		case 'L':
+		case 'l':
 			changePlayerDirection(2,RIGHT);
 			break;
 		default:
