@@ -5,6 +5,8 @@
 #include <tron.h>
 #include <interrupts.h>
 #include <naiveConsole.h>
+
+extern char* snapshot();
 extern uint64_t getkey();
 
 #define UP 0
@@ -20,6 +22,7 @@ static void int_80();
 static void write();
 static void tron();
 
+static char snapshotBuffer[128]; 
 static char buffer[500] = {0};
 static int lastChar = 0;
 
@@ -34,6 +37,149 @@ void clearBuffer ( void ){
 	for ( int i = 0; i < 80; i++ )
 		buffer[i] = (char)0;
 	lastChar = 0;
+}
+
+char toHex( char character ){ // de la forma 0000 XXXX
+	switch (character)
+	{
+	case 15:
+		return 'F';
+		break;
+	case 14:
+		return 'E';
+		break;
+	case 13:
+		return 'D';
+		break;
+	case 12:
+		return 'C';
+		break;
+	case 11:
+		return 'B';
+		break;
+	case 10:
+		return 'A';
+		break;
+    case 9:
+		return '9';
+		break;
+	case 8:
+		return '8';
+		break;
+	case 7:
+		return '7';
+		break;
+	case 6:
+		return '6';
+		break;
+	case 5:
+		return '5';
+		break;
+	case 4:
+		return '4';
+		break;
+    case 3:
+		return '3';
+		break;
+	case 2:
+		return '2';
+		break;
+	case 1:
+		return '1';
+		break;
+	case 0:
+		return '0';
+		break;
+	
+	default:
+		return character;
+	}
+}
+
+void printRegisters(){
+	for ( int i = 0; i < 128; i++ ){ 
+		switch (i)
+		{
+		case 0:
+			videoPrintWord("RAX   ");
+			break;
+		case 8:
+			videoNewLine();
+			videoPrintWord("RBX   ");
+			break;
+		case 16:
+			videoNewLine();
+			videoPrintWord("RDX   ");
+			break;
+		case 24:
+			videoNewLine();
+			videoPrintWord("RCX   ");
+			break;
+		case 32:
+			videoNewLine();
+			videoPrintWord("RSI   ");
+			break;
+		case 40:
+			videoNewLine();
+			videoPrintWord("RDI   ");
+			break;
+		case 48:
+			videoNewLine();
+			videoPrintWord("RBP   ");
+			break;
+		case 56:
+			videoNewLine();
+			videoPrintWord("RSP   ");
+			break;
+		case 64:
+			videoNewLine();
+			videoPrintWord("R8    ");
+			break;
+		case 72:
+			videoNewLine();
+			videoPrintWord("R9    ");
+			break;
+		case 80:
+			videoNewLine();
+			videoPrintWord("R10   ");
+			break;
+		case 88:
+			videoNewLine();
+			videoPrintWord("R11   ");
+			break;
+		case 96:
+			videoNewLine();
+			videoPrintWord("R12   ");
+			break;
+		case 104:
+			videoNewLine();
+			videoPrintWord("R13   ");
+			break;
+		case 112:
+			videoNewLine();
+			videoPrintWord("R14   ");
+			break;
+		case 120:
+			videoNewLine();
+			videoPrintWord("R15   ");
+			break;
+		default:
+			break;
+		}
+		videoPrintChar(toHex((snapshotBuffer[i]&0xF0)>>4));
+		videoPrintChar(toHex((snapshotBuffer[i]&0x0F)));
+		
+
+	}
+}
+
+// INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
+void memMoveChar( char* array1, char* array2, int charsToMove  ){ 
+	for ( int i = 0; i < charsToMove/8; i++){
+		for ( int j = 0; j < 8; j++ ){
+			array1[7-j+8*i] = array2[j+8*i];
+		}
+	}
 }
 
 char strcmp( const char* stringA,const char* stringB)  
@@ -55,6 +201,13 @@ char strcmp( const char* stringA,const char* stringB)
     	return 1;  
  	return 0;  
 }  
+
+void commandSnapshot(){
+	clearScreen();
+		printRegisters();
+		videoNewLine();
+		videoPrintWord("PRESIONE ESC PARA SALIR");
+}
 
 void commandHelp(){
 	clearScreen();
@@ -85,24 +238,26 @@ void commandTron(){
 	tronMotherfucker(1);
 	
 }
+
 void commandClear(){
 	clearScreen();
 	restartCursor();
 }
+
 void checkCommand( char * command ){
+
 	if(strcmp(command, "HELP") || strcmp(command, "- HELP") ){
 		commandHelp();
-	}
-	else if(strcmp(command, "TRON") || strcmp(command, "- TRON") ){
+	}else if(strcmp(command, "TRON") || strcmp(command, "- TRON") ){
 		commandTron();
-	}
-	else if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") ){
+	}else if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") ){
 		commandClear();
-	}
-	else if(strcmp(command, "BEEP") || strcmp(command, "- BEEP") ){
+	}else if(strcmp(command, "BEEP") || strcmp(command, "- BEEP") ){
 		beep();
 	}else if(strcmp(command, "ANTHEM") || strcmp(command, "- ANTHEM") ){
 		soviet_anthem();
+	}else if( strcmp(command,"SNAPSHOT")|| strcmp(command, "- SNAPSHOT")){
+		commandSnapshot();
 	}
 	/*
 	else if(strcmp(command, "SNAPSHOT") || strcmp(command, "- SNAPSHOT") ){
@@ -181,6 +336,10 @@ void write(int aux){ // escritura usando funciones de video
 		else if(aux == 27){ //escape
 			clearScreen();
 			restartCursor();
+		}
+		else if ( aux == '=' ){ // tecla para hacer un snapshot en un momento arbitrario
+			char* aux = snapshot(); 
+			memMoveChar(snapshotBuffer, aux, 128); 
 		}
 		else{
 			videoPrintChar(aux);
