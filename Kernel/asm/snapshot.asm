@@ -5,11 +5,6 @@ snapshot:
 	push rbp
 	mov rbp, rsp
 
-	mov rax, 6523464
-	mov rbx, 73
-	mov rdx, 75
-	mov rcx, 80
-
 	mov [snapshotBuffer], rax
 	mov [snapshotBuffer+8], rbx
 	mov [snapshotBuffer+16], rdx
