@@ -3,7 +3,7 @@
 
 
 extern void sys_write(int fd,char * buffer, int length);
-extern void sys_read(int fd,char * buff, int count);
+extern char getchar();
 extern int sys_time();
 
 #endif

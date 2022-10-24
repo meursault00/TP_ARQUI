@@ -58,7 +58,7 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	soviet_anthem(); //hola
+	//soviet_anthem(); //hola
 	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land amigos
 
 	while (1);

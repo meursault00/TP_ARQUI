@@ -1,6 +1,6 @@
 GLOBAL sys_time
 GLOBAL sys_write
-GLOBAL sys_read
+GLOBAL getchar
 
 section .text
 
@@ -49,6 +49,16 @@ sys_write:
     mov rdi,1
     int 80h
 	
-    pop rbp 
     mov rsp,rbp
+	pop rbp
+    ret
+
+getchar:
+
+    mov rcx,rdx 
+    mov rdx,rsi
+    mov rsi,rdi
+    mov rdi,0
+    int 80h
+
     ret

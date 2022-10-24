@@ -17,7 +17,7 @@ extern char* snapshot();
 
 static void int_20();
 static void int_21();
-static void int_80();
+static uint64_t int_80();
 
 static void write();
 static void tron(int);
@@ -26,9 +26,6 @@ static char snapshotBuffer[128];
 static char buffer[500] = {0};
 static int lastChar = 0;
 
-char * getBuffer(){
-	return buffer;
-}
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
 void (*fun_inter[256])(uint64_t,uint64_t,uint64_t,uint64_t);
 uint64_t (*fun_sys[256])(uint64_t,uint64_t,uint64_t);
@@ -276,7 +273,7 @@ void initialize(){
 	(fun_inter[0x60])=int_80; // pasasr 60 en el asm
 
 	//agreago syscalls
-	(fun_sys[0])=sys_read;
+	(fun_sys[0])=sys_getchar;
 	(fun_sys[1])=sys_write;
 	(fun_sys[2])=sys_time;
 }
@@ -293,7 +290,7 @@ void int_20() {
 void int_21(){
 	storeKey();
 	//write(getKey());
-	char key=getKey();
+/*	char key=getKey();
 	
 	if(tronOn()){
 		tron(key);
@@ -302,11 +299,11 @@ void int_21(){
 	else{
 		write(key);
 	}
+	*/
 }
 
-void int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
-	(*fun_sys[rdi])(rsi,rdx,rcx);
-	return;
+uint64_t int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx){
+	return (*fun_sys[rdi])(rsi,rdx,rcx);
 }
 
 void write(int aux){ // escritura usando funciones de video
