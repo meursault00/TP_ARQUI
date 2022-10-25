@@ -42,6 +42,7 @@ int countDigits( int number ){
         if ( number < limit )
             break;
     }
+	return digits;
 }
 
 void numLoader( int number, char * buffer, int digits ){
@@ -96,7 +97,6 @@ void printf ( char * foundation, void * parameters[] ){
             switch (foundation[i])
             {
             case 's':{
-				putchar("a");
                 write(1,(char*)parameters[j++], 0); // podria hacer un strlen para el tercer parametro o intentar borrarlo de la faz
                 break;
             }
@@ -114,7 +114,7 @@ void printf ( char * foundation, void * parameters[] ){
                 int digits = countDigits((int)floatNumber);
 	            char buffer2[ floatNumber < 0 ? digits+3+8:digits+2+8]; // 8 es la precision de decimales que tiene nuestro float 2 es en casode que haya que agregar un punto y un '\0' al final, y tambien esta el caso del menos
 	            floatToString(floatNumber,buffer2,digits);
-	            printf("%s\n", buffer2 );
+	            write(1,buffer2, digits );
                 break;
             }
             default:
