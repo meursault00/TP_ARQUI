@@ -4,6 +4,13 @@
 
 #include <stdint.h>
 
+static int currentCursorColor = 0;
+static int fontcolor = 0x00ff44;
+static int fontsize = 2;
+static char buffer[64] = {0};
+
+static int cursorX = 0; 				// por que estaba la hora
+static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 
 void putchar( char character, int x, int y, int size,int color);
 void putword( int fd, char * string );

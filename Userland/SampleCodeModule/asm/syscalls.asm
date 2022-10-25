@@ -82,6 +82,9 @@ getTime:
 getLastKey:
 	sys_call 6
 
+getRegisters:
+	sys_call 7
+
 ; sys_put_pixel
 ;
 ;

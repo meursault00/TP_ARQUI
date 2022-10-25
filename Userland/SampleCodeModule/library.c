@@ -4,13 +4,7 @@
 
 #define CURSOR_TICKS 9
 
-static int currentCursorColor = 0;
-static int fontcolor = 0x00ff44;
-static int fontsize = 2;
-static char buffer[64] = {0};
 
-static int cursorX = 0; 				// por que estaba la hora
-static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 
 
 #define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
@@ -122,13 +116,15 @@ static void updateCursor(){
 	}
 }
 
+
+
 void appendchar( char character ){
 	if(1){
-		 //drawCursor(0x000000);
+		 drawCursor(0x000000);
 		putchar(character,cursorX,cursorY,fontsize,fontcolor);
 
 		updateCursor();
-		//drawCursor(fontcolor);
+		drawCursor(fontcolor);
 	}
 }
 
@@ -139,12 +135,12 @@ void newline(){
 
 void backspace(){
 	if(cursorX != 0){
-		//drawCursor(0x000000);
+		drawCursor(0x000000);
 		cursorX -= fontsize * 8;
 		cursorY = (cursorX / 1024)*16*fontsize;
 		putSquare(cursorX,cursorY,fontsize*8,0x000000);
 		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,0x000000);
-		//drawCursor(FONTCOLOR);
+		drawCursor(fontcolor);
 	}
 }
 
@@ -152,18 +148,19 @@ void putchar(char character, int x, int y, int size,int color){
 	write(character,x,y,size,color);
 }
 
-int strcmp(const char* s1, const char* s2)
-{
+int strcmp(const char* s1, const char* s2){
     while (*s1 && (*s1 == *s2)){
         s1++, s2++;
 	}
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
 }
+
 int strlen(const char *str){
 	const char *s;
 	for (s = str; *s; ++s);
 	return (s - str);
 }
+
 void printf ( char * foundation, void * parameters[] ){
     int j = 0; // posicion en los parametros
     for ( int i = 0; foundation[i] != 0; i++ ){
@@ -172,7 +169,7 @@ void printf ( char * foundation, void * parameters[] ){
             switch (foundation[i])
             {
             case 's':{
-                ////write(1,(char*)parameters[j++], 0); // podria hacer un strlen para el tercer parametro o intentar borrarlo de la faz
+                appendstring((char*)parameters[j++]); 
                 break;
             }
             
@@ -181,7 +178,7 @@ void printf ( char * foundation, void * parameters[] ){
                 int digits = countDigits(number);
 	            char buffer[ number < 0 ? digits+2:digits+1];
 	            intToString(number,buffer,digits);
-                ////write(1,buffer, digits);   
+                appendstring(buffer); 
                 break;
             }
             case 'f':{
@@ -189,17 +186,18 @@ void printf ( char * foundation, void * parameters[] ){
                 int digits = countDigits((int)floatNumber);
 	            char buffer2[ floatNumber < 0 ? digits+3+8:digits+2+8]; // 8 es la precision de decimales que tiene nuestro float 2 es en casode que haya que agregar un punto y un '\0' al final, y tambien esta el caso del menos
 	            floatToString(floatNumber,buffer2,digits);
-	            ////write(1,buffer2, digits );
+	            appendstring(buffer2); 
                 break;
             }
             default:
                 break;
             }
         }else{
-            //putchar(1,foundation[i]);
+            appendchar(foundation[i]);
         } 
     }
 }
+
 void appendstring( char * string ){
 	for ( int i = 0; string[i] != 0; i++ ){
 		appendchar( string[i]);
@@ -247,3 +245,20 @@ void refreshCursor(){
 		drawCursor(currentCursorColor);
 	}
 }
+
+char strcmp2( const char* stringA,const char* stringB)  
+{  
+    char flag = 0;
+	int i = 0;
+    while(stringA[i]!='\0' && stringB[i]!='\0')  {  
+       if(stringA[i]!=stringB[i])  
+       {  
+           flag=1;  
+           break;  
+       }  
+       i++;  
+    }  
+    if(flag==0)  
+    	return 1;  
+ 	return 0;  
+} 

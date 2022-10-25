@@ -8,6 +8,7 @@
 #define MAXBUFFER 500
 
 extern int sys_getTime(int op);
+extern char* snapshot();
 
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
     put_letter(character, x, y, size, color );
@@ -39,5 +40,9 @@ void sys_putSquare(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 
 void sys_halt(){
     _hlt();
+}
+
+char* sys_getRegisters(){
+    return snapshot();
 }
 

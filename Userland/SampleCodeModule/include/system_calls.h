@@ -9,4 +9,5 @@ extern void halt();
 extern void putSquare(int x,int y,int tam,int color);
 extern int getTime(int code);
 extern char getLastKey();
+extern char* getRegisters();
 #endif

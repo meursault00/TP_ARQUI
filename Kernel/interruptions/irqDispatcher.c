@@ -6,7 +6,6 @@
 #include <naiveConsole.h>
 #include <keyboard_driver.h>
 
-extern char* snapshot();
 
 #define UP 0
 #define RIGHT 1
@@ -71,6 +70,8 @@ void initialize(){
 	(fun_sys[4])=sys_putSquare;
 	(fun_sys[5])=sys_getTime;
 	(fun_sys[6])=sys_getLastKey;
+	(fun_sys[7])=sys_getRegisters;
+
 }
 
 void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9) {

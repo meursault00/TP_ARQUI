@@ -9,7 +9,8 @@
         "system_calls.h": "c",
         "syscalls.h": "c",
         "exception": "c",
-        "new": "c"
+        "new": "c",
+        "console.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
