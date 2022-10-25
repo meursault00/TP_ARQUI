@@ -87,6 +87,10 @@ char getKey(){
     return popBuffer();
 }
 
+char getLastChar(){
+    return keyBuffer[bufferCount-1];
+}
+
 
 static int isValidScancode(int scancode){
     return scancode > 0 && scancode < MAX_SCANCODE;

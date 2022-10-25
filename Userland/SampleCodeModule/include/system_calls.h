@@ -2,8 +2,11 @@
 #define SYSTEM_CALLS_H
 
 
-extern void sys_write(int fd,char * buffer, int length);
+extern void write(int fd,char * buffer, int length);
 extern char getchar();
-extern int sys_time();
-
+extern int gettick();
+extern void halt();
+extern void putSquare(int x,int y,int tam,int color);
+extern int getTime(int code);
+extern char getLastKey();
 #endif

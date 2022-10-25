@@ -1,5 +1,5 @@
 GLOBAL cpuVendor
-GLOBAL timeUTC
+GLOBAL sys_getTime
 GLOBAL getkey
 GLOBAL inb
 GLOBAL outb
@@ -31,7 +31,7 @@ cpuVendor:
 
 ;recibe el modo y cual quiere q este de minutos horas etc
 ;devuelve en BCD el numero correspondiente a al hora minutos... etc
-timeUTC:
+sys_getTime:
 	push rbp
 	mov rbp, rsp
 

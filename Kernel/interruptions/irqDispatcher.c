@@ -2,7 +2,6 @@
 #include <syscalls.h>
 #include <sound_driver.h>
 #include <video_driver.h>
-#include <tron.h>
 #include <interrupts.h>
 #include <naiveConsole.h>
 #include <keyboard_driver.h>
@@ -20,7 +19,7 @@ static void int_21();
 static uint64_t int_80();
 
 static void write();
-static void tron(int);
+//static void tron(int);
 
 static char snapshotBuffer[128]; 
 static char buffer[500] = {0};
@@ -230,9 +229,9 @@ void commandHelp(){
 }
 
 void commandTron(){
-	clearScreen();
-	initialize_players();
-	tronMotherfucker(1);
+	//clearScreen();
+	//initialize_players();
+	//tronMotherfucker(1);
 	
 }
 
@@ -275,7 +274,11 @@ void initialize(){
 	//agreago syscalls
 	(fun_sys[0])=sys_getchar;
 	(fun_sys[1])=sys_write;
-	(fun_sys[2])=sys_time;
+	(fun_sys[2])=sys_tick;
+	(fun_sys[3])=sys_halt;
+	(fun_sys[4])=sys_putSquare;
+	(fun_sys[5])=sys_getTime;
+	(fun_sys[6])=sys_getLastKey;
 }
 
 void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx) {
@@ -340,51 +343,4 @@ void write(int aux){ // escritura usando funciones de video
 	//	else if(charHexMap[ teclahex]!=0)
 	//		ncPrintChar (charHexMap[ teclahex]);
 	//
-}
-
-
-
-
-void tron(int aux){
-	// asigno WASD para el jugador 1 y IJKL para el jugador 2
-	switch(aux){
-		case ESC:
-			//gameSwitch(0);
-			tronMotherfucker(0);
-			clearScreen();
-			restartCursor();
-
-		/*
-		case ' ':
-			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
-			break;
-		*/
-		case 'w':
-			changePlayerDirection(1,UP);
-			break;
-		case 'a':
-			changePlayerDirection(1,LEFT);
-			break;
-		case 's':
-			changePlayerDirection(1,DOWN);
-			break;
-		case 'd':
-			changePlayerDirection(1,RIGHT);
-			break;
-		
-		case 'i':
-			changePlayerDirection(2,UP);
-			break;
-		case 'j':
-			changePlayerDirection(2,LEFT);
-			break;
-		case 'k':
-			changePlayerDirection(2,DOWN);
-			break;
-		case 'l':
-			changePlayerDirection(2,RIGHT);
-			break;
-		default:
-			break;
-	}
 }

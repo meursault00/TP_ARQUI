@@ -1,11 +1,13 @@
-GLOBAL sys_time
-GLOBAL sys_write
+GLOBAL gettick
+GLOBAL write
 GLOBAL getchar
+GLOBAL halt
 
+GLOBAL getLastKey
+GLOBAL putSquare
 section .text
 
 %macro pushState 0
-	push rax
 	push rbx
 	push rcx
 	push rdx
@@ -37,28 +39,64 @@ section .text
 	pop rdx
 	pop rcx
 	pop rbx
-	pop rax
 %endmacro
-sys_write:
-    push rbp 
-    mov rbp,rsp
 
-    mov rcx,rdx 
+%macro sys_call 1
+	pushState
+
+	mov rcx,rdx 
     mov rdx,rsi
     mov rsi,rdi
-    mov rdi,1
-    int 80h
+	mov rdi, %1
+	int 80h
 	
-    mov rsp,rbp
-	pop rbp
-    ret
+	popState
+	ret
+%endmacro
+
+;-----------------------------------------------;
+;			nuestras syscalls					;			
+;												;	
+;-----------------------------------------------;
+write:
+    sys_call 1
 
 getchar:
+	sys_call 0
 
-    mov rcx,rdx 
-    mov rdx,rsi
-    mov rsi,rdi
-    mov rdi,0
-    int 80h
+gettick:
+	sys_call 2
 
-    ret
+halt:
+	sys_call 3
+
+putSquare:
+	sys_call 4
+
+getTime:
+	sys_call 5
+
+getLastKey:
+	sys_call 6
+
+; sys_put_pixel
+;
+;
+;
+; sys_getTime
+;
+;
+;
+;
+;
+;
+; sys_Beep
+;
+;
+;
+;
+;
+;
+;
+;
+;

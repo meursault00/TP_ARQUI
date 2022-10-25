@@ -1,7 +1,7 @@
 #include <naiveConsole.h>
 #include <stdio.h>
 #include <video_driver.h>
-
+#include <lib.h>
 #define FONTSIZE 1
 #define FONTCOLOR 0xFFFFCC
 
@@ -11,16 +11,14 @@ static char buffer[64] = { '0' };
 
 static int cursorX = 1024;
 static int cursorY = 16 * FONTSIZE ;
-static const uint32_t width = 80;
-static const uint32_t height = 25;
 
-extern uint64_t timeUTC(char mode);
+
 extern int getkey();
 
 #define IN_BOUNDS ((cursorX+FONTSIZE*8)/1024)*16*FONTSIZE < 736 // no termino de entender porque con 768 se pasa, REVISAR
 
 int isupdateinfprogress(){
-	return timeUTC(0x0A) & 0x80;
+	return sys_getTime(0x0A) & 0x80;
 }
 
 int getFontColor(){
@@ -96,6 +94,7 @@ void videoNewLine(){
 		while(cursorY == aux && IN_BOUNDS);
 }
 
+/*
 void videoPrintTime(int seconds, int minutes, int hours){
     for(int i=0; i<8; i++){
         put_square(FONTSIZE*8*i,0,FONTSIZE*8,0x000000);
@@ -103,31 +102,31 @@ void videoPrintTime(int seconds, int minutes, int hours){
     }
     while (isupdateinfprogress());
 
-    if(timeUTC(0x04) < 10){
+    if(sys_getTime(0x04) < 10){
         videoPrintHex(0, 0, 0,0x00FF00 );
-        videoPrintHex(timeUTC(0x04), 16, 0,0x00FF00 );    
+        videoPrintHex(sys_getTime(0x04), 16, 0,0x00FF00 );    
     }
     else{
-        videoPrintHex(timeUTC(0x04), 0, 0,0x00FF00 );
+        videoPrintHex(sys_getTime(0x04), 0, 0,0x00FF00 );
     }
     put_letter(':',FONTSIZE*16,0,FONTSIZE,0x00FF00);
-    if(timeUTC(0x02) < 10){
+    if(sys_getTime(0x02) < 10){
         videoPrintHex(0, FONTSIZE*24, 0,0x00FF00 );
-        videoPrintHex(timeUTC(0x02), FONTSIZE *32, 0,0x00FF00 );    
+        videoPrintHex(sys_getTime(0x02), FONTSIZE *32, 0,0x00FF00 );    
     }
     else{
-        videoPrintHex(timeUTC(0x02), FONTSIZE*24, 0,0x00FF00 );
+        videoPrintHex(sys_getTime(0x02), FONTSIZE*24, 0,0x00FF00 );
     }
     put_letter(':',FONTSIZE*40,0,FONTSIZE,0x00FF00);
-    if(timeUTC(0x00) < 10){
+    if(sys_getTime(0x00) < 10){
         videoPrintHex(0, FONTSIZE*48, 0,0x00FF00 );
-        videoPrintHex(timeUTC(0x00), FONTSIZE*56, 0,0x00FF00 );
+        videoPrintHex(sys_getTime(0x00), FONTSIZE*56, 0,0x00FF00 );
     }
     else{
-        videoPrintHex(timeUTC(0x00), FONTSIZE*48, 0,0x00FF00 );
+        videoPrintHex(sys_getTime(0x00), FONTSIZE*48, 0,0x00FF00 );
     }
 }
-
+*/
 void videoPrintHex(int value, int x, int y, int color){
 	uintToBase(value,buffer,16);
 	put_word(buffer,x,y,FONTSIZE,color);

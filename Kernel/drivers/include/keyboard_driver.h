@@ -16,5 +16,6 @@ int isCapsActivated();
 
 char getKey();
 
+char getLastChar();
 
 #endif

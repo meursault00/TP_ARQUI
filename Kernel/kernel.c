@@ -6,7 +6,6 @@
 #include <interrupts.h>
 #include <sound_driver.h>
 #include <video_driver.h>
-#include <tron.h>
 
 extern uint8_t text;
 extern uint8_t rodata;

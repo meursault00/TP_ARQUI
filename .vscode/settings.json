@@ -3,6 +3,9 @@
         "stdio.h": "c",
         "irqdispatcher.h": "c",
         "video_driver.h": "c",
-        "unistd.h": "c"
-    }
+        "unistd.h": "c",
+        "naiveconsole.h": "c",
+        "library.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
