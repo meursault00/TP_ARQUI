@@ -27,28 +27,29 @@ void printTime(int timeCode, int utc){
 char buffer[256] = {0};
 char lastChar = 0;
 
-
+void commandHelp();
+void checkCommand(char * command);
 void commandHelp(){
 	 //clearScreen();
-	putword(1,"BIENVENIDO AL MENU HELP");
+	//putword(1,"BIENVENIDO AL MENU HELP");
 	//videoNewLine();
-	putword(1,"EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
+	//putword(1,"EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
 	//videoNewLine();
-	putword(1,"- HELP");
+	//putword(1,"- HELP");
 	//videoNewLine();
-	putword(1,"- TRON");
+	//putword(1,"- TRON");
 	//videoNewLine();
-	putword(1,"- SNAPSHOT");
+	//putword(1,"- SNAPSHOT");
 	//videoNewLine();
-	putword(1,"- MEMACCESS ( MEM ADDRESS )");
+	//putword(1,"- MEMACCESS ( MEM ADDRESS )");
 	//videoNewLine();
-	putword(1,"- CLEAR");
+	//putword(1,"- CLEAR");
 	//videoNewLine();
-	putword(1,"- BEEP");
+	//putword(1,"- BEEP");
 	//videoNewLine();
-	putword(1,"- ANTHEM");
+	//putword(1,"- ANTHEM");
 	//videoNewLine();
-	putword(1,"PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
+	//putword(1,"PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
 void checkCommand( char * command ){
@@ -81,19 +82,15 @@ void checkCommand( char * command ){
 
 
 void initialize_shell(){
-    char character = 'j';
-	int x = 100 ;
-	int y = 100 ;
-	int size = 3;
-	int color = 0xFF0000;
+
 	putSquare(100,100,100, 0xffffff);
 
-	write(character, x, y, size, color);
-
-	int a = 21;
-	float b = 3.6;
-	void* parameters[] = {"Joaquin", &a, &b};
-	char * foundation = "Hola me llamo %s, mi edad es %d y mi ojo ( version atp ) mide %f cm" ;
+	putchar( 'B', 0, 100, 10, 0xFFFFFF);
+	
+	//int a = 21;
+	//float b = 3.6;
+	//void* parameters[] = {"Joaquin", &a, &b};
+	//char * foundation = "Hola me llamo %s, mi edad es %d y mi ojo ( version atp ) mide %f cm" ;
 	//printf("Hola me llamo %s, mi edad es %d y mi ojo ( version atp ) mide %f cm", parameters);
 	//char c;
 	//while ( ( c = getchar()) ){
@@ -107,19 +104,19 @@ void initialize_shell(){
 	//			checkCommand(buffer);
 	//		// clearBuffer();
 	//		putnewline();
-	//		putword(1,"enter");
+	//		//putword(1,"enter");
 //
 //
 	//	}
 	//	else if(c == 27){ //escape
 	//		//clearScreen();
 	//		//restartCursor();
-	//		putword(1,"escape");
+	//		//putword(1,"escape");
 	//	}
 	//	else if ( c == '=' ){ // tecla para hacer un snapshot en un momento arbitrario
 	//		//char* aux = snapshot(); 
 	//		//memMoveChar(snapshotBuffer, aux, 128); 
-	//		putword(1,"snapshot");
+	//		//putword(1,"snapshot");
 //
 	//	}
 	//	else{
@@ -130,5 +127,5 @@ void initialize_shell(){
 	//
 	while (1);
 
-    
+
 }

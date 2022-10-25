@@ -16,7 +16,7 @@ extern char* snapshot();
 
 static void int_20();
 static void int_21();
-static uint64_t int_80();
+static uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9);
 
 static void write();
 //static void tron(int);
@@ -35,198 +35,14 @@ void clearBuffer ( void ){
 	lastChar = 0;
 }
 
-char toHex( char character ){ // de la forma 0000 XXXX
-	switch (character)
-	{
-	case 15:
-		return 'F';
-		break;
-	case 14:
-		return 'E';
-		break;
-	case 13:
-		return 'D';
-		break;
-	case 12:
-		return 'C';
-		break;
-	case 11:
-		return 'B';
-		break;
-	case 10:
-		return 'A';
-		break;
-    case 9:
-		return '9';
-		break;
-	case 8:
-		return '8';
-		break;
-	case 7:
-		return '7';
-		break;
-	case 6:
-		return '6';
-		break;
-	case 5:
-		return '5';
-		break;
-	case 4:
-		return '4';
-		break;
-    case 3:
-		return '3';
-		break;
-	case 2:
-		return '2';
-		break;
-	case 1:
-		return '1';
-		break;
-	case 0:
-		return '0';
-		break;
-	
-	default:
-		return character;
-	}
-}
-
-void printRegisters(){
-	for ( int i = 0; i < 128; i++ ){ 
-		switch (i)
-		{
-		case 0:
-			videoPrintWord("RAX   ");
-			break;
-		case 8:
-			videoNewLine();
-			videoPrintWord("RBX   ");
-			break;
-		case 16:
-			videoNewLine();
-			videoPrintWord("RDX   ");
-			break;
-		case 24:
-			videoNewLine();
-			videoPrintWord("RCX   ");
-			break;
-		case 32:
-			videoNewLine();
-			videoPrintWord("RSI   ");
-			break;
-		case 40:
-			videoNewLine();
-			videoPrintWord("RDI   ");
-			break;
-		case 48:
-			videoNewLine();
-			videoPrintWord("RBP   ");
-			break;
-		case 56:
-			videoNewLine();
-			videoPrintWord("RSP   ");
-			break;
-		case 64:
-			videoNewLine();
-			videoPrintWord("R8    ");
-			break;
-		case 72:
-			videoNewLine();
-			videoPrintWord("R9    ");
-			break;
-		case 80:
-			videoNewLine();
-			videoPrintWord("R10   ");
-			break;
-		case 88:
-			videoNewLine();
-			videoPrintWord("R11   ");
-			break;
-		case 96:
-			videoNewLine();
-			videoPrintWord("R12   ");
-			break;
-		case 104:
-			videoNewLine();
-			videoPrintWord("R13   ");
-			break;
-		case 112:
-			videoNewLine();
-			videoPrintWord("R14   ");
-			break;
-		case 120:
-			videoNewLine();
-			videoPrintWord("R15   ");
-			break;
-		default:
-			break;
-		}
-		videoPrintChar(toHex((snapshotBuffer[i]&0xF0)>>4));
-		videoPrintChar(toHex((snapshotBuffer[i]&0x0F)));
-		
-
-	}
-}
-
-// INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
-void memMoveChar( char* array1, char* array2, int charsToMove  ){ 
-	for ( int i = 0; i < charsToMove/8; i++){
-		for ( int j = 0; j < 8; j++ ){
-			array1[7-j+8*i] = array2[j+8*i];
-		}
-	}
-}
-
-char strcmp( const char* stringA,const char* stringB)  
-{  
-    char flag = 0;
-	int i = 0;
-    while(stringA[i]!='\0' && stringB[i]!='\0')  {  
-       if(stringA[i]!=stringB[i])  
-       {  
-           flag=1;  
-           break;  
-       }  
-       i++;  
-    }  
-	if(stringA[i] != 0 || stringB[i] != 0){
-		return 0;
-	}
-    if(flag==0)  
-    	return 1;  
- 	return 0;  
-}  
-
+/*
 void commandSnapshot(){
 	clearScreen();
 		printRegisters();
 		videoNewLine();
 		videoPrintWord("PRESIONE ESC PARA SALIR");
 }
-
-void commandHelp(){
-	clearScreen();
-	videoPrintWord("BIENVENIDO AL MENU HELP");
-	videoNewLine();
-	videoPrintWord("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
-	videoNewLine();
-	videoPrintWord("- HELP");
-	videoNewLine();
-	videoPrintWord("- TRON");
-	videoNewLine();
-	videoPrintWord("- SNAPSHOT");
-	videoNewLine();
-	videoPrintWord("- MEMACCESS ( MEM ADDRESS )");
-	videoNewLine();
-	videoPrintWord("- CLEAR");
-	videoNewLine();
-	videoPrintWord("- BEEP");
-	videoNewLine();
-	videoPrintWord("- ANTHEM");
-	videoNewLine();
-	videoPrintWord("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
-}
+*/
 
 void commandTron(){
 	//clearScreen();
@@ -240,31 +56,7 @@ void commandClear(){
 	restartCursor();
 }
 
-void checkCommand( char * command ){
 
-	if(strcmp(command, "HELP") || strcmp(command, "- HELP") ){
-		commandHelp();
-	}else if(strcmp(command, "TRON") || strcmp(command, "- TRON") ){
-		commandTron();
-	}else if(strcmp(command, "CLEAR") || strcmp(command, "- CLEAR") ){
-		commandClear();
-	}else if(strcmp(command, "BEEP") || strcmp(command, "- BEEP") ){
-		beep();
-	}else if(strcmp(command, "ANTHEM") || strcmp(command, "- ANTHEM") ){
-		soviet_anthem();
-	}else if( strcmp(command,"SNAPSHOT")|| strcmp(command, "- SNAPSHOT")){
-		commandSnapshot();
-	}
-	/*
-	else if(strcmp(command, "SNAPSHOT") || strcmp(command, "- SNAPSHOT") ){
-		snapshot();
-	}
-	else if(strcmp(command, "MEMACCESS") || strcmp(command, "- MEMACCESS") ){
-		memaccess();
-	}*/
-	
-
-}
 
 void initialize(){
 	(fun_inter[0])=int_20;
@@ -281,7 +73,7 @@ void initialize(){
 	(fun_sys[6])=sys_getLastKey;
 }
 
-void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9) {
+void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9) {
 	(*fun_inter[irq])(rdi,rsi,rdx,rcx,r8,r9);
 	return;
 }
@@ -305,10 +97,10 @@ void int_21(){
 	*/
 }
 
-uint64_t int_80(uint64_t rdi, uint64_t rsi, char *  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9){
+uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9){
 	return (*fun_sys[rdi])(rsi,rdx,rcx,r8,r9);
 }
-
+/*
 void write(int aux){ // escritura usando funciones de video
 	if(aux!=0){
 		if(aux == 8){
@@ -328,7 +120,7 @@ void write(int aux){ // escritura usando funciones de video
 		}
 		else if ( aux == '=' ){ // tecla para hacer un snapshot en un momento arbitrario
 			char* aux = snapshot(); 
-			memMoveChar(snapshotBuffer, aux, 128); 
+			//memMoveChar(snapshotBuffer, aux, 128); 
 		}
 		else{
 			videoPrintChar(aux);
@@ -337,10 +129,6 @@ void write(int aux){ // escritura usando funciones de video
 		}
 	}
 	
-	//int teclahex=getkey();
-	//	if(charHexMap[ teclahex]=='\n')
-	//			ncNewline();
-	//	else if(charHexMap[ teclahex]!=0)
-	//		ncPrintChar (charHexMap[ teclahex]);
-	//
+
 }
+*/

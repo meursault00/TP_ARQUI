@@ -30,10 +30,10 @@ char sys_getLastKey(){
 
 
 int sys_tick(){
-    ticks_elapsed();
+    return ticks_elapsed();
 }
 
-int sys_putSquare(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
+void sys_putSquare(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
     put_square(x,y,tam,color);
 }
 

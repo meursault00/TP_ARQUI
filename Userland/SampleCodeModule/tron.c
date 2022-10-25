@@ -1,13 +1,11 @@
-/*
-//#include <video_driver.h>
-//#include <naiveConsole.h>
+#include <system_calls.h>
 
-static int tronSwitch = 0;
-static int gameOn = 1;
-//static int canMove = 0;
+static int tronOn = 0;
+static int gameOn = 0;
+static char lastKey = 0;
 
 #define MATCHES 1
-
+#define ESC 27
 #define SQUARE_SIDE 8 //largo del lado del cuadrado con el cual se dibujan las lineas
 
 #define BOARD_WIDTH 125 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
@@ -34,11 +32,17 @@ static int gameOn = 1;
 
 #define MOD(x) ((x)>0? (x) : (x)*(-1))
 
+static void initialize_players();
+static int insideBoard(int x, int y);
+static int checkPlayersPosition();
+static void changePlayerDirection(int player, int direction);
+static void keyboardHandler();
+
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
 
 // BOARD_WIDTH x BOARD_HEIGHT
-static int board[125][93] = {{0}}; // warning: missing braces around initializer [-Wmissing-braces]
+static int board[125][93] = {{0}}; 
 
 typedef struct player_t{
     int color;
@@ -69,36 +73,29 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     for(int i=0; i<125; i++){
         for(int j=0; j<93; j++){
             if(i==0)
-                put_square(i*8,j*8,12,0x00FF00);
+                putSquare(i*8,j*8,12,0x00FF00);
             if(i==124)
-                put_square(i*8+20,j*8,12,0x00FF00);
+                putSquare(i*8+20,j*8,12,0x00FF00);
             if(j==0)
-                 put_square(i*8,j+11,12,0x00FF00);
+                 putSquare(i*8,j+11,12,0x00FF00);
             //todo el de abajo no lo puedo ver por limites de hardware -bruzo 
             board[i][j] = 0;
         }
     }
 }
 
-
-/*
-void moveSwitch(int value){
-    canMove = value;
-}
-*/
-
 // chequeo si jugador se encuentra en la matriz (que representa la pantalla)
 // la macro usada anteriormente no terminaba de convencer
-/*
-static int insideBoard(int x, int y){
+
+int insideBoard(int x, int y){
     return (x >= 0) && (x < BOARD_WIDTH) && (y >= 0) && (y < BOARD_HEIGTH);
 }
-*/
+
 /**
 @param player tiene current position en X e Y
 @returns boolean 0 si algun jugador ha muerto, 1 si ambos viven
 */
-/*
+
 int checkPlayersPosition(){
     // si pasa no esta en el tablero o esta en una posicion pisada los mato
     if(!insideBoard(p1.currX,p1.currY) || board[p1.currX][p1.currY]){
@@ -115,16 +112,10 @@ int checkPlayersPosition(){
             p1.score++; // si uno sobrevivio aumento su puntaje
         else if(p2.alive)
             p2.score++;
-        tronSwitch = 0;
-        clearScreen(); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
-        restartCursor();
+        tronOn = 0;
+        putSquare(0,0,1024,0); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
         return 0;
     }
-}
-
-
-int tronOn(){
-    return tronSwitch;
 }
 
 void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
@@ -135,9 +126,55 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
         p2.direction = direction;
 }
 
+void keyboardHandler(){
+    int aux = getLastKey();
+    if(lastKey != aux){
+        lastKey = aux;
+        switch(aux){
+		case ESC:
+			//gameSwitch(0);
+			tronOn = 0;
+			putSquare(0,0,1024,0);
+
+		/*
+		case ' ':
+			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
+			break;
+		*/
+		case 'w':
+			changePlayerDirection(1,UP);
+			break;
+		case 'a':
+			changePlayerDirection(1,LEFT);
+			break;
+		case 's':
+			changePlayerDirection(1,DOWN);
+			break;
+		case 'd':
+			changePlayerDirection(1,RIGHT);
+			break;
+		
+		case 'i':
+			changePlayerDirection(2,UP);
+			break;
+		case 'j':
+			changePlayerDirection(2,LEFT);
+			break;
+		case 'k':
+			changePlayerDirection(2,DOWN);
+			break;
+		case 'l':
+			changePlayerDirection(2,RIGHT);
+			break;
+		default:
+			break;
+	    }
+    }
+}
+
 void drawPlayers(){
-    put_square(p1.currX*SQUARE_SIDE+1024*(p1.currY + OFFSET_Y)+ OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
-    put_square(p2.currX*SQUARE_SIDE+1024*(p2.currY + OFFSET_Y) + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
+    putSquare(p1.currX*SQUARE_SIDE+1024*(p1.currY + OFFSET_Y)+ OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
+    putSquare(p2.currX*SQUARE_SIDE+1024*(p2.currY + OFFSET_Y) + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
 }
 
 void movePlayers(){
@@ -158,13 +195,19 @@ void movePlayers(){
     }
 }
 
-// se usa en el irq dispatcher para activar la partida mediante el espacio
-void gameSwitch(int value){ //warning: control reaches end of non-void function [-Wreturn-type]
-    gameOn = value;
-}
+void playTron(){
+    tronOn = 1;
 
-// para prender tron por el kernel
-void tronMotherfucker(int value){
-    tronSwitch = value;
+    for(int i=0; i<MATCHES; i++){
+        gameOn = 1;
+        while(gameOn){
+            halt();
+            keyboardHandler();
+            if(gettick() % 2 == 0){
+                movePlayers();
+            }
+        }
+    }
+
+    tronOn = 0;
 }
-*/

@@ -140,21 +140,6 @@ _irq05Handler:
 	irqHandlerMaster 5
 _irq60Handler:
 
-	push rbx
-	push rcx
-	push rdx
-	push rbp
-	push rdi
-	push rsi
-	push r8
-	push r9
-	push r10
-	push r11
-	push r12
-	push r13
-	push r14
-	push r15
-	mov rbp,rsp
 
 	mov r9, r8
 	mov r8,rcx
@@ -164,21 +149,6 @@ _irq60Handler:
 	mov rdi,60h
 	call irqDispatcher
 	
-	mov rsp,rbp
-	pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop r11
-	pop r10
-	pop r9
-	pop r8
-	pop rsi
-	pop rdi
-	pop rbp
-	pop rdx
-	pop rcx
-	pop rbx
 	iretq
 
 

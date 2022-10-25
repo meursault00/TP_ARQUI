@@ -3,6 +3,15 @@
 #include <library.h>
 
 
+static int fontcolor = 0x00000;
+static int fontsize = 1;
+static char buffer[64] = {0};
+
+static int cursorX = 1024; 				// por que estaba la hora
+static int cursorY = 16 * 1 ; 			// 16 que es la cantidad de bits * fontsize
+
+
+#define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
 
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	char *p = buffer;
@@ -103,13 +112,23 @@ void floatToString( float number, char * buffer, int digits  ){
 	buffer[i]=0;
 	return;
 }
+void appendchar( char character ){
+	if(IN_BOUNDS){
+		 //drawCursor(0x000000);
+		write(character,cursorX,cursorY,fontsize,fontcolor);
 
-void putchar( int fd, char character ){
-    char string[2];
-    string[0] = character;
-    string[1] = 0;
-    //write(fd,string,1);
+		cursorX =+ fontsize*8; 	// no se que constante es pero deberia representar el tamaño de derecha 
+								// a izquierda de cada caracter, deberira ser fijo
+		cursorY = (cursorX / 1024)*16*fontsize;	// esto es la delimitacion de cada renglon para mi seria sumar 1
+												//
+		//drawCursor(fontcolor);
+	}
 }
+
+void putchar(char character, int x, int y, int size,int color){
+	write(character,x,y,size,color);
+}
+
 int strcmp(const char* s1, const char* s2)
 {
     while (*s1 && (*s1 == *s2)){
@@ -154,12 +173,12 @@ void printf ( char * foundation, void * parameters[] ){
                 break;
             }
         }else{
-            putchar(1,foundation[i]);
+            //putchar(1,foundation[i]);
         } 
     }
 }
 
-
+/*
 void putword( int fd, char * string ){
 	for ( int i = 0; string[i] != 0; i++ ){
 		putchar(fd, string[i]);
@@ -173,3 +192,4 @@ void putnewline( void) {
 		i++;
 	}
 }
+*/
