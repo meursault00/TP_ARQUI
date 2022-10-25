@@ -60,7 +60,6 @@ int main()
 	//soviet_anthem(); //hola
 	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land amigos
 
-	while (1);
 
 
 	return 0;
