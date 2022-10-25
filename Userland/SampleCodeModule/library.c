@@ -2,6 +2,8 @@
 #include <system_calls.h>
 #include <library.h>
 
+
+
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	char *p = buffer;
 	char *p1, *p2;
@@ -33,6 +35,26 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 
 	return digits;
 }
+
+char strcmp( const char* stringA,const char* stringB)  
+{  
+    char flag = 0;
+	int i = 0;
+    while(stringA[i]!='\0' && stringB[i]!='\0')  {  
+       if(stringA[i]!=stringB[i])  
+       {  
+           flag=1;  
+           break;  
+       }  
+       i++;  
+    }  
+	if(stringA[i] != 0 || stringB[i] != 0){
+		return 0;
+	}
+    if(flag==0)  
+    	return 1;  
+ 	return 0;  
+}  
 
 int countDigits( int number ){
     int digits, limit;
@@ -82,12 +104,6 @@ void floatToString( float number, char * buffer, int digits  ){
 	return;
 }
 
-void putchar( int fd, char character ){
-    char string[2];
-    string[0] = character;
-    string[1] = 0;
-    write(fd,string,1);
-}
 
 void printf ( char * foundation, void * parameters[] ){
     int j = 0; // posicion en los parametros
@@ -97,7 +113,7 @@ void printf ( char * foundation, void * parameters[] ){
             switch (foundation[i])
             {
             case 's':{
-                write(1,(char*)parameters[j++], 0); // podria hacer un strlen para el tercer parametro o intentar borrarlo de la faz
+                //write(1,(char*)parameters[j++], 0); // podria hacer un strlen para el tercer parametro o intentar borrarlo de la faz
                 break;
             }
             
@@ -106,7 +122,7 @@ void printf ( char * foundation, void * parameters[] ){
                 int digits = countDigits(number);
 	            char buffer[ number < 0 ? digits+2:digits+1];
 	            intToString(number,buffer,digits);
-                write(1,buffer, digits);   
+                //write(1,buffer, digits);   
                 break;
             }
             case 'f':{
@@ -114,7 +130,7 @@ void printf ( char * foundation, void * parameters[] ){
                 int digits = countDigits((int)floatNumber);
 	            char buffer2[ floatNumber < 0 ? digits+3+8:digits+2+8]; // 8 es la precision de decimales que tiene nuestro float 2 es en casode que haya que agregar un punto y un '\0' al final, y tambien esta el caso del menos
 	            floatToString(floatNumber,buffer2,digits);
-	            write(1,buffer2, digits );
+	            //write(1,buffer2, digits );
                 break;
             }
             default:
@@ -124,4 +140,26 @@ void printf ( char * foundation, void * parameters[] ){
             putchar(1,foundation[i]);
         } 
     }
+}
+
+
+void putchar( int fd, char character ){
+    char string[2];
+    string[0] = character;
+    string[1] = 0;
+    //write(fd,string,1);
+}
+
+void putword( int fd, char * string ){
+	for ( int i = 0; string[i] != 0; i++ ){
+		putchar(fd, string[i]);
+	}
+}
+
+void putnewline( void) {
+	int i = 0;
+	while( i < 256 ){
+		putchar(1,' ');
+		i++;
+	}
 }

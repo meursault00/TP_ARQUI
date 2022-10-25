@@ -9,17 +9,8 @@
 
 extern int sys_getTime(int op);
 
-void sys_write(uint64_t fd,char * buffer, uint64_t length){
-    switch (fd){
-    case STDOUT:
-        videoPrintWord(buffer);
-        break;
-    case STDRED:
-        videoPrintWordWColor(buffer,0xFF0000);
-        break;
-    default:
-        break;
-    }
+void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
+    put_letter(character, x, y, size, color );
 }
 
 char sys_getchar(){

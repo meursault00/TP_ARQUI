@@ -121,7 +121,7 @@ int storeKey(){
             keyBuffer[bufferCount] = asccode[scancode][shiftActivated ? 1: 0];   
         }
         bufferCount++;
-        write(keyBuffer[bufferCount-1]); // ESTE WRITE DEBERIA SER DE SHELL.c EN USERLAND
+        //write(keyBuffer[bufferCount-1]); // ESTE WRITE DEBERIA SER DE SHELL.c EN USERLAND
         return 1;
     }
     

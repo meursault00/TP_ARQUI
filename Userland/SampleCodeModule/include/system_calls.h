@@ -2,7 +2,7 @@
 #define SYSTEM_CALLS_H
 
 
-extern void write(int fd,char * buffer, int length);
+extern void write(char character, int x, int y, int size, int color);
 extern char getchar();
 extern int gettick();
 extern void halt();

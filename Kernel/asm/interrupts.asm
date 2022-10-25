@@ -156,6 +156,7 @@ _irq60Handler:
 	push r15
 	mov rbp,rsp
 
+	mov r9, r8
 	mov r8,rcx
 	mov rcx,rdx
 	mov rdx,rsi

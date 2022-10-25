@@ -5,7 +5,9 @@
         "video_driver.h": "c",
         "unistd.h": "c",
         "naiveconsole.h": "c",
-        "library.h": "c"
+        "library.h": "c",
+        "system_calls.h": "c",
+        "syscalls.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

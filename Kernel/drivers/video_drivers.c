@@ -77,6 +77,7 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	@param tamaño de la letra
 	@param color
 */
+// LA UNIICA FUNCION QUE IMPORTA DE VERDAD
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;
 	int start = letter -33;
