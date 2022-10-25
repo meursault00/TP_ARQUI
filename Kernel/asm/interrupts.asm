@@ -140,7 +140,7 @@ _irq05Handler:
 	irqHandlerMaster 5
 _irq60Handler:
 
-
+	push r9
 	mov r9, r8
 	mov r8,rcx
 	mov rcx,rdx
@@ -148,6 +148,7 @@ _irq60Handler:
 	mov rsi,rdi
 	mov rdi,60h
 	call irqDispatcher
+	pop r9
 	
 	iretq
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <video_driver.h>
 #include <lib.h>
+
 #define FONTSIZE 1
 #define FONTCOLOR 0xFFFFCC
 

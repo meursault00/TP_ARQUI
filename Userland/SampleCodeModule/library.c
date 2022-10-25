@@ -2,13 +2,15 @@
 #include <system_calls.h>
 #include <library.h>
 
+#define CURSOR_TICKS 9
 
-static int fontcolor = 0x00000;
-static int fontsize = 1;
+static int currentCursorColor = 0;
+static int fontcolor = 0x00ff44;
+static int fontsize = 2;
 static char buffer[64] = {0};
 
-static int cursorX = 1024; 				// por que estaba la hora
-static int cursorY = 16 * 1 ; 			// 16 que es la cantidad de bits * fontsize
+static int cursorX = 0; 				// por que estaba la hora
+static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 
 
 #define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
@@ -112,16 +114,37 @@ void floatToString( float number, char * buffer, int digits  ){
 	buffer[i]=0;
 	return;
 }
-void appendchar( char character ){
-	if(IN_BOUNDS){
-		 //drawCursor(0x000000);
-		write(character,cursorX,cursorY,fontsize,fontcolor);
 
-		cursorX =+ fontsize*8; 	// no se que constante es pero deberia representar el tamaño de derecha 
-								// a izquierda de cada caracter, deberira ser fijo
-		cursorY = (cursorX / 1024)*16*fontsize;	// esto es la delimitacion de cada renglon para mi seria sumar 1
-												//
+static void updateCursor(){
+	cursorX += fontsize*8;
+	if((cursorX / 1024)*fontsize*16 > cursorY){ // cursorX % 1024 == 0 
+			cursorY += fontsize*16; 
+	}
+}
+
+void appendchar( char character ){
+	if(1){
+		 //drawCursor(0x000000);
+		putchar(character,cursorX,cursorY,fontsize,fontcolor);
+
+		updateCursor();
 		//drawCursor(fontcolor);
+	}
+}
+
+void newline(){
+	int aux = cursorY;
+	do{appendchar(' ');} while(cursorY == aux && IN_BOUNDS);
+}
+
+void backspace(){
+	if(cursorX != 0){
+		//drawCursor(0x000000);
+		cursorX -= fontsize * 8;
+		cursorY = (cursorX / 1024)*16*fontsize;
+		putSquare(cursorX,cursorY,fontsize*8,0x000000);
+		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,0x000000);
+		//drawCursor(FONTCOLOR);
 	}
 }
 
@@ -177,13 +200,13 @@ void printf ( char * foundation, void * parameters[] ){
         } 
     }
 }
-
-/*
-void putword( int fd, char * string ){
+void appendstring( char * string ){
 	for ( int i = 0; string[i] != 0; i++ ){
-		putchar(fd, string[i]);
+		appendchar( string[i]);
 	}
 }
+/*
+
 
 void putnewline( void) {
 	int i = 0;
@@ -193,3 +216,34 @@ void putnewline( void) {
 	}
 }
 */
+
+void drawCursor(int color){
+	/* cursor editor de texto
+	for(int i=0; i<8; i++){
+		put_square(cursorX+fontSize*2,cursorY+fontSize*2*i,fontSize*2,color);
+	*/
+	// CURSOR TERMINAL
+	putSquare(cursorX,cursorY,fontsize*8,color);
+	putSquare(cursorX,cursorY+fontsize*8,fontsize*8,color);	
+}
+
+void restartCursor(){
+	cursorX = 0;
+	cursorY = 0;
+}
+
+void changeFontSize(int newSize){
+	fontsize=newSize;
+}
+
+void refreshCursor(){
+	if(gettick() % CURSOR_TICKS == 0){
+		if(currentCursorColor == fontcolor){
+			currentCursorColor = 0x000000;
+		}
+		else{
+			currentCursorColor = fontcolor;
+		}
+		drawCursor(currentCursorColor);
+	}
+}

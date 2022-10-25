@@ -7,7 +7,9 @@
         "naiveconsole.h": "c",
         "library.h": "c",
         "system_calls.h": "c",
-        "syscalls.h": "c"
+        "syscalls.h": "c",
+        "exception": "c",
+        "new": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
