@@ -9,7 +9,8 @@
 
 extern int sys_getTime(int op);
 extern char* snapshot();
-
+// ESTOY CASI SEGURO QUE FALTA EL INCLUDE DE ESTAS FUNCIONES
+// ESTAN EN LIBASM PERO NO ESTAN EN NINGUN INCLUDE TAL VEZ POR ESO NO ANDABA EL TICK
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
     put_letter(character, x, y, size, color );
 }

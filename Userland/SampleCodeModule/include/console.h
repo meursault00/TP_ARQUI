@@ -17,9 +17,10 @@ void checkCommand(char * command);
 void commandHelp();
 void commandSnapshot();
 void commandClear();
+void commandTron();
 void printRegisters();
 char toHex( char character );
-char * toUPPER(char * string);
+char * toUpper(char * string);
 void clearScreen();
 void checkKey( char c );
 

@@ -116,8 +116,6 @@ static void updateCursor(){
 	}
 }
 
-
-
 void appendchar( char character ){
 	if(1){
 		 drawCursor(0x000000);

@@ -1,6 +1,8 @@
 #include <console.h>
 #include <library.h>
 #include <system_calls.h>
+#include <tron.h>
+
 
 
 // INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
@@ -192,13 +194,17 @@ void commandSnapshot(){
 	appendstring("PRESIONE ESC PARA SALIR");
 }
 
+void commandTron(){
+	playTron();
+	restartCursor();
+}
+
 void checkCommand( char * string ){
-	// char * command = toUpper(consoleBuffer);
-	char * command = string;
+	char * command = toUpper(consoleBuffer); 
 	if(strcmp2(command, "HELP") || strcmp2(command, "- HELP") ){
 		commandHelp();
 	}else if(strcmp2(command, "TRON") || strcmp2(command, "- TRON") ){
-		//commandTron();
+		commandTron();
 	}else if(strcmp2(command, "CLEAR") || strcmp2(command, "- CLEAR") ){
 		commandClear();
 	}else if(strcmp2(command, "BEEP") || strcmp2(command, "- BEEP") ){
@@ -239,8 +245,8 @@ void checkKey( char c ){
 			}
 		}
 		case '=':{
-			//char* aux = getRegisters(); 
-			//memMoveChar(snapshotBuffer, aux, 128); 
+			char* aux = getRegisters(); 
+			memMoveChar(snapshotBuffer, aux, 128); 
 			break;
 		}
 		default:{
@@ -253,7 +259,7 @@ void checkKey( char c ){
 	//newline();
 }
 
-char * toUPPER(char * string){
+char * toUpper(char * string){
 	int i = 0;
 	while(string[i] != 0){
 		if(string[i] >= 'a' && string[i] <= 'z'){

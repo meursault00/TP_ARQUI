@@ -4,7 +4,6 @@
 #include <tron.h>
 #include <console.h>
 
-static void commandTron();
 
 void initialize_shell(){
 	while(1){
@@ -16,10 +15,6 @@ void initialize_shell(){
 	}
 }
 
-void commandTron(){
-	playTron();
-	restartCursor();
-}
 
 
 // printTime
