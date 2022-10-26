@@ -3,6 +3,8 @@
 #include <system_calls.h>
 #include <tron.h>
 
+static int changingSize = 0;
+
 /**
  *  HELP NO SE EJECUTA APRETANDO BACKSPACE
  * 	NO DEJAR ESCRIBIR CUADNO SE EJECUTA UN COMANDO
@@ -239,6 +241,8 @@ void commandHelp(){
 	newline();	
 	appendstring("- BEEP");
 	newline();
+	appendstring("- SIZE");
+	newline();
 	appendstring("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
@@ -265,6 +269,18 @@ void commandTron(){
 void commandBeep(){
 	beep(1000, 100);	
 }
+
+commandSize(){
+	changingSize = 1;
+	clearScreen();
+	appendstring("CAMBIAR FONT SIZE");
+	newline();
+	appendstring("+ INCREMENTAR");
+	newline();
+	appendstring("- DECREMENTAR");
+	newline();
+	
+}
 void checkCommand( char * string ){
 	//char * command = toUpper(consoleBuffer); 
 	char * command = toUpper(string);
@@ -285,6 +301,17 @@ void checkCommand( char * string ){
 	}
 	else if(streql(command, "TIME") || streql(command, "-TIME")){
 		commandTime();
+	}
+	else if(streql(command, "SIZE") || streql(command, "- SIZE")){
+		commandSize();
+	}
+	else if(changingSize){
+		if(streql(command, "+"))
+			changeFontSize(2);
+		else if(streql(command, "-"))
+			changeFontSize(-2);
+		changingSize = 0;
+		clearScreen();
 	}
 	/*
 	else if(streql(command, "SNAPSHOT") || streql(command, "- SNAPSHOT") ){
@@ -309,6 +336,7 @@ void checkKey( char c ){
 		case ESC:{
 			clearScreen();
 			restartCursor();
+			changingSize = 0;
 			appendstring("#USER > ");
 			break;
 		}
