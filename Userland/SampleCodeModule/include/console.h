@@ -13,14 +13,14 @@ static int lastChar = 0;
 
 void memMoveChar( char* array1, char* array2, int charsToMove );
 char strcmp2( const char* stringA,const char* stringB);
-void checkCommand(char * command);
+void checkCommand();
 void commandHelp();
 void commandSnapshot();
 void commandClear();
 void commandTron();
 void printRegisters();
 char toHex( char character );
-char * toUpper(char * string);
+void toUpper(char * string);
 void clearScreen();
 void checkKey( char c );
 void printCurrentTime();

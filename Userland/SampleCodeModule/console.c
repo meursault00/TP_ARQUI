@@ -15,15 +15,14 @@ static int changingSize = 0;
 
 
 
-char * toUpper(char * string){
+void toUpper(char * string){
 	int i = 0;
 	while(string[i] != 0){
-		if(string[i] >= 'a' && string[i] <= 'z'){
+		if(string[i] >= 'a' && string[i] <= 'z')
 			string[i] = string[i] - 32;
-		}
+		
 		i++;
 	}
-	return string;
 }
 
 /**
@@ -281,45 +280,42 @@ commandSize(){
 	newline();
 	
 }
-void checkCommand( char * string ){
-	//char * command = toUpper(consoleBuffer); 
-	char * command = toUpper(string);
 
-	// SPLITEAR EL BUFFER Y COMPARAR CANTIDAD DE PALABRAS Y ETC
-	if(streql(command, "HELP") || streql(command, "- HELP") ){
-		commandHelp();
-	}else if(streql(command, "TRON") || streql(command, "- TRON") ){
-		commandTron();
-	}else if(streql(command, "CLEAR") || streql(command, "- CLEAR") ){
-		commandClear();
-	}else if(streql(command, "BEEP") || streql(command, "- BEEP") ){
-		commandBeep();
-	}else if(streql(command, "ANTHEM") || streql(command, "- ANTHEM") ){
-		// soviet_anthem();
-	}else if( streql(command,"SNAPSHOT")|| streql(command, "- SNAPSHOT")){
-		commandSnapshot();
+
+
+void checkCommand(){
+	char section[64]={0};
+	splitString( consoleBuffer, section, ' ' );
+	toUpper(consoleBuffer);
+
+	if ( section[0] == 0 ){ // no tiene segundo parametro
+		if(streql(consoleBuffer, "HELP") || streql(consoleBuffer, "- HELP") )
+			commandHelp();
+		else if(streql(consoleBuffer, "TRON") || streql(consoleBuffer, "- TRON") )
+			commandTron();
+		else if(streql(consoleBuffer, "CLEAR") || streql(consoleBuffer, "- CLEAR") )
+			commandClear();
+		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") )
+			appendstring("work in progress");
+			// beep();
+		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") )
+			appendstring("work in progress");
+			// soviet_anthem();
+		else if( streql(consoleBuffer,"SNAPSHOT")|| streql(consoleBuffer, "- SNAPSHOT"))
+			commandSnapshot();
+		else if(streql(consoleBuffer, "TIME") || streql(consoleBuffer, "-TIME"))
+			commandTime();
+	}else{
+		if(streql(consoleBuffer, "MEMACCESS") || streql(consoleBuffer, "- MEMACCESS") ){
+			if ( strlen(section) <= 16 && onlyHexChars(section )){
+				newline();
+				appendstring("Se introdujo MEMACCESS y una direccion valida");
+				newline();
+				//commandMemaccess();
+			}
+		}
+		// deberiamos agregar la de size aca porque tambien recibe un parametro
 	}
-	else if(streql(command, "TIME") || streql(command, "-TIME")){
-		commandTime();
-	}
-	else if(streql(command, "SIZE") || streql(command, "- SIZE")){
-		commandSize();
-	}
-	else if(changingSize){
-		if(streql(command, "+"))
-			changeFontSize(2);
-		else if(streql(command, "-"))
-			changeFontSize(-2);
-		changingSize = 0;
-		clearScreen();
-	}
-	/*
-	else if(streql(command, "SNAPSHOT") || streql(command, "- SNAPSHOT") ){
-		snapshot();
-	}
-	else if(streql(command, "MEMACCESS") || streql(command, "- MEMACCESS") ){
-		memaccess();
-	}*/
 	
 }
 

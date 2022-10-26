@@ -40,6 +40,9 @@ int strlen(const char *str);
 
 void appendstring( char * string );
 
+char isHexChar( char character );
+char onlyHexChars( char * string );
+void splitString( char * original, char * firstSplit, char splitter );
 void drawCursor(int color);
 void restartCursor();
 void refreshCursor();

@@ -60,6 +60,38 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 //  	return 0;  
 // }  
 
+
+char isHexChar( char character ){
+	return ( character == 'A' || character == 'B' ||character == 'C' ||character == 'D' ||character == 'E' ||character == 'F' ||character == '0' ||character == '1' ||character == '2' ||character == '3' ||character == '4' ||character == '5' ||character == '6' ||character == '7' || character == '8' ||character == '9' );
+}
+
+char onlyHexChars( char * string ){
+	for ( int i = 0; string[i] != 0; i++ )
+		if ( !(isHexChar(string[i])))
+			return 0;
+	return 1;
+}
+
+void splitString( char * original, char * firstSplit, char splitter ){
+	int i = 0, j = 0, k = 0;
+	int flag = 0;
+	for ( ; original[i] != 0; i++ ){
+		if ( original[i] == ' ' && flag == 0){
+			flag = 1;
+			i++;
+		}
+		if ( flag ){
+			firstSplit[j++] = original[i];
+		}else{
+			original[k++] = original[i];
+		}
+	}
+	firstSplit[j]=0;
+	original[k] = 0;
+	return;
+}
+
+
 int countDigits( int number ){
     int digits, limit;
     if ( number < 0 )

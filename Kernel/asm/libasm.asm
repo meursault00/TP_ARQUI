@@ -70,8 +70,6 @@ outb:
 
 
 snapshot:
-	push rbp
-	mov rbp, rsp
 
 	mov [snapshotBuffer], rax
 	mov [snapshotBuffer+8], rbx
@@ -92,8 +90,6 @@ snapshot:
 
 	mov rax, snapshotBuffer
 
-	mov rsp, rbp
-	pop rbp
 	ret
 
 section .bss
