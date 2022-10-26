@@ -22,6 +22,7 @@ void clearconsoleBuffer(){
 
 void clearScreen(){
 	putSquare(0,0,1100,0x000000);
+	restartCursor();
 }
 
 char toHex( char character ){ // de la forma 0000 XXXX
@@ -201,6 +202,7 @@ void commandTron(){
 
 void checkCommand( char * string ){
 	char * command = toUpper(consoleBuffer); 
+	
 	if(strcmp2(command, "HELP") || strcmp2(command, "- HELP") ){
 		commandHelp();
 	}else if(strcmp2(command, "TRON") || strcmp2(command, "- TRON") ){
@@ -256,7 +258,6 @@ void checkKey( char c ){
 		}
 			
 	}
-	//newline();
 }
 
 char * toUpper(char * string){

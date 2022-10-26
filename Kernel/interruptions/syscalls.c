@@ -32,6 +32,7 @@ char sys_getLastKey(){
 
 
 int sys_tick(){
+    sys_halt();
     return ticks_elapsed();
 }
 

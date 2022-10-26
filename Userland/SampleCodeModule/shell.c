@@ -6,12 +6,14 @@
 
 
 void initialize_shell(){
+
 	while(1){
-		//halt();
-		// refreshCursor();
+
+		halt();
 		drawCursor(fontcolor);
 		char c = getchar();
 		checkKey(c);
+
 	}
 }
 

@@ -201,6 +201,12 @@ void appendstring( char * string ){
 		appendchar( string[i]);
 	}
 }
+
+void printInt( int integer ){
+	char * bufferInt[20];
+	intToString(integer,bufferInt, 20);
+	appendstring(bufferInt);
+}
 /*
 
 
