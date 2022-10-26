@@ -11,6 +11,6 @@ void sys_putSquare(uint32_t x , uint32_t y,uint32_t tam, uint32_t color);
 int sys_getTime(int op);
 char sys_getLastKey();
 char* sys_getRegisters();
-
+void sys_beep(int freq, int time);
 
 #endif

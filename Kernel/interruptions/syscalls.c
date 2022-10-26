@@ -1,6 +1,7 @@
 #include <syscalls.h>
 #include <naiveConsole.h>
 #include <keyboard_driver.h>
+#include <sound_driver.h>
 #include <interrupts.h>
 #include <lib.h>
 #define STDOUT 1
@@ -49,4 +50,8 @@ char* sys_getRegisters(){
 
 int sys_getTime(int op){
     return getTime(op);
+}
+
+void sys_beep(int freq, int time){
+    beeep(freq,time);
 }

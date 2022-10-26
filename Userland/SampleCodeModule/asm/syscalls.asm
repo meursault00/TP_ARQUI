@@ -6,6 +6,7 @@ GLOBAL getRegisters
 GLOBAL getLastKey
 GLOBAL putSquare
 GLOBAL getTime
+GLOBAL beep
 section .text
 
 %macro pushState 0
@@ -84,6 +85,10 @@ getLastKey:
 
 getRegisters:
 	sys_call 7
+
+beep:
+	sys_call 8
+
 
 ; sys_put_pixel
 ;
