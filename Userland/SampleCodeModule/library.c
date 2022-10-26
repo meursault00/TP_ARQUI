@@ -119,13 +119,15 @@ static void updateCursor(){
 
 
 void appendchar( char character ){
-	if(1){
-		 drawCursor(0x000000);
-		putchar(character,cursorX,cursorY,fontsize,fontcolor);
-
-		updateCursor();
-		drawCursor(fontcolor);
+	if(character == '\n'){
+		newline();
+		return;
 	}
+	
+	drawCursor(0x000000);
+	putcharSpecifics(character,cursorX,cursorY,fontsize,fontcolor);
+	updateCursor();
+	drawCursor(fontcolor);
 }
 
 void newline(){
@@ -144,10 +146,12 @@ void backspace(){
 	}
 }
 
-void putchar(char character, int x, int y, int size,int color){
+void putchar(char c){
+	appendchar(c);
+}
+void putcharSpecifics(char character, int x, int y, int size,int color){
 	write(character,x,y,size,color);
 }
-
 int strcmp(const char* s1, const char* s2){
     while (*s1 && (*s1 == *s2)){
         s1++, s2++;
@@ -198,6 +202,21 @@ void printf ( char * foundation, void * parameters[] ){
     }
 }
 
+void printInt(uint64_t integer){
+	char buffer[20] = {0};
+	uintToBase(integer,buffer,10);
+	appendstring(buffer);
+}
+void printHex(uint64_t integer){
+	char buffer[20] = {0};
+	uintToBase(integer,buffer,16);
+	appendstring(buffer);
+}
+
+void println(char * string){
+	appendstring(string);
+	newline();
+}
 void appendstring( char * string ){
 	for ( int i = 0; string[i] != 0; i++ ){
 		appendchar( string[i]);

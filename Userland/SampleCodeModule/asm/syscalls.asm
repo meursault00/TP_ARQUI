@@ -5,6 +5,7 @@ GLOBAL halt
 
 GLOBAL getLastKey
 GLOBAL putSquare
+GLOBAL getTime
 section .text
 
 %macro pushState 0
@@ -61,12 +62,11 @@ section .text
 ;			nuestras syscalls					;			
 ;												;	
 ;-----------------------------------------------;
-write:
-    sys_call 1
-
 getchar:
 	sys_call 0
 
+write:
+    sys_call 1
 gettick:
 	sys_call 2
 

@@ -7,6 +7,8 @@
 static void commandTron();
 
 void initialize_shell(){
+	appendstring("#USER > ");
+
 	while(1){
 		//halt();
 		// refreshCursor();
@@ -22,26 +24,7 @@ void commandTron(){
 }
 
 
-// printTime
-/*
-void printTime(int timeCode, int utc){
-    int aux;
-    switch(timeCode){
-        case 0x00:  // segundos
-            uintToBase(getTime(0x00), buffer, 10);
-            break;
-        case 0x02: // minutos
-            uintToBase(getTime(0x02), buffer, 10);
-            break;
-        case 0x04: // horas
-            aux = getTime(0x04);
-            if(aux <)
 
-
-    }
-}
-
-*/
 
 
 //int a = 21;

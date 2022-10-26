@@ -199,6 +199,7 @@ void playTron(){
     tronOn = 1;
 
     for(int i=0; i<MATCHES; i++){
+        initialize_players();
         gameOn = 1;
         while(gameOn){
             halt();

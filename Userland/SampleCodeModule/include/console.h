@@ -22,5 +22,7 @@ char toHex( char character );
 char * toUPPER(char * string);
 void clearScreen();
 void checkKey( char c );
+void printCurrentTime();
+void printRTC(int code);
 
 #endif

@@ -86,7 +86,7 @@ int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 	if ( letter == ' ' ){
 		return a + tam*8;
 	}
-	for ( int i = 0; i < 33; i++ ){
+	for ( int i = 0; i < 32; i++ ){
 		if ( i % 2 == 0 && i != 0){
 			y+= tam;
 			a = x;

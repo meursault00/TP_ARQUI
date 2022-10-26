@@ -2,6 +2,27 @@
 #include <library.h>
 #include <system_calls.h>
 
+/**
+ *  HELP NO SE EJECUTA APRETANDO BACKSPACE
+ * 	NO DEJAR ESCRIBIR CUADNO SE EJECUTA UN COMANDO
+ *  IMPRIMIR TIEMPO Y LUEGO SEGUIR ESCRIBIENDO
+ *  
+ * 
+ */
+
+
+
+char * toUpper(char * string){
+	int i = 0;
+	while(string[i] != 0){
+		if(string[i] >= 'a' && string[i] <= 'z'){
+			string[i] = string[i] - 32;
+		}
+		i++;
+	}
+	return string;
+}
+
 
 // INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
 void memMoveChar( char* array1, char* array2, int charsToMove  ){ 
@@ -12,10 +33,35 @@ void memMoveChar( char* array1, char* array2, int charsToMove  ){
 	}
 }
 
+
+// funcion que convierte un bcd en decimal
+static int bcdToDec(int bcd){
+	return ((bcd/16)*10 + (bcd%16));
+}
+
+void printCurrentTime(){
+	int aux = bcdToDec(getTime(0x04));
+	if(aux < 3){
+		aux += aux+24-3;
+	}
+	else{
+		aux -= 3;
+	}
+	printInt(aux); // checkear
+	putchar(':');
+	printInt(bcdToDec(getTime(0x02)));
+	putchar(':');
+	printInt(bcdToDec(getTime(0x00)));
+	putchar('\n');
+}
+
+
 void clearconsoleBuffer(){
 	for ( int i = 0; i < lastChar; i++ )
 		consoleBuffer[i] = 0;
 	lastChar=0;
+	appendstring("#USER > ");
+
 }
 
 void clearScreen(){
@@ -176,6 +222,8 @@ void commandHelp(){
 	appendstring("- BEEP");
 	newline();
 	appendstring("- ANTHEM");
+	newline();
+	appendstring("- TIME");
 	newline();	
 	appendstring("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
@@ -191,10 +239,14 @@ void commandSnapshot(){
 	newline();
 	appendstring("PRESIONE ESC PARA SALIR");
 }
+void commandTime(){
+	printCurrentTime();
+	newline();
+}
 
 void checkCommand( char * string ){
-	// char * command = toUpper(consoleBuffer);
 	char * command = string;
+ 	//char * command = toUpper(consoleBuffer);
 	if(strcmp2(command, "HELP") || strcmp2(command, "- HELP") ){
 		commandHelp();
 	}else if(strcmp2(command, "TRON") || strcmp2(command, "- TRON") ){
@@ -207,6 +259,9 @@ void checkCommand( char * string ){
 		// soviet_anthem();
 	}else if( strcmp2(command,"SNAPSHOT")|| strcmp2(command, "- SNAPSHOT")){
 		commandSnapshot();
+	}
+	else if(strcmp2(command, "TIME") || strcmp2(command, "-TIME")){
+		commandTime();
 	}
 	/*
 	else if(strcmp2(command, "SNAPSHOT") || strcmp2(command, "- SNAPSHOT") ){
@@ -229,14 +284,17 @@ void checkKey( char c ){
 		case ESC:{
 			clearScreen();
 			restartCursor();
+			appendstring("#USER > ");
 			break;
 		}
 		case ENTER : {
 			newline();
+			appendstring("#USER > ");
 			if ( consoleBuffer != 0 && consoleBuffer[0] ){				
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
 			}
+			break;
 		}
 		case '=':{
 			//char* aux = getRegisters(); 
@@ -252,15 +310,3 @@ void checkKey( char c ){
 	}
 	//newline();
 }
-
-char * toUPPER(char * string){
-	int i = 0;
-	while(string[i] != 0){
-		if(string[i] >= 'a' && string[i] <= 'z'){
-			string[i] = string[i] - 32;
-		}
-		i++;
-	}
-	return string;
-}
-

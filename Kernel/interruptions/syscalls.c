@@ -7,8 +7,8 @@
 #define STDRED 2
 #define MAXBUFFER 500
 
-extern int sys_getTime(int op);
 extern char* snapshot();
+extern int getTime(int op);
 
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
     put_letter(character, x, y, size, color );
@@ -46,3 +46,6 @@ char* sys_getRegisters(){
     return snapshot();
 }
 
+int sys_getTime(int op){
+    return getTime(op);
+}

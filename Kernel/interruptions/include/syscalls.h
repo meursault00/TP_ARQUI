@@ -8,7 +8,7 @@ void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_
 int sys_tick();
 void sys_halt();
 void sys_putSquare(uint32_t x , uint32_t y,uint32_t tam, uint32_t color);
-extern int sys_getTime(int op);
+int sys_getTime(int op);
 char sys_getLastKey();
 char* sys_getRegisters();
 
