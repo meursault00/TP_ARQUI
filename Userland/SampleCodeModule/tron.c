@@ -1,15 +1,16 @@
 #include <system_calls.h>
+#include <library.h>
 
 static int tronOn = 0;
 static int gameOn = 0;
 static char lastKey = 0;
 
-#define MATCHES 3
+#define BESTOF 3
 #define ESC 27
 #define SQUARE_SIDE 8 //largo del lado del cuadrado con el cual se dibujan las lineas
 
 #define BOARD_WIDTH 119 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
-#define BOARD_HEIGTH 87 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
+#define BOARD_HEIGHT 87 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
 
 // para que se imprima en la porrcion de pantalla elegida
 // estaria centrada y los margenes (para poner menu y etc) serian de 12 pixeles
@@ -37,12 +38,14 @@ static int insideBoard(int x, int y);
 static int checkPlayersPosition();
 static void changePlayerDirection(int player, int direction);
 static void keyboardHandler();
+static void resetScore();
+static void printScore();
 
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
 
 // BOARD_WIDTH x BOARD_HEIGHT
-static int board[BOARD_WIDTH][BOARD_HEIGTH] = {{0}}; 
+static int board[BOARD_WIDTH][BOARD_HEIGHT] = {{0}}; 
 
 typedef struct player_t{
     int color;
@@ -50,7 +53,7 @@ typedef struct player_t{
     int currY;
     int alive;
     int direction; // sera usada en conjunto con la matriz mover
-    int score; //puntaje
+    char score; //puntaje
 } player_t;
 
 static player_t p1,p2;
@@ -61,14 +64,12 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p1.currY=P1_STARTING_Y;
     p1.alive=1;
     p1.direction=DOWN;
-    p1.score=0;
 
     p2.color=P2_COLOR;
     p2.currX=P2_STARTING_X;
     p2.currY=P2_STARTING_Y;
     p2.alive=1;
     p2.direction=UP;
-    p2.score=0;
     //board = {{0}}; causa un error
     for(int i=0; i<1024; i+=OFFSET_X){
         putSquare(i,0,OFFSET_X,0x00FF00);
@@ -81,7 +82,7 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     }
 
     for(int i=0; i<BOARD_WIDTH; i++){
-        for(int j=0; j<BOARD_HEIGTH; j++){
+        for(int j=0; j<BOARD_HEIGHT; j++){
             board[i][j]=0;
         }
     }
@@ -91,7 +92,7 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
 // la macro usada anteriormente no terminaba de convencer
 
 int insideBoard(int x, int y){
-    return (x >= 0) && (x < BOARD_WIDTH) && (y >= 0) && (y < BOARD_HEIGTH);
+    return (x >= 0) && (x < BOARD_WIDTH) && (y >= 0) && (y < BOARD_HEIGHT);
 }
 
 /**
@@ -176,8 +177,8 @@ void keyboardHandler(){
 }
 
 void drawPlayers(){
-    putSquare(p1.currX*SQUARE_SIDE+1024*(p1.currY + OFFSET_Y)+ OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
-    putSquare(p2.currX*SQUARE_SIDE+1024*(p2.currY + OFFSET_Y) + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
+    putSquare(p1.currX*SQUARE_SIDE + OFFSET_X,p1.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P1_COLOR);
+    putSquare(p2.currX*SQUARE_SIDE + OFFSET_X,p2.currY*SQUARE_SIDE + OFFSET_Y,SQUARE_SIDE,P2_COLOR);
 }
 
 void movePlayers(){
@@ -198,13 +199,26 @@ void movePlayers(){
     }
 }
 
+void resetScore(){
+    p1.score = '0';
+    p2.score = '0';
+}
+
+printScore(){
+    putcharSpecifics(p1.score,492,0,2,0x0000FF);
+    putcharSpecifics(p2.score,532,0,2,0xFF0000);
+
+}
+
 void playTron(){
     tronOn = 1;
     putSquare(0,0,1034,0);
 
-    for(int i=0; i<MATCHES && tronOn; i++){
+    resetScore();
+    while((p1.score - '0' < BESTOF) && (p2.score - '0' < BESTOF) && tronOn){
         initialize_players();
-        lastKey = 0;
+        //lastKey = 0;
+        printScore();
         gameOn = 1;
         while(gameOn){
             keyboardHandler();
@@ -212,6 +226,7 @@ void playTron(){
                 movePlayers();
             }
         }
+        beep(440,2);
     }
 
     tronOn = 0;
