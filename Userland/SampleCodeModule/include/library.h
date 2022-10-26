@@ -16,8 +16,7 @@ void putchar( char character, int x, int y, int size,int color);
 void putword( int fd, char * string );
 void printf(  char * foundation, void * parameters[]);
 void appendchar( char character );
-void printInt( int integer);
-
+void printInt(uint64_t integer );
 int countDigits( int number );
 void numLoader( int number, char * buffer, int digits );
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);

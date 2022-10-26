@@ -6,9 +6,8 @@
 
 
 void initialize_shell(){
-
 	while(1){
-
+		
 		halt();
 		drawCursor(fontcolor);
 		char c = getchar();

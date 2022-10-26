@@ -202,10 +202,10 @@ void appendstring( char * string ){
 	}
 }
 
-void printInt( int integer ){
-	char * bufferInt[20];
-	intToString(integer,bufferInt, 20);
-	appendstring(bufferInt);
+void printInt(uint64_t integer){
+    char buffer[20] = {0};
+    uintToBase(integer,buffer,10);
+    appendstring(buffer);
 }
 /*
 
