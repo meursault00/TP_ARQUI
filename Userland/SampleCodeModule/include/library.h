@@ -31,7 +31,7 @@ void putnewline( void );
 void newline();
 void backspace();
 void changeFontSize(int newSize);
-
+char streql( const char * str1,const char * str2 );
 int strcmp(const char* s1, const char* s2);
 int strlen(const char *str);
 

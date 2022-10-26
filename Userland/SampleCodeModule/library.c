@@ -370,19 +370,15 @@ void refreshCursor(){
 	}
 }
 
-char strcmp2( const char* stringA,const char* stringB)  
+char streql( const char* stringA,const char* stringB)  
 {  
-    char flag = 0;
 	int i = 0;
-    while(stringA[i]!='\0' && stringB[i]!='\0')  {  
-       if(stringA[i]!=stringB[i])  
-       {  
-           flag=1;  
-           break;  
-       }  
-       i++;  
+    while(stringB[i]!='\0')  {  
+		if (stringA[i] == '\0' || stringA[i]!=stringB[i])
+			return 0;
+       	i++;  
     }  
-    if(flag==0)  
-    	return 1;  
- 	return 0;  
+	if ( stringA[i]!=0 ) 
+		return 0;
+    return 1;
 } 

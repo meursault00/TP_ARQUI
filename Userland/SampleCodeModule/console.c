@@ -201,26 +201,28 @@ void commandTron(){
 }
 
 void checkCommand( char * string ){
-	char * command = toUpper(consoleBuffer); 
+	//char * command = toUpper(consoleBuffer); 
+	char * command = string;
+
 	// SPLITEAR EL BUFFER Y COMPARAR CANTIDAD DE PALABRAS Y ETC
-	if(strcmp2(command, "HELP") || strcmp2(command, "- HELP") ){
+	if(streql(command, "HELP") || streql(command, "- HELP") ){
 		commandHelp();
-	}else if(strcmp2(command, "TRON") || strcmp2(command, "- TRON") ){
+	}else if(streql(command, "TRON") || streql(command, "- TRON") ){
 		commandTron();
-	}else if(strcmp2(command, "CLEAR") || strcmp2(command, "- CLEAR") ){
+	}else if(streql(command, "CLEAR") || streql(command, "- CLEAR") ){
 		commandClear();
-	}else if(strcmp2(command, "BEEP") || strcmp2(command, "- BEEP") ){
+	}else if(streql(command, "BEEP") || streql(command, "- BEEP") ){
 		// beep();
-	}else if(strcmp2(command, "ANTHEM") || strcmp2(command, "- ANTHEM") ){
+	}else if(streql(command, "ANTHEM") || streql(command, "- ANTHEM") ){
 		// soviet_anthem();
-	}else if( strcmp2(command,"SNAPSHOT")|| strcmp2(command, "- SNAPSHOT")){
+	}else if( streql(command,"SNAPSHOT")|| streql(command, "- SNAPSHOT")){
 		commandSnapshot();
 	}
 	/*
-	else if(strcmp2(command, "SNAPSHOT") || strcmp2(command, "- SNAPSHOT") ){
+	else if(streql(command, "SNAPSHOT") || streql(command, "- SNAPSHOT") ){
 		snapshot();
 	}
-	else if(strcmp2(command, "MEMACCESS") || strcmp2(command, "- MEMACCESS") ){
+	else if(streql(command, "MEMACCESS") || streql(command, "- MEMACCESS") ){
 		memaccess();
 	}*/
 	
