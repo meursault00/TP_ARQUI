@@ -369,8 +369,9 @@ void restartCursor(){
 	cursorY = 0;
 }
 
-void changeFontSize(int newSize){
-	fontsize=newSize;
+void changeFontSize(int increment){
+	if((fontsize + increment) > 0 && (fontsize + increment) <= 64)
+		fontsize+=increment;
 }
 
 void refreshCursor(){
