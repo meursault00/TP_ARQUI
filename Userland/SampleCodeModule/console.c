@@ -202,7 +202,7 @@ void commandTron(){
 
 void checkCommand( char * string ){
 	char * command = toUpper(consoleBuffer); 
-	
+	// SPLITEAR EL BUFFER Y COMPARAR CANTIDAD DE PALABRAS Y ETC
 	if(strcmp2(command, "HELP") || strcmp2(command, "- HELP") ){
 		commandHelp();
 	}else if(strcmp2(command, "TRON") || strcmp2(command, "- TRON") ){

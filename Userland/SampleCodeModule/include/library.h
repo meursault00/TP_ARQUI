@@ -15,6 +15,10 @@ static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 void putchar( char character, int x, int y, int size,int color);
 void putword( int fd, char * string );
 void printf(  char * foundation, void * parameters[]);
+void print (char * foundation, ...);
+char *_strrev (char *str);
+char * _itoa(int i, char *strout, int base);
+void strcpy( char * destination, char * origin );
 void appendchar( char character );
 void printInt(uint64_t integer );
 int countDigits( int number );

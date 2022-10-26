@@ -6,9 +6,10 @@
 
 
 void initialize_shell(){
+
+	print("%c %d %o %x %s", 'A', 10, 100, 1000, "Hello from printf!");
 	while(1){
 		
-		halt();
 		drawCursor(fontcolor);
 		char c = getchar();
 		checkKey(c);

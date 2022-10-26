@@ -10,7 +10,10 @@
         "syscalls.h": "c",
         "exception": "c",
         "new": "c",
-        "console.h": "c"
+        "console.h": "c",
+        "stdarg.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

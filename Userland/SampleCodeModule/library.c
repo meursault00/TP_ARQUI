@@ -1,9 +1,8 @@
 
 #include <system_calls.h>
 #include <library.h>
-
+#include <stdarg.h>
 #define CURSOR_TICKS 9
-
 
 
 
@@ -154,10 +153,131 @@ int strcmp(const char* s1, const char* s2){
 }
 
 int strlen(const char *str){
-	const char *s;
-	for (s = str; *s; ++s);
-	return (s - str);
+	int s;
+	for (s = 0; str[s] != 0; ++s);
+	return s;
 }
+
+void print (char * foundation, ...){
+
+	// se inicializa la lista de parametros indefinidos
+	va_list vl;
+	int i = 0, j=0;
+	// el buffer final y el buffer temporal para las conversiones numericas
+	// buff deberia ser dinamico pero no tenemos malloc :/
+	char buff[100]={0}, tmp[20];
+	// buffer para el string
+	char * str_arg;
+
+	// macro de inicializacion
+	va_start( vl, foundation );
+
+	// mientras haya caracteres y argumentos
+	while (foundation && foundation[i])
+	{
+		// caso especial de que encuentre un porcentaje que representa la insercion de una variable
+	  	if (foundation[i] == '%'){
+	  	i++;
+	  	switch (foundation[i]) {
+	  	  // caso char
+	  	  case 'c': {
+			// se toma el argumento que se presume de tipo char y se lo castea para guardarlo
+	  	    buff[j] = (char)va_arg( vl, int );
+	  	    j++;
+	  	    break;
+	  	  }
+	  	  // caso integer
+	  	  case 'd': {
+			// se toma un int, se lo pasa a decimal y luego a string guardandose en tmp
+	  	    _itoa(va_arg( vl, int ), tmp, 10);
+			// se copia tmp al buffer
+	  	    strcpy(&buff[j], tmp);
+			// se aumenta la posicion del string final
+	  	    j += strlen(tmp);
+	  	    break;
+	  	  }
+	  	  // caso hexa
+	  	  case 'x': {
+			// identico al previo pero con base 16
+	  	    _itoa(va_arg( vl, int ), tmp, 16);
+	  	    strcpy(&buff[j], tmp);
+	  	    j += strlen(tmp);
+	  	    break;
+	  	  }
+	  	  // caso octal
+	  	  case 'o': {
+			// identico al anterior pero con base 8
+	  	    _itoa(va_arg( vl, int ), tmp, 8);
+	  	    strcpy(&buff[j], tmp);
+	  	    j += strlen(tmp);
+	  	    break;
+	  	  }
+	  	  // caso string
+	  	  case 's': {
+			// no se necesita conversion entonces se guarda directo
+	  	    str_arg = va_arg( vl, char* );
+	  	    strcpy(&buff[j], str_arg);
+	  	    j += strlen(str_arg);
+	  	    break;
+	  	  }
+	  	}
+		// caso donde no hay un porcentaje y se continua el string como si nada
+	  	}else {
+	    	buff[j] = foundation[i];
+	    	j++;
+	  	}
+	  i++;
+	} 
+  appendstring(buff);
+  va_end(vl);
+}
+
+void strcpy( char * destination, char * origin ){
+	int i;
+	for (  i = 0; origin[i]!='\0'; i++ )
+		destination[i] = origin[i];
+	destination[i] = '\0';
+}
+
+char *_strrev (char *str){
+  int i;
+  int len = 0;
+  char c;
+  if (!str)
+    return 0;
+  while(str[len] != '\0'){
+    len++;
+  }
+  for(i = 0; i < (len/2); i++)
+  {
+    c = str[i];
+    str [i] = str[len - i - 1];
+    str[len - i - 1] = c;
+  }
+  return str;
+}
+
+char * _itoa(int i, char *strout, int base){
+  char *str = strout;
+  int digit, sign = 0;
+  if (i < 0) {
+    sign = 1;
+    i *= -1;
+  }
+  while(i) {
+    digit = i % base;
+    *str = (digit > 9) ? ('A' + digit - 10) : '0' + digit;
+    i = i / base;
+    str ++;
+  }
+  if(sign) {
+  *str++ = '-';
+  }
+  *str = '\0';
+  _strrev(strout);
+  return strout;
+}
+
 
 void printf ( char * foundation, void * parameters[] ){
     int j = 0; // posicion en los parametros
