@@ -4,22 +4,22 @@ static int tronOn = 0;
 static int gameOn = 0;
 static char lastKey = 0;
 
-#define MATCHES 1
+#define MATCHES 3
 #define ESC 27
 #define SQUARE_SIDE 8 //largo del lado del cuadrado con el cual se dibujan las lineas
 
-#define BOARD_WIDTH 125 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
-#define BOARD_HEIGTH 93 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
+#define BOARD_WIDTH 119 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
+#define BOARD_HEIGTH 87 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
 
 // para que se imprima en la porrcion de pantalla elegida
 // estaria centrada y los margenes (para poner menu y etc) serian de 12 pixeles
-#define OFFSET_X 12
-#define OFFSET_Y 12
+#define OFFSET_X 36
+#define OFFSET_Y 36
 
 
-#define P1_STARTING_X 63
+#define P1_STARTING_X 60
 #define P1_STARTING_Y 10
-#define P2_STARTING_X 63
+#define P2_STARTING_X 60
 #define P2_STARTING_Y 70
 
 #define P1_COLOR 0x0000FF //azul
@@ -70,16 +70,19 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.direction=UP;
     p2.score=0;
     //board = {{0}}; causa un error
-    for(int i=0; i<125; i++){
-        for(int j=0; j<93; j++){
-            if(i==0)
-                putSquare(i*8,j*8,12,0x00FF00);
-            if(i==124)
-                putSquare(i*8+20,j*8,12,0x00FF00);
-            if(j==0)
-                 putSquare(i*8,j+11,12,0x00FF00);
-            //todo el de abajo no lo puedo ver por limites de hardware -bruzo 
-            board[i][j] = 0;
+    for(int i=0; i<1024; i+=OFFSET_X){
+        putSquare(i,0,OFFSET_X,0x00FF00);
+        putSquare(0,i,OFFSET_X,0x00FF00);
+    }
+
+    for(int i=0; i<1024; i+=OFFSET_X){
+        putSquare(i,768-OFFSET_X,OFFSET_X,0x00FF00);
+        putSquare(1024-OFFSET_X,i,OFFSET_X,0x00FF00);
+    }
+
+    for(int i=0; i<BOARD_WIDTH; i++){
+        for(int j=0; j<BOARD_HEIGTH; j++){
+            board[i][j]=0;
         }
     }
 }
@@ -197,12 +200,12 @@ void movePlayers(){
 
 void playTron(){
     tronOn = 1;
+    putSquare(0,0,1034,0);
 
-    for(int i=0; i<MATCHES; i++){
+    for(int i=0; i<MATCHES && tronOn; i++){
         initialize_players();
         gameOn = 1;
         while(gameOn){
-            halt();
             keyboardHandler();
             if(gettick() % 2 == 0){
                 movePlayers();
