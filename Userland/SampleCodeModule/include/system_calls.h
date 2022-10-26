@@ -10,5 +10,5 @@ extern void putSquare(int x,int y,int tam,int color);
 extern int getTime(int code);
 extern char getLastKey();
 extern char* getRegisters();
-extern void beep2(int freq, int time);
+extern void beep(int freq, int time);
 #endif

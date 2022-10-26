@@ -298,8 +298,10 @@ void checkKey( char c ){
 	switch (c)
 		{
 		case BACKSPACE:{
-			backspace();
-			consoleBuffer[lastChar--] = 0;
+			if(lastChar != 0){
+				backspace();
+				consoleBuffer[lastChar--] = 0;				
+			}
 			break;
 		}
 		case ESC:{
@@ -310,10 +312,13 @@ void checkKey( char c ){
 		}
 		case ENTER : {
 			newline();
-			appendstring("#USER > ");
-			if ( consoleBuffer != 0 && consoleBuffer[0] ){				
+
+			if ( consoleBuffer != 0 && consoleBuffer[0] ){	
+
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
+			}else{
+				appendstring("#USER > ");
 			}
 			break;
 		}
