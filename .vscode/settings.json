@@ -11,7 +11,13 @@
         "exception": "c",
         "new": "c",
         "console.h": "c",
+<<<<<<< HEAD
         "interrupts.h": "c"
+=======
+        "stdarg.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c"
+>>>>>>> f8258f90431146326968f60b04c2d882588b529d
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

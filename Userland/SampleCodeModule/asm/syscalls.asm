@@ -2,7 +2,7 @@ GLOBAL gettick
 GLOBAL write
 GLOBAL getchar
 GLOBAL halt
-
+GLOBAL getRegisters
 GLOBAL getLastKey
 GLOBAL putSquare
 GLOBAL getTime

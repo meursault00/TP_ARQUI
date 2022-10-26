@@ -19,8 +19,11 @@ void printf(  char * foundation, void * parameters[]);
 void printInt(uint64_t );
 void printHex(uint64_t );
 void println(char * string);
+void print (char * foundation, ...);
+char *_strrev (char *str);
+char * _itoa(int i, char *strout, int base);
+void strcpy( char * destination, char * origin );
 void appendchar( char character );
-
 int countDigits( int number );
 void numLoader( int number, char * buffer, int digits );
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
@@ -31,7 +34,7 @@ void putnewline( void );
 void newline();
 void backspace();
 void changeFontSize(int newSize);
-
+char streql( const char * str1,const char * str2 );
 int strcmp(const char* s1, const char* s2);
 int strlen(const char *str);
 

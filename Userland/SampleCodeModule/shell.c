@@ -4,24 +4,21 @@
 #include <tron.h>
 #include <console.h>
 
-static void commandTron();
 
 void initialize_shell(){
 	appendstring("#USER > ");
 
+
+	print("%c %d %o %x %s", 'A', 10, 100, 1000, "Hello from printf!");
 	while(1){
-		//halt();
-		// refreshCursor();
+		
 		drawCursor(fontcolor);
 		char c = getchar();
 		checkKey(c);
+
 	}
 }
 
-void commandTron(){
-	playTron();
-	restartCursor();
-}
 
 
 

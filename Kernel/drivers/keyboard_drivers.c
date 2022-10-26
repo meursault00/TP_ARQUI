@@ -133,6 +133,7 @@ int storeKey(){
 
 void write(int aux){ // escritura usando funciones de video
 	if(aux!=0){
+        
 		if(aux == 8){
 			videoBackSpace();
 			keyBuffer[bufferCount--] = 0;
