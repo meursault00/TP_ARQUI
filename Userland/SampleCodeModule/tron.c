@@ -42,7 +42,7 @@ static void keyboardHandler();
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
 
 // BOARD_WIDTH x BOARD_HEIGHT
-static int board[125][93] = {{0}}; 
+static int board[BOARD_WIDTH][BOARD_HEIGTH] = {{0}}; 
 
 typedef struct player_t{
     int color;
@@ -115,7 +115,7 @@ int checkPlayersPosition(){
             p1.score++; // si uno sobrevivio aumento su puntaje
         else if(p2.alive)
             p2.score++;
-        tronOn = 0;
+        gameOn = 0;
         putSquare(0,0,1024,0); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
         return 0;
     }
@@ -204,6 +204,7 @@ void playTron(){
 
     for(int i=0; i<MATCHES && tronOn; i++){
         initialize_players();
+        lastKey = 0;
         gameOn = 1;
         while(gameOn){
             keyboardHandler();
