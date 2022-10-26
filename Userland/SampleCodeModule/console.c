@@ -35,17 +35,6 @@ char * toUpper(char * string){
 
 
 
-char * toUpper(char * string){
-	int i = 0;
-	while(string[i] != 0){
-		if(string[i] >= 'a' && string[i] <= 'z'){
-			string[i] = string[i] - 32;
-		}
-		i++;
-	}
-	return string;
-}
-
 
 // INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
 void memMoveChar( char* array1, char* array2, int charsToMove  ){ 
@@ -292,7 +281,7 @@ void checkCommand( char * string ){
 	}else if( streql(command,"SNAPSHOT")|| streql(command, "- SNAPSHOT")){
 		commandSnapshot();
 	}
-	else if(strcmp2(command, "TIME") || strcmp2(command, "-TIME")){
+	else if(streql(command, "TIME") || streql(command, "-TIME")){
 		commandTime();
 	}
 	/*
@@ -341,15 +330,3 @@ void checkKey( char c ){
 			
 	}
 }
-
-char * toUpper(char * string){
-	int i = 0;
-	while(string[i] != 0){
-		if(string[i] >= 'a' && string[i] <= 'z'){
-			string[i] = string[i] - 32;
-		}
-		i++;
-	}
-	return string;
-}
-

@@ -341,11 +341,7 @@ void appendstring( char * string ){
 	}
 }
 
-void printInt(uint64_t integer){
-    char buffer[20] = {0};
-    uintToBase(integer,buffer,10);
-    appendstring(buffer);
-}
+
 /*
 
 
