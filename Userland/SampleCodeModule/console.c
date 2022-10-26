@@ -3,7 +3,6 @@
 #include <system_calls.h>
 #include <tron.h>
 
-
 /**
  *  HELP NO SE EJECUTA APRETANDO BACKSPACE
  * 	NO DEJAR ESCRIBIR CUADNO SE EJECUTA UN COMANDO
@@ -238,6 +237,8 @@ void commandHelp(){
 	newline();
 	appendstring("- TIME");
 	newline();	
+	appendstring("- BEEP");
+	newline();
 	appendstring("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
@@ -254,7 +255,6 @@ void commandSnapshot(){
 }
 void commandTime(){
 	printCurrentTime();
-	newline();
 }
 
 void commandTron(){
@@ -262,10 +262,12 @@ void commandTron(){
 	restartCursor();
 }
 
-
+void commandBeep(){
+	beep(1000, 100);	
+}
 void checkCommand( char * string ){
 	//char * command = toUpper(consoleBuffer); 
-	char * command = string;
+	char * command = toUpper(string);
 
 	// SPLITEAR EL BUFFER Y COMPARAR CANTIDAD DE PALABRAS Y ETC
 	if(streql(command, "HELP") || streql(command, "- HELP") ){
@@ -275,7 +277,7 @@ void checkCommand( char * string ){
 	}else if(streql(command, "CLEAR") || streql(command, "- CLEAR") ){
 		commandClear();
 	}else if(streql(command, "BEEP") || streql(command, "- BEEP") ){
-		// beep();
+		commandBeep();
 	}else if(streql(command, "ANTHEM") || streql(command, "- ANTHEM") ){
 		// soviet_anthem();
 	}else if( streql(command,"SNAPSHOT")|| streql(command, "- SNAPSHOT")){

@@ -7,10 +7,7 @@
 
 void initialize_shell(){
 	appendstring("#USER > ");
-	
-	print("%c %d %o %x %s", 'A', 10, 100, 1000, "Hello from printf!");
 	while(1){
-		
 		drawCursor(fontcolor);
 		char c = getchar();
 		checkKey(c);
