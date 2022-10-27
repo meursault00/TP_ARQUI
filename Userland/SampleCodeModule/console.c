@@ -12,7 +12,7 @@ static int changingSize = 0;
  *  
  * 
  */
-
+ extern void INVALID_OP_CODE();
 
 
 void toUpper(char * string){
@@ -242,6 +242,10 @@ void commandHelp(){
 	newline();
 	appendstring("- SIZE");
 	newline();
+	appendstring("- INVOP");
+	newline();
+	appendstring("- DIVCERO");
+	newline();
 	appendstring("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
 }
 
@@ -280,7 +284,9 @@ commandSize(){
 	newline();
 	
 }
-
+ static void div_cero(){
+	int x=1/0;
+ }
 
 
 void checkCommand(){
@@ -305,6 +311,15 @@ void checkCommand(){
 			commandSnapshot();
 		else if(streql(consoleBuffer, "TIME") || streql(consoleBuffer, "-TIME"))
 			commandTime();
+		else if(streql(consoleBuffer, "INVOP") || streql(consoleBuffer, "-INVOP")){
+			clearScreen();
+			INVALID_OP_CODE();
+		}
+		else if(streql(consoleBuffer, "DIVCERO") || streql(consoleBuffer, "-DIVCERO")){
+			clearScreen();
+			div_cero();
+		}
+	
 	}else{
 		if(streql(consoleBuffer, "MEMACCESS") || streql(consoleBuffer, "- MEMACCESS") ){
 			if ( strlen(section) <= 16 && onlyHexChars(section )){
@@ -351,6 +366,14 @@ void checkKey( char c ){
 		case '=':{
 			char* aux = getRegisters(); 
 			memMoveChar(snapshotBuffer, aux, 128); 
+			break;
+		}
+		case '\t':{
+			appendstring("    ");
+			for(int i=0;i<4;i++){
+				consoleBuffer[lastChar+i] =' ';
+			}
+			lastChar+=4;
 			break;
 		}
 		default:{

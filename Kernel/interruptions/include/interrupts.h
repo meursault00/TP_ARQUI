@@ -21,6 +21,7 @@ void _irq05Handler(void);
 uint64_t _irq60Handler(void);
 
 void _exception0Handler(void);
+void _exception6Handler(void);
 
 void _cli(void);
 
