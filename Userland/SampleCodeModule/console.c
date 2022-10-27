@@ -319,6 +319,17 @@ void checkCommand(){
 			clearScreen();
 			div_cero();
 		}
+		else if(streql(consoleBuffer, "SIZE") || streql(consoleBuffer, "- SIZE")){
+		commandSize();
+		}
+		else if(changingSize){
+			if(streql(consoleBuffer, "+"))
+				changeFontSize(2);
+			else if(streql(consoleBuffer, "-"))
+				changeFontSize(-2);
+			changingSize = 0;
+			clearScreen();
+		}
 	
 	}else{
 		if(streql(consoleBuffer, "MEMACCESS") || streql(consoleBuffer, "- MEMACCESS") ){

@@ -4,6 +4,7 @@
 static int tronOn = 0;
 static int gameOn = 0;
 static char lastKey = 0;
+static int lastTick = 0;
 
 #define BESTOF 3
 #define ESC 27
@@ -23,8 +24,8 @@ static char lastKey = 0;
 #define P2_STARTING_X 60
 #define P2_STARTING_Y 70
 
-#define P1_COLOR 0x0000FF //azul
-#define P2_COLOR 0xFF0000 //rojo
+#define P1_COLOR 0x333652 //azul
+#define P2_COLOR 0xFAD02C //rojo
 
 #define UP 0
 #define RIGHT 1
@@ -71,14 +72,27 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.alive=1;
     p2.direction=UP;
     //board = {{0}}; causa un error
-    for(int i=0; i<1024; i+=OFFSET_X){
-        putSquare(i,0,OFFSET_X,0x00FF00);
-        putSquare(0,i,OFFSET_X,0x00FF00);
+
+    for(int i=OFFSET_X; i<1024-OFFSET_X; i+=SQUARE_SIDE){
+        for(int j=OFFSET_Y; j<768 - OFFSET_Y; j++){
+            putSquare(i,j,1,0x90ADC6);
+        }
+    }
+
+    for(int i=OFFSET_Y; i<768-OFFSET_Y; i+=SQUARE_SIDE){
+        for(int j=OFFSET_X; j<1024 - OFFSET_X; j++){
+            putSquare(j,i,1,0x90ADC6);
+        }
     }
 
     for(int i=0; i<1024; i+=OFFSET_X){
-        putSquare(i,768-OFFSET_X,OFFSET_X,0x00FF00);
-        putSquare(1024-OFFSET_X,i,OFFSET_X,0x00FF00);
+        putSquare(i,0,OFFSET_X,0x90ADC6);
+        putSquare(0,i,OFFSET_X,0x90ADC6);
+    }
+
+    for(int i=0; i<1024; i+=OFFSET_X){
+        putSquare(i,768-OFFSET_X,OFFSET_X,0x90ADC6);
+        putSquare(1024-OFFSET_X,i,OFFSET_X,0x90ADC6);
     }
 
     for(int i=0; i<BOARD_WIDTH; i++){
@@ -117,16 +131,22 @@ int checkPlayersPosition(){
         else if(p2.alive)
             p2.score++;
         gameOn = 0;
-        putSquare(0,0,1024,0); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
+        putSquare(0,0,1024,0xE9EAEC); //Todo hacer q no frene y espera una tecla para jugar otra partida(imprimir socre cuando termina la partida)
         return 0;
     }
 }
 
 void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
+    int aux = MOD(direction - p1.direction);
     //cambio dir del jugador que corresponda
-    if(player == 1 && MOD(direction - p1.direction) != 2) // para q no pueda invertir su direccion
+    if(player == 1){ // para q no pueda invertir su direccion
+        if(aux == 2 || aux == 0)
+            return;
         p1.direction = direction;
-    else if(MOD(direction - p2.direction) != 2)
+        return;
+    }
+    aux = MOD(direction - p2.direction);
+    if(aux != 2 && aux != 0)
         p2.direction = direction;
 }
 
@@ -135,44 +155,44 @@ void keyboardHandler(){
     if(lastKey != aux){
         lastKey = aux;
         switch(aux){
-		case ESC:
-			//gameSwitch(0);
-			tronOn = 0;
-			putSquare(0,0,1024,0);
+        case ESC:
+            //gameSwitch(0);
+            tronOn = 0;
+            putSquare(0,0,1024,0);
 
-		/*
-		case ' ':
-			gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
-			break;
-		*/
-		case 'w':
-			changePlayerDirection(1,UP);
-			break;
-		case 'a':
-			changePlayerDirection(1,LEFT);
-			break;
-		case 's':
-			changePlayerDirection(1,DOWN);
-			break;
-		case 'd':
-			changePlayerDirection(1,RIGHT);
-			break;
-		
-		case 'i':
-			changePlayerDirection(2,UP);
-			break;
-		case 'j':
-			changePlayerDirection(2,LEFT);
-			break;
-		case 'k':
-			changePlayerDirection(2,DOWN);
-			break;
-		case 'l':
-			changePlayerDirection(2,RIGHT);
-			break;
-		default:
-			break;
-	    }
+        /*
+        case ' ':
+            gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
+            break;
+        */
+        case 'w':
+            changePlayerDirection(1,UP);
+            break;
+        case 'a':
+            changePlayerDirection(1,LEFT);
+            break;
+        case 's':
+            changePlayerDirection(1,DOWN);
+            break;
+        case 'd':
+            changePlayerDirection(1,RIGHT);
+            break;
+        
+        case 'i':
+            changePlayerDirection(2,UP);
+            break;
+        case 'j':
+            changePlayerDirection(2,LEFT);
+            break;
+        case 'k':
+            changePlayerDirection(2,DOWN);
+            break;
+        case 'l':
+            changePlayerDirection(2,RIGHT);
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -205,14 +225,14 @@ void resetScore(){
 }
 
 printScore(){
-    putcharSpecifics(p1.score,492,0,2,0x0000FF);
-    putcharSpecifics(p2.score,532,0,2,0xFF0000);
+    putcharSpecifics(p1.score,492,0,2,P1_COLOR);
+    putcharSpecifics(p2.score,532,0,2,P2_COLOR);
 
 }
 
 void playTron(){
     tronOn = 1;
-    putSquare(0,0,1034,0);
+    putSquare(0,0,1034,0xE9EAEC);
 
     resetScore();
     while((p1.score - '0' < BESTOF) && (p2.score - '0' < BESTOF) && tronOn){
@@ -230,4 +250,5 @@ void playTron(){
     }
 
     tronOn = 0;
+    putSquare(0,0,1024,0);
 }
