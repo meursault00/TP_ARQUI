@@ -65,3 +65,7 @@ void sys_sleep(int seconds) {
 void sys_clearkeybuffer(){
     clearKeyBuffer();
 }
+
+void sys_changeLanguage(int lan){
+    changeLanguage(lan);
+}

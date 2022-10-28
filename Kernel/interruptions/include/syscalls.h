@@ -14,5 +14,6 @@ void sys_getRegisters(char * registers);
 void sys_beep(int freq, int time);
 void sys_sleep(int seconds);
 void sys_clearkeybuffer();
+void sys_changeLanguage(int lan);
 
 #endif

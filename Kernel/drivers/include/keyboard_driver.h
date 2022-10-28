@@ -20,4 +20,6 @@ char getLastChar();
 
 void clearKeyBuffer();
 
+void changeLanguage(int lan);
+
 #endif

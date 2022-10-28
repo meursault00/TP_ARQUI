@@ -258,6 +258,8 @@ void commandHelp(){
 	newline();
 	appendstring("- PIANO");
 	newline();
+	appendstring("- LANGUAGE (EN o ES) ");
+	newline();
 	appendstring("Presione ESC para volver a la consola.");
 	waitForKey(ESC);
 }
@@ -462,6 +464,13 @@ void checkCommand(){
 			else if(streql(section,"-"))
 				changeFontSize(-1);
 				clearScreen();
+		}
+		else if(streql(consoleBuffer, "LANGUAGE") || streql(consoleBuffer, "- LANGUAGE")){
+			if(streql(section,"EN")||streql(section,"en")){
+				changelanguage(0);
+			}
+			else if(streql(section,"ES"),streql(section,"es"))
+				changelanguage(1);
 		}
 	}
 	
