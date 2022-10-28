@@ -25,7 +25,7 @@ static int lastTick = 0;
 #define P2_STARTING_Y 70
 
 #define P1_COLOR 0x333652 //azul
-#define P2_COLOR 0xFAD02C //rojo
+#define P2_COLOR 0xFAD02C //amarillo
 
 #define UP 0
 #define RIGHT 1
@@ -41,6 +41,7 @@ static void changePlayerDirection(int player, int direction);
 static void keyboardHandler();
 static void resetScore();
 static void printScore();
+static void daleBo();
 
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
@@ -151,7 +152,7 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
 }
 
 void keyboardHandler(){
-    int  aux = getLastKey();
+    int aux = getLastKey();
     if(lastKey != aux){
         lastKey = aux;
         switch(aux){
@@ -178,16 +179,16 @@ void keyboardHandler(){
             changePlayerDirection(1,RIGHT);
             break;
         
-        case 38:
+        case 'i':
             changePlayerDirection(2,UP);
             break;
-        case 37:
+        case 'j':
             changePlayerDirection(2,LEFT);
             break;
-        case 40:
+        case 'k':
             changePlayerDirection(2,DOWN);
             break;
-        case 39:
+        case 'l':
             changePlayerDirection(2,RIGHT);
             break;
         default:
@@ -202,12 +203,6 @@ void drawPlayers(){
 }
 
 void movePlayers(){
-    //actualizo poiscion de ambos jugadors
-    p1.currX += mover[p1.direction][0];
-    p1.currY += mover[p1.direction][1];
-    p2.currX += mover[p2.direction][0];
-    p2.currY += mover[p2.direction][1];
-
     if(checkPlayersPosition()){ //si es que estan vivos marco respectivos cuadros y dibujo
         board[p1.currX][p1.currY] = 1;
         board[p2.currX][p2.currY] = 1;
@@ -217,6 +212,12 @@ void movePlayers(){
         // paso los colores correspondientes
         drawPlayers();
     }
+    //actualizo poiscion de ambos jugadors
+    p1.currX += mover[p1.direction][0];
+    p1.currY += mover[p1.direction][1];
+    p2.currX += mover[p2.direction][0];
+    p2.currY += mover[p2.direction][1];
+
 }
 
 void resetScore(){
@@ -224,7 +225,7 @@ void resetScore(){
     p2.score = '0';
 }
 
-printScore(){
+void printScore(){
     putcharSpecifics(p1.score,492,0,2,P1_COLOR);
     putcharSpecifics(p2.score,532,0,2,P2_COLOR);
 
@@ -232,7 +233,8 @@ printScore(){
 
 void playTron(){
     tronOn = 1;
-    putSquare(0,0,1034,0xE9EAEC);
+    putSquare(0,0,1024,0xE9EAEC);
+    lastTick = gettick();
 
     resetScore();
     while((p1.score - '0' < BESTOF) && (p2.score - '0' < BESTOF) && tronOn){
@@ -241,14 +243,81 @@ void playTron(){
         printScore();
         gameOn = 1;
         while(gameOn){
+            //getchar();
             keyboardHandler();
-            if(gettick() % 2 == 0){
+            if(gettick() != lastTick){
                 movePlayers();
+                lastTick = gettick();
             }
         }
         beep(440,2);
     }
+    
+    for(int i=0; i<1024; i+=8){
+        for(int j=0; j<256; j+=8){
+            putSquare(i,j,8,0x333652);
+        }
+        for(int j=256; j<512; j+=8){
+            putSquare(i,j,8,0xFAD02C);
+        }
+        for(int j=512; j<768; j+=8){
+            putSquare(i,j,8,0x333652);
+        }
+    }
+    if(p1.score == '3')
+        putstringSpecifics("1 WINS",32,256,20,0x333652);
+    else
+        putstringSpecifics("2 WINS",32,256,20,0x333652);
+    
+    daleBo(4);
+
+    clearkeybuffer();
 
     tronOn = 0;
-    putSquare(0,0,1024,0);
+    //putSquare(0,0,1024,0);
+
+}
+
+void daleBo(int n){
+    beep(262,n); //C
+    beep(294,n); //D
+    beep(330,n); //E
+    for(int i=0; i<8; i++)
+        beep(349,n); //F
+    beep(330,n); //E
+    beep(294,n); //D
+    beep(349,n); //F
+    beep(294,2*n); //D
+
+    beep(262,n); //C
+    beep(294,n); //D
+    beep(330,n); //E
+    for(int i=0; i<8; i++)
+        beep(349,n); //F
+    beep(330,n); //E
+    beep(294,n); //D
+    beep(349,n); //F
+    beep(392,2*n); //G
+
+    beep(262,n); //C
+    beep(294,n); //D
+    beep(330,n); //E
+    for(int i=0; i<8; i++)
+        beep(392,n); //G
+    beep(349,n); //F
+    beep(330,n); //E
+    beep(392,n); //G
+    beep(330,2*n); //E
+
+    beep(262,n); //C
+    beep(294,n); //D
+    beep(330,n); //E
+    for(int i=0; i<4; i++)
+        beep(349,n); //F
+    for(int i=0; i<3; i++)
+        beep(330,n); //E
+    beep(349,n); //F
+    beep(330,n); //E
+    for(int i=0; i<3; i++)
+        beep(294,2*n); //D
 }

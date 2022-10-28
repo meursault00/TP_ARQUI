@@ -20,6 +20,8 @@ static uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,u
 #define SYS_GETLASTKEY_ID 6
 #define SYS_GETREGISTERS_ID 7
 #define SYS_BEEP_ID 8
+#define SYS_SLEEP_ID 9
+#define SYS_CLEARKEYBUFFER 10
 
 
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
@@ -42,6 +44,8 @@ void initialize(){
     (fun_sys[SYS_GETLASTKEY_ID])=sys_getLastKey;
     (fun_sys[SYS_GETREGISTERS_ID])=sys_getRegisters;
 	(fun_sys[SYS_BEEP_ID])=sys_beep;
+    (fun_sys[SYS_SLEEP_ID])=sys_sleep;
+    (fun_sys[SYS_CLEARKEYBUFFER])=sys_clearkeybuffer;
 }
 
 

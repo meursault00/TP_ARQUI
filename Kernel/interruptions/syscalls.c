@@ -32,7 +32,7 @@ char sys_getLastKey(){
 
 
 int sys_tick(){
-    sys_halt();
+    //sys_halt();
     return ticks_elapsed();
 }
 
@@ -54,4 +54,13 @@ int sys_getTime(int op){
 
 void sys_beep(int freq, int time){
     beeep(freq,time);
+}
+
+void sys_sleep(int seconds) {
+    int start = seconds_elapsed();
+    while (seconds_elapsed() - start < seconds) _hlt();
+}
+
+void sys_clearkeybuffer(){
+    clearKeyBuffer();
 }

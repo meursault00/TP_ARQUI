@@ -12,5 +12,7 @@ int sys_getTime(int op);
 char sys_getLastKey();
 char* sys_getRegisters();
 void sys_beep(int freq, int time);
+void sys_sleep(int seconds);
+void sys_clearkeybuffer();
 
 #endif

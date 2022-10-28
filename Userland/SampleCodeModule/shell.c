@@ -7,6 +7,7 @@
 
 void initialize_shell(){
 	appendstring("#USER > ");
+	
 	while(1){
 		drawCursor(fontcolor);
 		char c = getchar();

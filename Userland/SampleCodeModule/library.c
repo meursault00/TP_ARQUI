@@ -141,10 +141,12 @@ void floatToString( float number, char * buffer, int digits  ){
 }
 
 static void updateCursor(){
-	cursorX += fontsize*8;
-	if((cursorX / 1024)*fontsize*16 > cursorY){ // cursorX % 1024 == 0 
-			cursorY += fontsize*16; 
+	if(cursorX + fontsize*8 >= 1024){
+		cursorY += fontsize*16;
+		cursorX = 0;
 	}
+	else
+		cursorX += fontsize*8;
 }
 
 void appendchar( char character ){
@@ -160,20 +162,26 @@ void appendchar( char character ){
 }
 
 void newline(){
-	int aux = cursorY;
-	do{appendchar(' ');} while(cursorY == aux && IN_BOUNDS);
+	drawCursor(0);
+	cursorX = 0;
+	cursorY += 16*fontsize;
 }
 
 void backspace(){
 	if(cursorX != 0){
 		drawCursor(0x000000);
-		cursorX -= fontsize * 8;
-		cursorY = (cursorX / 1024)*16*fontsize;
+		if(cursorX-fontsize*8 < 0){
+			cursorY -= fontsize*16;
+			cursorX = 1023;
+		}
+		else
+			cursorX -= fontsize * 8;
 		putSquare(cursorX,cursorY,fontsize*8,0x000000);
 		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,0x000000);
 		drawCursor(fontcolor);
 	}
 }
+
 
 void putchar(char c){
 	appendchar(c);
@@ -181,6 +189,16 @@ void putchar(char c){
 void putcharSpecifics(char character, int x, int y, int size,int color){
 	write(character,x,y,size,color);
 }
+
+void putstringSpecifics(char * string, int x, int y, int size, int color){
+	int accum;
+	for ( int i = 0; string[i] != 0; i++ ){
+		accum=  i*size*8;
+		putcharSpecifics(string[i], x + accum, y, size, color);
+
+	}
+}
+
 int strcmp(const char* s1, const char* s2){
     while (*s1 && (*s1 == *s2)){
         s1++, s2++;
@@ -326,7 +344,6 @@ void printf ( char * foundation, void * parameters[] ){
                 appendstring((char*)parameters[j++]); 
                 break;
             }
-            
             case 'd':{
                 int number = *((int*)parameters[j++]);
                 int digits = countDigits(number);
@@ -430,8 +447,16 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
-/*
-//scanf implementation 
+
+int pow(int base, int exponent){
+	int result = 1;
+	for(int i = 0; i < exponent; i++){
+		result *= base;
+	}
+	return result;
+}
+
+// scanf implementation by @josemariasosa
 void scanf(char * format, void * parameters[]){
 	int j = 0;
 	for ( int i = 0; format[i] != 0; i++ ){
@@ -454,27 +479,42 @@ void scanf(char * format, void * parameters[]){
 			case 'd':{
 				int * number = (int*)parameters[j++];
 				char c = getchar();
-				int k = 0;
-				char buffer[20] = {0};
-				while(c != '\n'){
-					buffer[k++] = c;
+				int sign = 1;
+				if(c == '-'){
+					sign = -1;
 					c = getchar();
 				}
-				buffer[k] = '\0';
-				*number = stringToInt(buffer);
+				int result = 0;
+				while(c != '\n'){
+					result = result*10 + (c - '0');
+					c = getchar();
+				}
+				*number = result*sign;
 				break;
 			}
 			case 'f':{
 				float * floatNumber = (float*)parameters[j++];
 				char c = getchar();
-				int k = 0;
-				char buffer[20] = {0};
-				while(c != '\n'){
-					buffer[k++] = c;
+				int sign = 1;
+				if(c == '-'){
+					sign = -1;
 					c = getchar();
 				}
-				buffer[k] = '\0';
-				*floatNumber = stringToFloat(buffer);
+				int result = 0;
+				while(c != '.'){
+					result = result*10 + (c - '0');
+					c = getchar();
+				}
+				c = getchar();
+				int decimal = 0;
+				int decimalCount = 0;
+				while(c != '\n'){
+					decimal = decimal*10 + (c - '0');
+					c = getchar();
+					decimalCount++;
+				}
+				*floatNumber = (float)result + (float)decimal/(float)pow(10,decimalCount);
+				*floatNumber *= sign;
 				break;
 			}
 			default:
@@ -485,5 +525,3 @@ void scanf(char * format, void * parameters[]){
 		} 
 	}
 }
-*/
-

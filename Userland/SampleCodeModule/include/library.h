@@ -12,8 +12,11 @@ static char buffer[64] = {0};
 static int cursorX = 0; 				// por que estaba la hora
 static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 
+void scanf(char * format, void * parameters[]);
+
 void putchar(char c);
 void putcharSpecifics( char character, int x, int y, int size,int color);
+void putstringSpecifics(char * string, int x, int y, int size, int color);
 void putword( int fd, char * string );
 void printf(  char * foundation, void * parameters[]);
 void printInt(uint64_t );

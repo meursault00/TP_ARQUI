@@ -279,9 +279,15 @@ void commandTime(){
 }
 
 void commandTron(){
+	//bufferOn = 0;
 	playTron();
-	commandClear();
+	restartCursor();
+	getchar();
+	//clearkeybuffer();
+	clearScreen();
+	//bufferOn = 1;
 }
+
 void commandPiano(){
 	appendstring("Usted se encuentra frente a un teclado especial.");
 	newline();
@@ -312,8 +318,17 @@ commandSize(){
 	
 }
  static void div_cero(){
-	int x=1/0;
+	int a, b ;
+	void *parameters[] = {&a, &b};
+	scanf("%d %d",parameters);
+	printInt(a);
+	newline();
+	printInt(b);
+	//printInt(1/s);
+	//int x=1/s;
  }
+
+// hexa to int
 
 
 void checkCommand(){
@@ -353,9 +368,9 @@ void checkCommand(){
 		}
 		else if(changingSize){
 			if(streql(consoleBuffer, "+"))
-				changeFontSize(2);
+				changeFontSize(1);
 			else if(streql(consoleBuffer, "-"))
-				changeFontSize(-2);
+				changeFontSize(-1);
 			changingSize = 0;
 			clearScreen();
 		}
@@ -376,6 +391,8 @@ void checkCommand(){
 	}
 	
 }
+
+
 
 void checkKey( char c ){
 	switch (c)

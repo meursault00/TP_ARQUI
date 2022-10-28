@@ -11,4 +11,6 @@ extern int getTime(int code);
 extern char getLastKey();
 extern char* getRegisters();
 extern void beep(int freq, int time);
+extern void sleep(int seconds);
+extern void clearkeybuffer();
 #endif
