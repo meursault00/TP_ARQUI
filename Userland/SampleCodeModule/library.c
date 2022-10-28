@@ -40,6 +40,52 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	return digits;
 }
 
+unsigned char hexToChar( unsigned char a, unsigned char b ){
+	unsigned char returnChar = 0; // 0000 0000
+	if ( a >= 'A' && a <= 'F' )
+		returnChar = (a%'A')+10; // caso B seria 0000 1011
+	else if ( a >= '0' && a <= '9' )
+		returnChar =  a%'0';
+	returnChar = returnChar<<4; // 1011 0000
+	if ( b >= 'A' && b <= 'F' )
+		returnChar = returnChar + (b%'A')+10; // caso b = F seria 1011 1111 
+	else if ( b >= '0' && b <= '9' )
+		returnChar = returnChar + (b%'0');
+	return returnChar;
+}
+
+void memCopy( char * pointer1, char * pointer2, int chars ){
+	for ( int i = 0; i < chars; i++ )
+		pointer1[i] = pointer2[i];
+}
+
+uint64_t hexstringToInt(char * s){
+    int c;
+    uint64_t rta = 0;
+
+    if(s == '0' &&(s+1) == 'x')
+        s += 2;
+
+    int len = strlen(s);
+
+    for (int i = 0; i < len; i++){
+        c = s[len - 1 - i] - '0';
+        if(c < 0 || c > 9){
+            c = s[len - 1 - i] - 'A' + 10;
+            if(c < 10 || c > 15)
+                return 0;
+        }
+        rta += c*pow(16, i);
+    }
+    return rta;
+}
+
+int pow(int base, unsigned int exp){
+	int rta=1;
+	for(int i=0;i<exp;i++)
+		rta*=base;
+	return rta;
+}
 // char strcmp( const char* stringA,const char* stringB)  
 // {  
 //     char flag = 0;
@@ -448,13 +494,6 @@ char streql( const char* stringA,const char* stringB)
     return 1;
 } 
 
-int pow(int base, int exponent){
-	int result = 1;
-	for(int i = 0; i < exponent; i++){
-		result *= base;
-	}
-	return result;
-}
 
 // scanf implementation by @josemariasosa
 void scanf(char * format, void * parameters[]){

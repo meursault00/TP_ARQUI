@@ -19,11 +19,13 @@ void commandSnapshot();
 void commandClear();
 void commandTron();
 void printRegisters();
-char toHex( char character );
+unsigned char toHex( unsigned char character );
 void toUpper(char * string);
 void clearScreen();
 void checkKey( char c );
 void printCurrentTime();
 void printRTC(int code);
+void commandMemAccess( char * , int);
+void printAddress( unsigned char * address );
 
 #endif

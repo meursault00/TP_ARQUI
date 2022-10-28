@@ -22,6 +22,7 @@ static uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,u
 #define SYS_BEEP_ID 8
 #define SYS_SLEEP_ID 9
 #define SYS_CLEARKEYBUFFER 10
+#define SYS_MEMACCESS_ID 11
 
 
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
@@ -46,6 +47,8 @@ void initialize(){
 	(fun_sys[SYS_BEEP_ID])=sys_beep;
     (fun_sys[SYS_SLEEP_ID])=sys_sleep;
     (fun_sys[SYS_CLEARKEYBUFFER])=sys_clearkeybuffer;
+	// (fun_sys[SYS_MEMACCESS_ID])=sys_memAccess;
+
 }
 
 
