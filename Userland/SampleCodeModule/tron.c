@@ -151,7 +151,7 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
 }
 
 void keyboardHandler(){
-    int aux = getLastKey();
+    int  aux = getLastKey();
     if(lastKey != aux){
         lastKey = aux;
         switch(aux){

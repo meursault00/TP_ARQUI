@@ -430,3 +430,60 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
+/*
+//scanf implementation 
+void scanf(char * format, void * parameters[]){
+	int j = 0;
+	for ( int i = 0; format[i] != 0; i++ ){
+		if ( format[i] == '%' ){
+			i++;
+			switch (format[i])
+			{
+			case 's':{
+				char * string = (char*)parameters[j++];
+				int k = 0;
+				char c = getchar();
+				while(c != '\n'){
+					string[k++] = c;
+					c = getchar();
+				}
+				string[k] = '\0';
+				break;
+			}
+			
+			case 'd':{
+				int * number = (int*)parameters[j++];
+				char c = getchar();
+				int k = 0;
+				char buffer[20] = {0};
+				while(c != '\n'){
+					buffer[k++] = c;
+					c = getchar();
+				}
+				buffer[k] = '\0';
+				*number = stringToInt(buffer);
+				break;
+			}
+			case 'f':{
+				float * floatNumber = (float*)parameters[j++];
+				char c = getchar();
+				int k = 0;
+				char buffer[20] = {0};
+				while(c != '\n'){
+					buffer[k++] = c;
+					c = getchar();
+				}
+				buffer[k] = '\0';
+				*floatNumber = stringToFloat(buffer);
+				break;
+			}
+			default:
+				break;
+			}
+		}else{
+			getchar();
+		} 
+	}
+}
+*/
+

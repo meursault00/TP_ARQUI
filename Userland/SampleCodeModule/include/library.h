@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 static int currentCursorColor = 0;
-static int fontcolor = 0x00ff44;
+static int fontcolor = 0x11a7bb;
 static int fontsize = 2;
 static char buffer[64] = {0};
 

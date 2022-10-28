@@ -3,6 +3,7 @@
 #include <system_calls.h>
 #include <tron.h>
 
+#include <keyboardPiano.h>
 static int changingSize = 0;
 
 /**
@@ -266,7 +267,20 @@ void commandTime(){
 
 void commandTron(){
 	playTron();
-	restartCursor();
+	commandClear();
+}
+void commandPiano(){
+	appendstring("Usted se encuentra frente a un teclado especial.");
+	newline();
+	appendstring("-al presionar \'a\' sonara la nota DO y asi consecutivamente.");
+	newline();
+	appendstring("-tambien encontrara las octavas en w, e, t,y,u,");
+	newline();
+	newline();
+	appendstring("<Para salir presione la barra espaciadora>");
+
+	playPiano();
+	commandClear();
 }
 
 void commandBeep(){
@@ -301,12 +315,13 @@ void checkCommand(){
 			commandTron();
 		else if(streql(consoleBuffer, "CLEAR") || streql(consoleBuffer, "- CLEAR") )
 			commandClear();
-		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") )
-			appendstring("work in progress");
-			// beep();
-		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") )
-			appendstring("work in progress");
-			// soviet_anthem();
+		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") ){
+			commandBeep();
+		}
+		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") ){
+
+		}
+			//soviet_anthem();
 		else if( streql(consoleBuffer,"SNAPSHOT")|| streql(consoleBuffer, "- SNAPSHOT"))
 			commandSnapshot();
 		else if(streql(consoleBuffer, "TIME") || streql(consoleBuffer, "-TIME"))
@@ -320,7 +335,7 @@ void checkCommand(){
 			div_cero();
 		}
 		else if(streql(consoleBuffer, "SIZE") || streql(consoleBuffer, "- SIZE")){
-		commandSize();
+			commandSize();
 		}
 		else if(changingSize){
 			if(streql(consoleBuffer, "+"))
@@ -329,6 +344,9 @@ void checkCommand(){
 				changeFontSize(-2);
 			changingSize = 0;
 			clearScreen();
+		}
+		else if(streql(consoleBuffer, "PIANO")){
+			commandPiano();
 		}
 	
 	}else{
