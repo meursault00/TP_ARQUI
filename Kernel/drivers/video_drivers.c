@@ -100,9 +100,9 @@ int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 		return a + tam*8;
 	}
 	if(letter == 255)
-		start = 94;
+		start = 29;
 	if(letter == 254)
-		start = 95;
+		start = 28;
 	for ( int i = 0; i < 32; i++ ){
 		if ( i % 2 == 0 && i != 0){
 			y+= tam;
