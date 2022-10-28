@@ -61,7 +61,7 @@ static char asccode[MAX_SCANCODE][2] ={
     {   0,0   }, 
     {   0,0   },
     {   0,0   },
-    { ' ',' ' },
+    { ' ',' ' }    
 };
 static int shiftActivated = 0;
 static int capsActivated = 0;
@@ -131,35 +131,7 @@ int storeKey(){
 
 
 
-void write(int aux){ // escritura usando funciones de video
-	if(aux!=0){
-        
-		if(aux == 8){
-			videoBackSpace();
-			keyBuffer[bufferCount--] = 0;
-		}
-		else if(aux == '\n'){
-			//if ( buffer != 0 && keyBuffer[0] != 0 )
-			//	checkCommand(buffer);
-			clearKeyBuffer();
-			videoNewLine();
 
-		}
-		else if(aux == 27){ //escape
-			clearScreen();
-			restartCursor();
-		}
-		//else if ( aux == '=' ){ // tecla para hacer un snapshot en un momento arbitrario
-		//	char* aux = snapshot(); 
-		//	memMoveChar(snapshotBuffer, aux, 128); 
-		//}
-		else{
-			videoPrintChar(aux);
-			keyBuffer[bufferCount] = aux;
-			bufferCount+=1;
-		}
-	}
-}
 
 void clearKeyBuffer ( void ){
 	for ( int i = 0; i < MAX_BUFFER; i++ )

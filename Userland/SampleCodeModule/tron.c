@@ -178,16 +178,16 @@ void keyboardHandler(){
             changePlayerDirection(1,RIGHT);
             break;
         
-        case 'i':
+        case 38:
             changePlayerDirection(2,UP);
             break;
-        case 'j':
+        case 37:
             changePlayerDirection(2,LEFT);
             break;
-        case 'k':
+        case 40:
             changePlayerDirection(2,DOWN);
             break;
-        case 'l':
+        case 39:
             changePlayerDirection(2,RIGHT);
             break;
         default:

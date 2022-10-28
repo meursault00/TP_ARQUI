@@ -216,6 +216,16 @@ void printRegisters(){
 	}
 }
 
+void waitForKey(char key){
+	while(1){
+		if(getchar() == key){
+			break;
+		}
+	}
+	//and restart
+	clearScreen();
+	restartCursor();
+}
 void commandHelp(){
 	clearScreen();
 	restartCursor();
@@ -247,7 +257,10 @@ void commandHelp(){
 	newline();
 	appendstring("- DIVCERO");
 	newline();
-	appendstring("PRESIONE ESC PARA VOLVER AL MENU PRINCIPAL");
+	appendstring("- PIANO");
+	newline();
+	appendstring("Presione ESC para volver a la consola.");
+	waitForKey(ESC);
 }
 
 void commandClear(){
@@ -316,6 +329,7 @@ void checkCommand(){
 		else if(streql(consoleBuffer, "CLEAR") || streql(consoleBuffer, "- CLEAR") )
 			commandClear();
 		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") ){
+			
 			commandBeep();
 		}
 		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") ){

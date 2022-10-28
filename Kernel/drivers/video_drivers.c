@@ -65,9 +65,9 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	put_rectangle(x,y,tam,tam,color);
 }
 void put_rectangle(uint32_t x , uint32_t y,uint32_t tamX,uint32_t tamY, uint32_t color){
-	for(int i=0;i<tamX;i++)
-		for(int j =0;j<tamY;j++)//TODO bruzo: nose su para aabajo en el tron funciona mi pantalla no llega a tanto
-			put_pixel(x+i,y+j,color);
+	for(int i=0;i<tamY;i++)
+		for(int j =0;j<tamX;j++)//TODO bruzo: nose su para aabajo en el tron funciona mi pantalla no llega a tanto
+			put_pixel(x+j,y+i,color);
 
 }
 
