@@ -18,4 +18,6 @@ char getKey();
 
 char getLastChar();
 
+void clearKeyBuffer();
+
 #endif

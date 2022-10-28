@@ -68,30 +68,28 @@ outb:
 	ret
 
 
-
 snapshot:
 
-	mov [snapshotBuffer], rax
-	mov [snapshotBuffer+8], rbx
-	mov [snapshotBuffer+16], rdx
-	mov [snapshotBuffer+24], rcx
-	mov [snapshotBuffer+32], rsi
-	mov [snapshotBuffer+40], rdi
-	mov [snapshotBuffer+48], rbp
-	mov [snapshotBuffer+56], rsp
-	mov [snapshotBuffer+64], r8
-	mov [snapshotBuffer+72], r9
-	mov [snapshotBuffer+80], r10
-	mov [snapshotBuffer+88], r11
-	mov [snapshotBuffer+96], r12
-	mov [snapshotBuffer+104], r13
-	mov [snapshotBuffer+112], r14
-	mov [snapshotBuffer+120], r15
+	; en rdi tengo el puntero al comienzo de donde tengo que llenar con las cosas
 
-	mov rax, snapshotBuffer
+
+	mov [rdi], rax
+	mov [rdi+8], rbx
+	mov [rdi+16], rdx
+	mov [rdi+24], rcx
+	mov [rdi+32], rsi
+	mov [rdi+40], rdi
+	mov [rdi+48], rbp
+	mov [rdi+56], rsp
+	mov [rdi+64], r8
+	mov [rdi+72], r9
+	mov [rdi+80], r10
+	mov [rdi+88], r11
+	mov [rdi+96], r12
+	mov [rdi+104], r13
+	mov [rdi+112], r14
+	mov [rdi+120], r15
+
+	mov rax, rdi
 
 	ret
-
-section .bss
-snapshotBuffer resb 128 
-memaccessBuffer resb 32

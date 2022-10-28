@@ -103,7 +103,7 @@ static char asccode[MAX_SCANCODE][2] ={
     { 'j','J' },
     { 'k','K' }, 
     { 'l','L' }, 
-    { 'ñ','Ñ' },
+    { 254,255 },
     {'{','['},
     { '`','~' }, 
     {   0,0   }, 
@@ -157,8 +157,10 @@ static int isValidScancode(int scancode){
 }
 
 static int isLetter(int scancode){
+    if(scancode == 0x27)
+        return 1;
     char ascii = asccode[scancode][0];
-    return  ascii >= 'a' && ascii <= 'z';
+    return  (ascii >= 'a' && ascii <= 'z');
 }
 
 int storeKey(){
@@ -193,7 +195,7 @@ int storeKey(){
 
 
 
-void clearKeyBuffer ( void ){
+void clearKeyBuffer(){
 	for ( int i = 0; i < MAX_BUFFER; i++ )
 		keyBuffer[i] = (char)0;
 	bufferCount= 0;
