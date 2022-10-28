@@ -4,7 +4,6 @@
 #include <tron.h>
 
 #include <keyboardPiano.h>
-static int changingSize = 0;
 
 /**
  *  HELP NO SE EJECUTA APRETANDO BACKSPACE
@@ -251,7 +250,7 @@ void commandHelp(){
 	newline();	
 	appendstring("- BEEP");
 	newline();
-	appendstring("- SIZE");
+	appendstring("- SIZE (+ o -))");
 	newline();
 	appendstring("- INVOP");
 	newline();
@@ -291,32 +290,19 @@ void commandTron(){
 void commandPiano(){
 	appendstring("Usted se encuentra frente a un teclado especial.");
 	newline();
-	appendstring("-al presionar \'a\' sonara la nota DO y asi consecutivamente.");
-	newline();
-	appendstring("-tambien encontrara las octavas en w, e, t,y,u,");
+	appendstring("Presione teclas...");
 	newline();
 	newline();
-	appendstring("<Para salir presione la barra espaciadora>");
+	appendstring("Para salir presione la SPACE bar.");
 
 	playPiano();
 	commandClear();
 }
 
 void commandBeep(){
-	beep(1000, 100);	
+	beep(1000, 10);	
 }
 
-commandSize(){
-	changingSize = 1;
-	clearScreen();
-	appendstring("CAMBIAR FONT SIZE");
-	newline();
-	appendstring("+ INCREMENTAR");
-	newline();
-	appendstring("- DECREMENTAR");
-	newline();
-	
-}
  static void div_cero(){
 	int a, b ;
 	void *parameters[] = {&a, &b};
@@ -363,17 +349,6 @@ void checkCommand(){
 			clearScreen();
 			div_cero();
 		}
-		else if(streql(consoleBuffer, "SIZE") || streql(consoleBuffer, "- SIZE")){
-			commandSize();
-		}
-		else if(changingSize){
-			if(streql(consoleBuffer, "+"))
-				changeFontSize(1);
-			else if(streql(consoleBuffer, "-"))
-				changeFontSize(-1);
-			changingSize = 0;
-			clearScreen();
-		}
 		else if(streql(consoleBuffer, "PIANO")){
 			commandPiano();
 		}
@@ -388,6 +363,15 @@ void checkCommand(){
 			}
 		}
 		// deberiamos agregar la de size aca porque tambien recibe un parametro
+		else if(streql(consoleBuffer, "SIZE") || streql(consoleBuffer, "- SIZE")){
+			if(streql(section,"+")){
+				changeFontSize(1);
+				clearScreen();
+			}
+			else if(streql(section,"-"))
+				changeFontSize(-1);
+				clearScreen();
+		}
 	}
 	
 }
@@ -407,7 +391,6 @@ void checkKey( char c ){
 		case ESC:{
 			clearScreen();
 			restartCursor();
-			changingSize = 0;
 			appendstring("#USER > ");
 			break;
 		}

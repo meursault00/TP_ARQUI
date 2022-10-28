@@ -7,6 +7,9 @@
 
 
 #define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
+int lastEnter(){
+	return cursorY+16*fontsize > 736;
+}
 
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	char *p = buffer;
@@ -402,6 +405,10 @@ void putnewline( void) {
 	}
 }
 */
+void setCursor( int x, int y ){
+	cursorX = x;
+	cursorY = y;
+}
 
 void drawCursor(int color){
 	/* cursor editor de texto

@@ -13,6 +13,8 @@ static int cursorX = 0; 				// por que estaba la hora
 static int cursorY = 0; 			// 16 que es la cantidad de bits * fontsize
 
 void scanf(char * format, void * parameters[]);
+void setCursor( int x, int y );
+int lastEnter();
 
 void putchar(char c);
 void putcharSpecifics( char character, int x, int y, int size,int color);

@@ -53,6 +53,7 @@ void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 	screen[pixel_offset+2]=(uint8_t)((color>>16) & 0xFF); // R
 
 }
+
 /**
  * @brief los cuadrados se arman de arriba a la izq hacia abajo a la derecha
  * 
