@@ -25,8 +25,12 @@ static void error_sign(char * message){
         put_rectangle(190,190,800,300,0xFF0000);
 
         put_word(message,200,200,3,0xFFFFFF);
-        put_word("escriba y ejecute",200,200+34*3,3,0xFFFFFF);
-        put_word("clear para continuar   !!!",200,200+68*3,3,0xFFFFFF);
+        put_word("reiniciando consola en ",200,200+34*3,3,0xFFFFFF);
+        put_word("5 segundos  !!!",200,200+68*3,3,0xFFFFFF);
+        for(int i=0;i<(18*5);i++){
+            _hlt();
+        }
+        put_rectangle(190,190,810,310,0x000000);
 }      
 
 static void zero_division() {

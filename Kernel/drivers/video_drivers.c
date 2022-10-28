@@ -65,9 +65,17 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	put_rectangle(x,y,tam,tam,color);
 }
 void put_rectangle(uint32_t x , uint32_t y,uint32_t tamX,uint32_t tamY, uint32_t color){
-	for(int i=0;i<tamX;i++)
-		for(int j =0;j<tamY;j++)//TODO bruzo: nose su para aabajo en el tron funciona mi pantalla no llega a tanto
-			put_pixel(x+i,y+j,color);
+    uint8_t* screen=(uint8_t*) info->framebuffer;
+    uint32_t pixel_offset =(y) * (info->pitch)  ;
+    for(int j =0;j<tamY;j++){
+        for(int i=0;i<tamX;i++){
+            uint32_t aux=pixel_offset+(x+i)*3;
+            screen[aux]=(uint8_t)color & 0xFF; // B 
+            screen[aux+1]=(uint8_t)((color>>8) & 0xFF); // G
+            screen[aux+2]=(uint8_t)((color>>16) & 0xFF); // R
+        }
+        pixel_offset+=info->pitch;
+    }
 
 }
 
