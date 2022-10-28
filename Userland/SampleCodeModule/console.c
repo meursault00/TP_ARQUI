@@ -403,14 +403,8 @@ void commandMemAccess( char * memdirHexa, int stringlen ){
 }
 
  static void div_cero(){
-	int a, b ;
-	void *parameters[] = {&a, &b};
-	scanf("%d %d",parameters);
-	printInt(a);
-	newline();
-	printInt(b);
-	//printInt(1/s);
-	//int x=1/s;
+	
+	int x=1/0;
  }
 
 // hexa to int

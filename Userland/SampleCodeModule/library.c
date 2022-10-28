@@ -501,74 +501,145 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
-
-
-// scanf implementation by @josemariasosa
-void scanf(char * format, void * parameters[]){
-	int j = 0;
-	for ( int i = 0; format[i] != 0; i++ ){
-		if ( format[i] == '%' ){
-			i++;
-			switch (format[i])
-			{
-			case 's':{
-				char * string = (char*)parameters[j++];
-				int k = 0;
-				char c = getchar();
-				while(c != '\n'){
-					string[k++] = c;
-					c = getchar();
-				}
-				string[k] = '\0';
-				break;
-			}
-			
-			case 'd':{
-				int * number = (int*)parameters[j++];
-				char c = getchar();
-				int sign = 1;
-				if(c == '-'){
-					sign = -1;
-					c = getchar();
-				}
-				int result = 0;
-				while(c != '\n'){
-					result = result*10 + (c - '0');
-					c = getchar();
-				}
-				*number = result*sign;
-				break;
-			}
-			case 'f':{
-				float * floatNumber = (float*)parameters[j++];
-				char c = getchar();
-				int sign = 1;
-				if(c == '-'){
-					sign = -1;
-					c = getchar();
-				}
-				int result = 0;
-				while(c != '.'){
-					result = result*10 + (c - '0');
-					c = getchar();
-				}
-				c = getchar();
-				int decimal = 0;
-				int decimalCount = 0;
-				while(c != '\n'){
-					decimal = decimal*10 + (c - '0');
-					c = getchar();
-					decimalCount++;
-				}
-				*floatNumber = (float)result + (float)decimal/(float)pow(10,decimalCount);
-				*floatNumber *= sign;
-				break;
-			}
-			default:
-				break;
-			}
-		}else{
-			getchar();
-		} 
-	}
+int stringToInt(char * string, int base){
+    int number = 0;
+    int i = 0;
+    int sign = 1;
+    if ( string[0] == '-' ){
+        sign = -1;
+        i++;
+    }
+    for ( ; string[i] != 0; i++ ){
+        if ( string[i] >= '0' && string[i] <= '9' ){
+            number = number*base + string[i] - '0';
+        }else if ( string[i] >= 'A' && string[i] <= 'F' ){
+            number = number*base + string[i] - 'A' + 10;
+        }
+    }
+    return number*sign;
 }
+
+static unsigned char atointhex( unsigned char a){
+    unsigned char returnChar = 0; // 0000 0000
+    if ( a >= 'A' && a <= 'F' )
+        returnChar = (a%'A')+10; // caso B seria 0000 1011
+    else if ( a >= '0' && a <= '9' )
+        returnChar =  a%'0';
+    return returnChar;
+}
+
+int scan (char * str, ...){
+	va_list vl;
+    int i = 0, j=0, ret = 0;
+    char buff[100] = {0};
+ 	va_start( vl, str );
+ 	i = 0;
+ 	while (str && str[i])
+ 	{
+ 	    if (str[i] == '%') 
+ 	    {
+ 	       i++;
+ 	       switch (str[i]) 
+ 	       {
+				case 's':
+				{	char *string;
+					string=va_arg( vl, char* );
+					char buff[100];
+					strcpy(buff,string);
+					int k = 0;
+                char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+				appendchar('A');
+                while(c != '\n' && c!=' '){
+					buff[k++] = c;
+                    c = getchar();
+                }
+                	buff[k] = '\0';
+					strcpy(string,buff);
+					ret++;
+					break;
+				}
+ 	           case 'c': 
+ 	           {	char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+	 	           *(char *)va_arg( vl, char* ) =c;
+	 	           ret ++;
+	 	           break;
+ 	           }
+ 	           case 'd': 
+ 	           {
+	 	        	char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+
+                	int sign = 1;
+                	if(c == '-'){
+                    	sign = -1;
+                    	c = getchar();
+                	}
+                	int result = 0;
+                	while(c != '\n' && c!=' '){
+                    	result = result*10 + (c - '0');
+                    	c = getchar();
+                	}
+				*(int *)va_arg( vl, int* ) =result*sign;
+	 	           ret++;
+	 	           break;
+ 	            }
+ 	            case 'x': 
+ 	            {	
+					char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+                	int result = 0;
+                	while(c != '\n' && c!=' '){
+                    	result = result*16 + atointhex(c);
+                    	c = getchar();
+                	}
+				*(int *)va_arg( vl, int* ) =result;
+	 	        
+	 	           ret++;
+	 	           break;
+ 	            }
+				case 'f':
+				{
+					char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+                int sign = 1;
+                if(c == '-'){
+                    sign = -1;
+                    c = getchar();
+                }
+                int result = 0;
+                while(c != '.'){
+                    result = result*10 + (c - '0');
+                    c = getchar();
+                }
+                c = getchar();
+                int decimal = 0;
+                int decimalCount = 0;
+                while(c != '\n' && c!=' '){
+                    decimal = decimal*10 + (c - '0');
+                    c = getchar();
+                    decimalCount++;
+                }
+				*(float*)va_arg( vl, float* )=((float)result + (float)decimal/(float)pow(10,decimalCount))*sign;
+				ret++;
+					break;
+				}
+ 	        }
+ 	    } 
+        i++;
+    }
+    va_end(vl);
+    return ret;
+}
+
