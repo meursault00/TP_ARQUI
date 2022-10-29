@@ -8,9 +8,8 @@ void initialize_shell(){
 	putSquare(0,0,1024,BACKGROUND_COLOR);
 	appendstring("> $ ");
 	while(1){
-		refreshCursor();
-		//char c = getchar();
-		//checkKey(c);
+		char c = getchar();
+		checkKey(c);
 	}
 }
 
