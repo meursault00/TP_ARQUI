@@ -144,12 +144,13 @@ void floatToString( float number, char * buffer, int digits  ){
 }
 
 static void updateCursor(){
-	if(cursorX + fontsize*8 >= 1024){
+	if(cursorX + fontsize * 8 >= 1024){
 		cursorY += fontsize*16;
-		cursorX = 0;
+		cursorX = 4;
 	}
-	else
+	else{
 		cursorX += fontsize*8;
+	}
 }
 
 void appendchar( char character ){
@@ -158,29 +159,29 @@ void appendchar( char character ){
 		return;
 	}
 	
-	drawCursor(0x000000);
+	drawCursor(currentCursorColor);
 	putcharSpecifics(character,cursorX,cursorY,fontsize,fontcolor);
 	updateCursor();
 	drawCursor(fontcolor);
 }
 
 void newline(){
-	drawCursor(0);
-	cursorX = 0;
+	drawCursor(currentCursorColor);
+	cursorX = 4;
 	cursorY += 16*fontsize;
 }
 
 void backspace(){
-	if(cursorX != 0){
-		drawCursor(0x000000);
+	if(cursorX != 4){
+		drawCursor(currentCursorColor);
 		if(cursorX-fontsize*8 < 0){
 			cursorY -= fontsize*16;
 			cursorX = 1023;
 		}
 		else
 			cursorX -= fontsize * 8;
-		putSquare(cursorX,cursorY,fontsize*8,0x000000);
-		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,0x000000);
+		putSquare(cursorX,cursorY,fontsize*8,BACKGROUND_COLOR);
+		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,BACKGROUND_COLOR);
 		drawCursor(fontcolor);
 	}
 }
@@ -421,8 +422,8 @@ void drawCursor(int color){
 }
 
 void restartCursor(){
-	cursorX = 0;
-	cursorY = 0;
+	cursorX = 4;
+	cursorY = 4;
 }
 
 void changeFontSize(int increment){

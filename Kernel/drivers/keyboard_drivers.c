@@ -1,5 +1,5 @@
 #include <keyboard_driver.h>
-#include <naiveConsole.h>
+#include <video_driver.h>
 #define MAX_SCANCODE 58
 
 
@@ -76,7 +76,7 @@ static char asccode[MAX_SCANCODE][2] ={
     { '8','(' }, 
     { '9',')' }, 
     { '0','=' },
-    { '\'','?' },
+    { '\'','?'},
     { '¿','¡' }, 
     {'\b','\b'}, 
     {'\t','\t'},
@@ -121,7 +121,7 @@ static char asccode[MAX_SCANCODE][2] ={
     {   0,0   }, 
     {   0,0   },
     {   0,0   },
-    { ' ',' ' }    
+    { ' ',' ' },    
 };
 static int shiftActivated = 0;
 static int capsActivated = 0;
@@ -160,17 +160,33 @@ static int isLetter(int scancode){
     char ascii = asccode[scancode][0];
     return  ascii >= 'a' && ascii <= 'z';
 }
-
+#define SCANCODE_UP_ARROW 72
+#define SCANCODE_DOWN_ARROW 80
+#define SCANCODE_LEFT_ARROW 75
+#define SCANCODE_RIGHT_ARROW 77
+#define ASC_UP    '\200'
+#define ASC_DOWN  '\201'
+#define ASC_LEFT  '\202'
+#define ASC_RIGHT '\203'
+#define LSHIFT_PRESSED 0x2A          /* Scan codes for shift press, */
+#define LSHIFT_RELEASED 0xAA        /* shift release and capslock  */
+#define RSHIFT_PRESSED 0x36        /* keys.                       */
+#define RSHIFT_RELEASED 0xB6
+#define CAPSLOCK 0x3A
+#define CAPSLOCK_RELEASED 0xBA 
 int storeKey(){
-    int scancode  = getkeyScancode();
 
-    if(scancode == 42 || scancode == 54){
+    int scancode  = inb(0x60);
+    
+    
+    if(scancode == LSHIFT_PRESSED || scancode == RSHIFT_PRESSED){
         shiftActivated = 1;
     }
-    else if(scancode == 170 || scancode == 182){
+    
+    else if(scancode == LSHIFT_RELEASED || scancode == RSHIFT_RELEASED){
         shiftActivated = 0;
     }
-    else if(scancode == 58){
+    else if(scancode == CAPSLOCK){
         capsActivated = !capsActivated;
     }
     if(isValidScancode(scancode) && bufferCount < MAX_BUFFER){
@@ -184,7 +200,26 @@ int storeKey(){
         //write(keyBuffer[bufferCount-1]); // ESTE WRITE DEBERIA SER DE SHELL.c EN USERLAND
         return 1;
     }
-    
+    if(scancode == SCANCODE_UP_ARROW){
+        keyBuffer[bufferCount] = ASC_UP;
+        bufferCount++;
+        return 2;
+    }
+    if(scancode == SCANCODE_DOWN_ARROW){
+        keyBuffer[bufferCount] = ASC_DOWN;
+        bufferCount++;
+        return 3;
+    }
+    if(scancode == SCANCODE_LEFT_ARROW){
+        keyBuffer[bufferCount] = ASC_LEFT;
+        bufferCount++;
+        return 4;
+    }
+    if(scancode == SCANCODE_RIGHT_ARROW){
+        keyBuffer[bufferCount] = ASC_RIGHT;
+        bufferCount++;
+        return 5;
+    }
     return 0;
     
 }
@@ -225,73 +260,3 @@ void clearKeyBuffer ( void ){
 
 
 
-
-/*
-    else if(scancode == 14){
-        if(bufferCount > 0){
-            bufferCount--;
-            keyBuffer[bufferCount] = 0;
-        }
-    }
-    else if(scancode == 28){
-        keyBuffer[bufferCount] = 0;
-        bufferCount = 0;
-        if(strcmp(keyBuffer, "tron") == 0){
-            tronOn();
-        }
-        else if(strcmp(keyBuffer, "help") == 0){
-            help();
-        }
-        else if(strcmp(keyBuffer, "clear") == 0){
-            clear();
-        }
-        else if(strcmp(keyBuffer, "date") == 0){
-            date();
-        }
-        else if(strcmp(keyBuffer, "time") == 0){
-            time();
-        }
-        else if(strcmp(keyBuffer, "echo") == 0){
-            echo();
-        }
-        else if(strcmp(keyBuffer, "ls") == 0){
-            ls();
-        }
-        else if(strcmp(keyBuffer, "cat") == 0){
-            cat();
-        }
-        else if(strcmp(keyBuffer, "mkdir") == 0){
-            mkdir();
-        }
-        else if(strcmp(keyBuffer, "rmdir") == 0){
-            rmdir();
-        }
-        else if(strcmp(keyBuffer, "rm") == 0){
-            rm();
-        }
-        else if(strcmp(keyBuffer, "touch") == 0){
-            touch();
-        }
-        else if(strcmp(keyBuffer, "cp") == 0){
-            cp();
-        }
-        else if(strcmp(keyBuffer, "mv") == 0){
-            mv();
-        }
-        else if(strcmp(keyBuffer, "cd") == 0){
-            cd();
-        }
-        else if(strcmp(keyBuffer, "pwd") == 0){
-            pwd();
-        }
-        else if(strcmp(keyBuffer, "info") == 0){
-            info();
-        }
-        else if(strcmp(keyBuffer, "ps") == 0){
-            ps();
-        }
-        else if(strcmp(keyBuffer, "kill") == 0){
-            kill();
-        }
-        else if(strcmp(keyBuffer
-        */

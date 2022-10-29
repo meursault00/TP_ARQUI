@@ -30,7 +30,7 @@ static void error_sign(char * message){
         for(int i=0;i<(18*5);i++){
             _hlt();
         }
-        put_rectangle(190,190,810,310,0x000000);
+        put_rectangle(190,190,810,310,0x77216F);
 }      
 
 static void zero_division() {

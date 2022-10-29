@@ -1,5 +1,4 @@
 ;GLOBAL getkey
-GLOBAL getkeyScancode
 GLOBAL keyboardActive
 section .text
 
@@ -19,15 +18,6 @@ section .text
 ;	pop rbp
 ;	ret
 
-getkeyScancode:
-    push rbp
-	mov rbp, rsp
-
-	mov rax, 0
-	in al, 0x60
-
-	leave
-    ret
 
 keyboardActive:
     push rbp

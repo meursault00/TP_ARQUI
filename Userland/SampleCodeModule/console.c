@@ -72,12 +72,11 @@ void clearconsoleBuffer(){
 	for ( int i = 0; i < lastChar; i++ )
 		consoleBuffer[i] = 0;
 	lastChar=0;
-	appendstring("#USER > ");
 
 }
 
 void clearScreen(){
-	putSquare(0,0,1100,0x000000);
+	putSquare(0,0,1024,BACKGROUND_COLOR);
 	restartCursor();
 }
 
@@ -304,18 +303,34 @@ void commandBeep(){
 }
 
  static void div_cero(){
-	int a, b ;
-	void *parameters[] = {&a, &b};
-	scanf("%d %d",parameters);
-	printInt(a);
-	newline();
-	printInt(b);
-	//printInt(1/s);
-	//int x=1/s;
+	int x=1/0;
  }
 
-// hexa to int
-
+void soviet_anthem(){
+	beep(392 ,375 /50); 
+	beep(523 ,750 /50); 
+	beep(392 ,463 /50); 
+	beep(440 ,187 /50); 
+	beep(494 ,750 /50); 
+	beep(330 ,375 /50); 
+	beep(330 ,375 /50); 
+	beep(440 ,750 /50); 
+	beep(392 ,463 /50); 
+	beep(349 ,187 /50); 
+	beep(392 ,750 /50); 
+	beep(262 ,463 /50); 
+	beep(262 ,187 /50); 
+	beep(294 ,750 /50); 
+	beep(294 ,463 /50); 
+	beep(330 ,187 /50); 
+	beep(349 ,750 /50); 
+	beep(349 ,463 /50); 
+	beep(392 ,187 /50); 
+	beep(440 ,750 /50); 
+	beep(494 ,375 /50); 
+	beep(523 ,375 /50); 
+	beep( 587,1125/50);
+}
 
 void checkCommand(){
 	char section[64]={0};
@@ -334,9 +349,8 @@ void checkCommand(){
 			commandBeep();
 		}
 		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") ){
-
+			soviet_anthem();
 		}
-			//soviet_anthem();
 		else if( streql(consoleBuffer,"SNAPSHOT")|| streql(consoleBuffer, "- SNAPSHOT"))
 			commandSnapshot();
 		else if(streql(consoleBuffer, "TIME") || streql(consoleBuffer, "-TIME"))
@@ -375,35 +389,98 @@ void checkCommand(){
 	}
 	
 }
+#define MAX_COMMAND_LENGTH 64
+#define MAX_COMMANDS 64
+char historyBuffer[MAX_COMMANDS][MAX_COMMAND_LENGTH];
+unsigned int historyIndex = 0;
+unsigned int historyDim = 0;
 
+static void loadHistory(const char *s){
+	int len = strlen(s);
+	for(int j = 0; j < len; j++){
+		historyBuffer[historyDim][j] = s[j];
+	}
+	historyBuffer[historyDim++][len] = 0;
+	historyIndex = historyDim;
+}
 
+static char * upHistory(){
+	if(historyIndex > 0){
+		return historyBuffer[--historyIndex];
+	}
+	else{
+		beep(100, 1);
+		return "";
+	}
+}
 
+static char * downHistory(){
+	if(historyIndex < historyDim){
+		return historyBuffer[++historyIndex];
+	}
+	beep(100, 1);
+	return "";
+}
+
+static void inLineReset(){
+	int i = 0;
+	while(i <= strlen(consoleBuffer)-1){
+		backspace();
+		i++;
+	}
+	clearconsoleBuffer();
+}
+
+void upArrow(int arrowUp){
+	inLineReset();
+	char *aux ;
+	if(arrowUp){
+		aux =  upHistory();
+	}
+	else{
+		aux = downHistory();
+
+	}
+	appendstring(aux);
+	lastChar =0;
+	for(int i = 0; i < strlen(aux); i++){
+		consoleBuffer[lastChar++] = aux[i];
+	}
+}
+void restartHistory(){
+	historyDim = 0;
+	historyIndex = historyDim;
+}
 void checkKey( char c ){
 	switch (c)
 		{
 		case BACKSPACE:{
 			if(lastChar != 0){
 				backspace();
-				consoleBuffer[lastChar--] = 0;				
+				consoleBuffer[--lastChar] = 0;
+
+			}else{
+				beep(80, 1);
 			}
 			break;
 		}
 		case ESC:{
 			clearScreen();
 			restartCursor();
-			appendstring("#USER > ");
+			restartHistory();
+			appendstring("~$ ");
 			break;
 		}
 		case ENTER : {
 			newline();
 
 			if ( consoleBuffer != 0 && consoleBuffer[0] ){	
+				loadHistory(consoleBuffer);
 
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
-			}else{
-				appendstring("#USER > ");
 			}
+			appendstring("~$ ");
 			break;
 		}
 		case '=':{
@@ -417,6 +494,14 @@ void checkKey( char c ){
 				consoleBuffer[lastChar+i] =' ';
 			}
 			lastChar+=4;
+			break;
+		}
+		case '\200':{
+			upArrow(1);
+			break;
+		}
+		case '\201':{
+			upArrow(0);
 			break;
 		}
 		default:{

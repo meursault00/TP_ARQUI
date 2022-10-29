@@ -56,7 +56,6 @@ void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 
 /**
  * @brief los cuadrados se arman de arriba a la izq hacia abajo a la derecha
- * 
  * @param x pos en x
  * @param y pos en y
  * @param tam tamaño de 1 lado
@@ -144,6 +143,6 @@ void VideoClearScreen(){
 			put_square((i*4+j)*256,i*256,256,0x000000);
 		}
 	}*/
-	put_square(0,0,1024,0);
+	put_square(0,0,1024,0x002B36);
 }
 

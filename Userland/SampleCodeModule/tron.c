@@ -150,7 +150,10 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
     if(aux != 2 && aux != 0)
         p2.direction = direction;
 }
-
+#define ASC_UP    '\200'
+#define ASC_DOWN  '\201'
+#define ASC_LEFT  '\202'
+#define ASC_RIGHT '\203'
 void keyboardHandler(){
     int aux = getLastKey();
     if(lastKey != aux){
@@ -179,16 +182,16 @@ void keyboardHandler(){
             changePlayerDirection(1,RIGHT);
             break;
         
-        case 'i':
+        case ASC_UP:
             changePlayerDirection(2,UP);
             break;
-        case 'j':
+        case ASC_LEFT:
             changePlayerDirection(2,LEFT);
             break;
-        case 'k':
+        case ASC_DOWN:
             changePlayerDirection(2,DOWN);
             break;
-        case 'l':
+        case ASC_RIGHT:
             changePlayerDirection(2,RIGHT);
             break;
         default:
