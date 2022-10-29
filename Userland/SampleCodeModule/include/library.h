@@ -53,5 +53,10 @@ void splitString( char * original, char * firstSplit, char splitter );
 void drawCursor(int color);
 void restartCursor();
 void refreshCursor();
+int pow(int base, unsigned int exp);
+uint64_t hexstringToInt(char * s);
+unsigned char hexToChar( unsigned char a, unsigned char b );
+void memCopy( char * pointer1, char * pointer2, int chars );
+int scan (char * str, ...);
 
 #endif

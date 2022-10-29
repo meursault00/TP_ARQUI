@@ -25,5 +25,7 @@ void clearScreen();
 void checkKey( char c );
 void printCurrentTime();
 void printRTC(int code);
+void commandMemAccess( char * memdirHexa, int stringlen );
+void printAddress( unsigned char * address );
 
 #endif

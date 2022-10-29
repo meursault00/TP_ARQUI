@@ -9,6 +9,7 @@ GLOBAL getTime
 GLOBAL beep
 GLOBAL sleep
 GLOBAL clearkeybuffer
+GLOBAL changelanguage
 section .text
 
 %macro pushState 0
@@ -96,6 +97,9 @@ sleep:
 
 clearkeybuffer:
 	sys_call 10
+
+changelanguage
+	sys_call 11
 
 ; sys_put_pixel
 ;

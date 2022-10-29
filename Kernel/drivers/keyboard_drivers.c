@@ -2,8 +2,13 @@
 #include <video_driver.h>
 #define MAX_SCANCODE 58
 
+#define ENGLISH 0
+#define SPANISH 1
 
-static char asccodeEnglish[MAX_SCANCODE][2] ={
+static int language = SPANISH;
+
+static char keyboards[2][MAX_SCANCODE][2] ={
+    {
     {   0,0   },
     {ESC , ESC}, 
     { '1','!' }, 
@@ -62,8 +67,8 @@ static char asccodeEnglish[MAX_SCANCODE][2] ={
     {   0,0   },
     {   0,0   },
     { ' ',' ' }    
-};
-static char asccode[MAX_SCANCODE][2] ={
+    },
+    {
     {   0,0   },
     {ESC , ESC}, 
     { '1','!' }, 
@@ -103,7 +108,7 @@ static char asccode[MAX_SCANCODE][2] ={
     { 'j','J' },
     { 'k','K' }, 
     { 'l','L' }, 
-    { 'ñ','Ñ' },
+    { '~'+1,'~' },
     {'{','['},
     { '`','~' }, 
     {   0,0   }, 
@@ -121,8 +126,9 @@ static char asccode[MAX_SCANCODE][2] ={
     {   0,0   }, 
     {   0,0   },
     {   0,0   },
-    { ' ',' ' },    
-};
+    { ' ',' ' }    
+}};
+
 static int shiftActivated = 0;
 static int capsActivated = 0;
 
@@ -157,8 +163,10 @@ static int isValidScancode(int scancode){
 }
 
 static int isLetter(int scancode){
-    char ascii = asccode[scancode][0];
-    return  ascii >= 'a' && ascii <= 'z';
+    if(scancode == 0x27)
+        return 1;
+    char ascii = keyboards[language][scancode][0];
+    return  (ascii >= 'a' && ascii <= 'z');
 }
 #define SCANCODE_UP_ARROW 72
 #define SCANCODE_DOWN_ARROW 80
@@ -191,10 +199,10 @@ int storeKey(){
     }
     if(isValidScancode(scancode) && bufferCount < MAX_BUFFER){
         if( isLetter(scancode) && capsActivated ){
-            keyBuffer[bufferCount] = asccode[scancode][1];
+            keyBuffer[bufferCount] = keyboards[language][scancode][1];
         }
         else{
-            keyBuffer[bufferCount] = asccode[scancode][shiftActivated ? 1: 0];   
+            keyBuffer[bufferCount] = keyboards[language][scancode][shiftActivated ? 1: 0];   
         }
         bufferCount++;
         //write(keyBuffer[bufferCount-1]); // ESTE WRITE DEBERIA SER DE SHELL.c EN USERLAND
@@ -228,13 +236,15 @@ int storeKey(){
 
 
 
-void clearKeyBuffer ( void ){
+void clearKeyBuffer(){
 	for ( int i = 0; i < MAX_BUFFER; i++ )
 		keyBuffer[i] = (char)0;
 	bufferCount= 0;
 }
 
-
+void changeLanguage(int lan){
+    language = lan;
+}
 
 
 

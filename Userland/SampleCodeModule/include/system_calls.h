@@ -13,4 +13,5 @@ extern char* getRegisters();
 extern void beep(int freq, int time);
 extern void sleep(int seconds);
 extern void clearkeybuffer();
+extern void changelanguage(int lan);
 #endif

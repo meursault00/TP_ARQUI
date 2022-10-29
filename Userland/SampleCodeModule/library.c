@@ -43,6 +43,53 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	return digits;
 }
 
+unsigned char hexToChar( unsigned char a, unsigned char b ){
+	unsigned char returnChar = 0; // 0000 0000
+	if ( a >= 'A' && a <= 'F' )
+		returnChar = (a%'A')+10; // caso B seria 0000 1011
+	else if ( a >= '0' && a <= '9' )
+		returnChar =  a%'0';
+	returnChar = returnChar<<4; // 1011 0000
+	if ( b >= 'A' && b <= 'F' )
+		returnChar = returnChar + (b%'A')+10; // caso b = F seria 1011 1111 
+	else if ( b >= '0' && b <= '9' )
+		returnChar = returnChar + (b%'0');
+	return returnChar;
+}
+
+void memCopy( char * pointer1, char * pointer2, int chars ){
+	for ( int i = 0; i < chars; i++ )
+		pointer1[i] = pointer2[i];
+}
+
+uint64_t hexstringToInt(char * s){
+    int c;
+    uint64_t rta = 0;
+
+    if(s == '0' &&(s+1) == 'x')
+        s += 2;
+
+    int len = strlen(s);
+
+    for (int i = 0; i < len; i++){
+        c = s[len - 1 - i] - '0';
+        if(c < 0 || c > 9){
+            c = s[len - 1 - i] - 'A' + 10;
+            if(c < 10 || c > 15)
+                return 0;
+        }
+        rta += c*pow(16, i);
+    }
+    return rta;
+}
+
+int pow(int base, unsigned int exp){
+	int rta=1;
+	for(int i=0;i<exp;i++)
+		rta*=base;
+	return rta;
+}
+
 // char strcmp( const char* stringA,const char* stringB)  
 // {  
 //     char flag = 0;
@@ -455,81 +502,145 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
-
-int pow(int base, int exponent){
-	int result = 1;
-	for(int i = 0; i < exponent; i++){
-		result *= base;
-	}
-	return result;
+int stringToInt(char * string, int base){
+    int number = 0;
+    int i = 0;
+    int sign = 1;
+    if ( string[0] == '-' ){
+        sign = -1;
+        i++;
+    }
+    for ( ; string[i] != 0; i++ ){
+        if ( string[i] >= '0' && string[i] <= '9' ){
+            number = number*base + string[i] - '0';
+        }else if ( string[i] >= 'A' && string[i] <= 'F' ){
+            number = number*base + string[i] - 'A' + 10;
+        }
+    }
+    return number*sign;
 }
 
-// scanf implementation by @josemariasosa
-void scanf(char * format, void * parameters[]){
-	int j = 0;
-	for ( int i = 0; format[i] != 0; i++ ){
-		if ( format[i] == '%' ){
-			i++;
-			switch (format[i])
-			{
-			case 's':{
-				char * string = (char*)parameters[j++];
-				int k = 0;
-				char c = getchar();
-				while(c != '\n'){
-					string[k++] = c;
-					c = getchar();
-				}
-				string[k] = '\0';
-				break;
-			}
-			
-			case 'd':{
-				int * number = (int*)parameters[j++];
-				char c = getchar();
-				int sign = 1;
-				if(c == '-'){
-					sign = -1;
-					c = getchar();
-				}
-				int result = 0;
-				while(c != '\n'){
-					result = result*10 + (c - '0');
-					c = getchar();
-				}
-				*number = result*sign;
-				break;
-			}
-			case 'f':{
-				float * floatNumber = (float*)parameters[j++];
-				char c = getchar();
-				int sign = 1;
-				if(c == '-'){
-					sign = -1;
-					c = getchar();
-				}
-				int result = 0;
-				while(c != '.'){
-					result = result*10 + (c - '0');
-					c = getchar();
-				}
-				c = getchar();
-				int decimal = 0;
-				int decimalCount = 0;
-				while(c != '\n'){
-					decimal = decimal*10 + (c - '0');
-					c = getchar();
-					decimalCount++;
-				}
-				*floatNumber = (float)result + (float)decimal/(float)pow(10,decimalCount);
-				*floatNumber *= sign;
-				break;
-			}
-			default:
-				break;
-			}
-		}else{
-			getchar();
-		} 
-	}
+static unsigned char atointhex( unsigned char a){
+    unsigned char returnChar = 0; // 0000 0000
+    if ( a >= 'A' && a <= 'F' )
+        returnChar = (a%'A')+10; // caso B seria 0000 1011
+    else if ( a >= '0' && a <= '9' )
+        returnChar =  a%'0';
+    return returnChar;
 }
+
+int scan (char * str, ...){
+	va_list vl;
+    int i = 0, j=0, ret = 0;
+    char buff[100] = {0};
+ 	va_start( vl, str );
+ 	i = 0;
+ 	while (str && str[i])
+ 	{
+ 	    if (str[i] == '%') 
+ 	    {
+ 	       i++;
+ 	       switch (str[i]) 
+ 	       {
+				case 's':
+				{	char *string;
+					string=va_arg( vl, char* );
+					char buff[100];
+					strcpy(buff,string);
+					int k = 0;
+                char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+				appendchar('A');
+                while(c != '\n' && c!=' '){
+					buff[k++] = c;
+                    c = getchar();
+                }
+                	buff[k] = '\0';
+					strcpy(string,buff);
+					ret++;
+					break;
+				}
+ 	           case 'c': 
+ 	           {	char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+	 	           *(char *)va_arg( vl, char* ) =c;
+	 	           ret ++;
+	 	           break;
+ 	           }
+ 	           case 'd': 
+ 	           {
+	 	        	char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+
+                	int sign = 1;
+                	if(c == '-'){
+                    	sign = -1;
+                    	c = getchar();
+                	}
+                	int result = 0;
+                	while(c != '\n' && c!=' '){
+                    	result = result*10 + (c - '0');
+                    	c = getchar();
+                	}
+				*(int *)va_arg( vl, int* ) =result*sign;
+	 	           ret++;
+	 	           break;
+ 	            }
+ 	            case 'x': 
+ 	            {	
+					char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+                	int result = 0;
+                	while(c != '\n' && c!=' '){
+                    	result = result*16 + atointhex(c);
+                    	c = getchar();
+                	}
+				*(int *)va_arg( vl, int* ) =result;
+	 	        
+	 	           ret++;
+	 	           break;
+ 	            }
+				case 'f':
+				{
+					char c;
+					do{
+					c= getchar();      //clear buffer de los espacios
+					}while (c==' ');
+                int sign = 1;
+                if(c == '-'){
+                    sign = -1;
+                    c = getchar();
+                }
+                int result = 0;
+                while(c != '.'){
+                    result = result*10 + (c - '0');
+                    c = getchar();
+                }
+                c = getchar();
+                int decimal = 0;
+                int decimalCount = 0;
+                while(c != '\n' && c!=' '){
+                    decimal = decimal*10 + (c - '0');
+                    c = getchar();
+                    decimalCount++;
+                }
+				*(float*)va_arg( vl, float* )=((float)result + (float)decimal/(float)pow(10,decimalCount))*sign;
+				ret++;
+					break;
+				}
+ 	        }
+ 	    } 
+        i++;
+    }
+    va_end(vl);
+    return ret;
+}
+
