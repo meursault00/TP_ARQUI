@@ -575,7 +575,7 @@ void checkKey( char c ){
 			clearScreen();
 			restartCursor();
 			restartHistory();
-			appendstring("~$ ");
+			appendstring("> $ ");
 			break;
 		}
 		case ENTER : {
@@ -587,7 +587,7 @@ void checkKey( char c ){
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
 			}
-			appendstring("~$ ");
+			appendstring("> $ ");
 			break;
 		}
 		case '=':{

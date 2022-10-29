@@ -7,7 +7,7 @@
 
 void initialize_shell(){
 	putSquare(0,0,1024,BACKGROUND_COLOR);
-	appendstring("~$ ");
+	appendstring("> $ ");
 	while(1){
 		drawCursor(fontcolor);
 		char c = getchar();
