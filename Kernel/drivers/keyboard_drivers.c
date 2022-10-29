@@ -266,7 +266,3 @@ void changeLanguage(int lan){
 
 
 
-
-
-
-

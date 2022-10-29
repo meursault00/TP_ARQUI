@@ -2,6 +2,10 @@
 #include <library.h>
 #include <system_calls.h>
 #include <tron.h>
+#define ASC_UP    '\200'
+#define ASC_DOWN  '\201'
+#define ASC_LEFT  '\202'
+#define ASC_RIGHT '\203'
 
 #include <keyboardPiano.h>
 
@@ -249,7 +253,7 @@ void commandHelp(){
 	newline();	
 	appendstring("- BEEP");
 	newline();
-	appendstring("- SIZE (+ o -))");
+	appendstring("- SIZE (+ o -)");
 	newline();
 	appendstring("- INVOP");
 	newline();
@@ -273,6 +277,7 @@ void commandSnapshot(){
 	printRegisters();
 	newline();
 	appendstring("PRESIONE ESC PARA SALIR");
+	newline();
 }
 void commandTime(){
 	printCurrentTime();
@@ -436,8 +441,9 @@ void soviet_anthem(){
 
 void checkCommand(){
 	char section[64]={0};
-	splitString( consoleBuffer, section, ' ' );
 	toUpper(consoleBuffer);
+
+	splitString( consoleBuffer, section, ' ' );
 
 	if ( section[0] == 0 ){ // no tiene segundo parametro
 		if(streql(consoleBuffer, "HELP") || streql(consoleBuffer, "- HELP") )
@@ -447,7 +453,6 @@ void checkCommand(){
 		else if(streql(consoleBuffer, "CLEAR") || streql(consoleBuffer, "- CLEAR") )
 			commandClear();
 		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") ){
-			
 			commandBeep();
 		}
 		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") ){
@@ -504,11 +509,12 @@ unsigned int historyDim = 0;
 
 static void loadHistory(const char *s){
 	int len = strlen(s);
-	for(int j = 0; j < len; j++){
-		historyBuffer[historyDim][j] = s[j];
-	}
+	if(historyDim > 0 && strcmp(historyBuffer[historyDim-1],s) == 0)
+		return;
+	strcpy(historyBuffer[historyDim], s);
 	historyBuffer[historyDim++][len] = 0;
 	historyIndex = historyDim;
+
 }
 
 static char * upHistory(){
@@ -523,7 +529,7 @@ static char * upHistory(){
 
 static char * downHistory(){
 	if(historyIndex < historyDim){
-		return historyBuffer[++historyIndex];
+		return historyBuffer[historyIndex++];
 	}
 	beep(100, 1);
 	return "";
@@ -558,6 +564,18 @@ void restartHistory(){
 	historyDim = 0;
 	historyIndex = historyDim;
 }
+
+
+void leftArrow(){
+	if(lastChar > 0){
+		rollLeft();
+
+
+		
+		lastChar--;
+	}
+}
+
 void checkKey( char c ){
 	switch (c)
 		{
@@ -602,12 +620,20 @@ void checkKey( char c ){
 			lastChar+=4;
 			break;
 		}
-		case '\200':{
+		case ASC_UP:{ //up arrow key ascii
 			upArrow(1);
 			break;
 		}
-		case '\201':{
+		case ASC_DOWN:{ // down arrow key ascii
 			upArrow(0);
+			break;
+		}
+		case ASC_RIGHT:{ // right arrow key ascii
+
+			break;
+		}
+		case ASC_LEFT:{ // left arrow key ascii
+			leftArrow();
 			break;
 		}
 		default:{

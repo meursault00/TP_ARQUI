@@ -58,9 +58,7 @@ int main()
 {	
 	load_idt();
 	//soviet_anthem(); //hola
-	((EntryPoint) sampleCodeModuleAddress)(); //nos vamos para user land amigos
+	 //nos vamos para user land amigos
 
-
-
-	return 0;
+	return ((EntryPoint) sampleCodeModuleAddress)();
 }

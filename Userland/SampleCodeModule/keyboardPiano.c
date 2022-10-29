@@ -2,7 +2,7 @@
 
 
 #include <keyboardPiano.h>
-#include <syscall.h>
+#include <system_calls.h>
 static int playingPiano = 0;
 
 
@@ -71,6 +71,7 @@ static int keyChordMap[MAXCHORDS][2] ={
 
 
 void playPiano(){
+    drawSomething();
     playingPiano = 1;
 
     while(playingPiano){
@@ -98,4 +99,28 @@ void playSound(int key){
         }
     }
 
+}
+void drawSomething(){
+    int color =0xFFFFFF;
+    int tam = 3;
+    for(int i = 300; i < 500; i++){
+        putSquare(200-50, i, tam, color);
+        putSquare(300-50, i, tam, color);
+        putSquare(400-50, i, tam, color);
+        putSquare(500-50, i, tam, color);
+        putSquare(600-50, i, tam, color);
+        putSquare(700-50, i, tam, color);
+        putSquare(800-50, i, tam, color);
+        putSquare(900-50, i, tam, color);
+    }
+
+}
+
+//function to draw a line
+void drawLine(int x, int y, int size, int color){
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j < size; j++){
+            putSquare(x+i, y+j, 3, color);
+        }
+    }
 }

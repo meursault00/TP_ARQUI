@@ -37,6 +37,7 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 void intToString( int number, char * buffer, int digits );
 void floatToString( float number, char * buffer, int digits  );
 
+void rollLeft();
 void putnewline( void );
 void newline();
 void backspace();

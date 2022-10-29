@@ -217,7 +217,15 @@ void newline(){
 	cursorX = 4;
 	cursorY += 16*fontsize;
 }
-
+void rollLeft(){
+	drawCursor(currentCursorColor);
+	cursorX -= 8*fontsize;
+	if(cursorX < 4){
+		cursorX = 1024 - 8*fontsize;
+		cursorY -= 16*fontsize;
+	}
+	drawCursor(fontcolor);
+}
 void backspace(){
 	if(cursorX != 4){
 		drawCursor(currentCursorColor);

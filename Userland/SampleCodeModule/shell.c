@@ -4,7 +4,6 @@
 #include <tron.h>
 #include <console.h>
 
-
 void initialize_shell(){
 	putSquare(0,0,1024,BACKGROUND_COLOR);
 	appendstring("> $ ");
