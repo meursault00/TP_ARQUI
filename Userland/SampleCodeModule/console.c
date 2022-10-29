@@ -250,8 +250,6 @@ void commandHelp(){
 	appendstring("- ANTHEM");
 	newline();
 	appendstring("- TIME");
-	newline();	
-	appendstring("- BEEP");
 	newline();
 	appendstring("- SIZE (+ o -)");
 	newline();
@@ -497,6 +495,173 @@ void checkCommand(){
 			}
 			else if(streql(section,"ES"),streql(section,"es"))
 				changelanguage(1);
+		}
+		else if(streql(consoleBuffer, "HELP") || streql(consoleBuffer, "- HELP")){
+			if(streql(section,"HELP")||streql(section,"help")){
+				clearScreen();
+				restartCursor();
+				appendstring("En serio?");
+				newline();
+				newline();
+				appendstring("HELP\n\n");
+				appendstring("Ayuda.");
+				newline();
+				appendstring("De no ser seguido por nada, lista los comandos disponibles.");
+				newline();
+				appendstring("De ser seguido por un comando, da informacion sobre el mismo.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"TRON")||streql(section,"tron")){
+				clearScreen();
+				restartCursor();
+				appendstring("TRON\n\n");
+				appendstring("Juego de dos jugadores, al mejor de 5.");
+				newline();
+				appendstring("Pierde quien choque contra si mismo,\nel otro jugador, o los bordes.");
+				newline();
+				appendstring("El jugador 1 se mueve con las flechas.");
+				newline();
+				appendstring("El jugador 2 se mueve con las teclas W,A,S y D.");
+				newline();
+				appendstring("Sorpresa al final :)");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"SNAPSHOT")||streql(section,"snapshot")){
+				clearScreen();
+				restartCursor();
+				appendstring("SNAPSHOT\n\n");
+				appendstring("Imprime en pamtalla el valo de los registros\nal momento de ejecucion.");
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"MEMACCESS")||streql(section,"memaccess")){
+				clearScreen();
+				restartCursor();
+				appendstring("MEMACCESS (MEM ADRESS)\n\n");
+				appendstring("Imprime por pantalla los 32 bits posteriores\na la direccion de memoria especificada.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"CLEAR")||streql(section,"clear")){
+				clearScreen();
+				restartCursor();
+				appendstring("CLEAR\n\n");
+				appendstring("Limpia la pantalla.");
+				newline();
+				appendstring("AUSPICIADO POR MR MUSCULO");
+				newline();
+				appendstring("ANIQUILA LOS GERMENES, SUFRIMIENTO MAXIMO");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"BEEP")||streql(section,"beep")){
+				clearScreen();
+				restartCursor();
+				appendstring("BEEP\n\n");
+				appendstring("Emite un");
+				newline();
+				newline();
+				beep(440,1);
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"ANTHEM")||streql(section,"anthem")){
+				clearScreen();
+				restartCursor();
+				appendstring("ANTHEM\n\n");
+				appendstring("El himno de mi corazon, \npero no el de los abuelos de la nada.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"TIME")||streql(section,"time")){
+				clearScreen();
+				restartCursor();
+				appendstring("TIME\n\n");
+				appendstring("De encontrarse en una isla desierta \nsin medios para saber la hora,\nuse este comando");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"SIZE")||streql(section,"size")){
+				clearScreen();
+				restartCursor();
+				appendstring("SIZE\n\n");
+				appendstring("Agrande o achique el tamaño del texto en pantalla \nsiguiendo el comando con un + o un -,\nrespectivamente.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"INVOP")||streql(section,"invop")){
+				clearScreen();
+				restartCursor();
+				appendstring("INVOP\n\n");
+				appendstring("Envia un código de operación invalido.");
+				newline();
+				appendstring("Que puede salir mal?");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"DIVCERO")||streql(section,"divcero")){
+				clearScreen();
+				restartCursor();
+				appendstring("DIVCERO\n\n");
+				appendstring("Divide por cero.");
+				newline();
+				appendstring("Totalmente inocuo.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"PIANO")||streql(section,"piano")){
+				clearScreen();
+				restartCursor();
+				appendstring("PIANO\n\n");
+				appendstring("Componga su proxima obra maestra.");
+				newline();
+				appendstring("Piano de eleccion de: \nPablo Lescano, Paul McCartney y Wolfgang Amadeus Mozart.");
+				newline();
+				appendstring("Blancas: ASDFGHJ");
+				newline();
+				appendstring("Negras: WETYUOP");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
+			if(streql(section,"LANGUAGE")||streql(section,"language")){
+				clearScreen();
+				restartCursor();
+				appendstring("LANGUAGE\n\n");
+				appendstring("Cambia de teclado.");
+				newline();
+				appendstring("Seguido por ES -> español");
+				newline();
+				appendstring("Seguido por EN -> ingles");
+				newline();
+				appendstring("Ruso y Klingon disponibles proximamente.");
+				newline();
+				newline();
+				appendstring("PRESIONE ESC PARA SALIR");
+				waitForKey(ESC);
+			}
 		}
 	}
 	

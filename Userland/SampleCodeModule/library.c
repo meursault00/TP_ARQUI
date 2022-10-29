@@ -489,7 +489,7 @@ void changeFontSize(int increment){
 void refreshCursor(){
 	if(gettick() % CURSOR_TICKS == 0){
 		if(currentCursorColor == fontcolor){
-			currentCursorColor = 0x000000;
+			currentCursorColor = BACKGROUND_COLOR;
 		}
 		else{
 			currentCursorColor = fontcolor;
