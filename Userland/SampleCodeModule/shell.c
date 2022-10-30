@@ -8,10 +8,8 @@ void initialize_shell(){
 	putSquare(0,0,1024,BACKGROUND_COLOR);
 	appendstringColor("> $ ", USER_TEXT_COLOR);
 	while(1){
-		drawCursor(fontcolor);
 		char c = getchar();
 		checkKey(c);
-
 	}
 }
 
