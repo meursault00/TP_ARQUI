@@ -143,6 +143,8 @@ _irq04Handler:
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
+
+;syscalls	
 _irq60Handler:
 
 	push r9
@@ -151,6 +153,7 @@ _irq60Handler:
 	mov rcx,rdx
 	mov rdx,rsi
 	mov rsi,rdi
+	;muevo los parametros de handler para q al dispatcher le lleguen bien
 	mov rdi,60h
 	call irqDispatcher
 	pop r9
@@ -162,6 +165,7 @@ _irq60Handler:
 _exception0Handler:
 	exceptionHandler 0
 
+;Invalid Op code Exception
 _exception6Handler:
 	exceptionHandler 6
 

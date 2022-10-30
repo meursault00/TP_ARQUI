@@ -7,6 +7,7 @@
 
 static int language = SPANISH;
 
+//estan cargados los teclados en ingles y español
 static char keyboards[2][MAX_SCANCODE][2] ={
     {
     {   0,0   },
@@ -138,6 +139,7 @@ static int bufferCount = 0;
 
 void clearKeyBuffer ( void );
 
+//saca el primero que esta en el vector
 static char popBuffer(){
     char key = keyBuffer[0];
     for(int i = 0; i < bufferCount; i++){
@@ -146,13 +148,19 @@ static char popBuffer(){
     bufferCount--;
     return key;
 }
+/**
+ * 
+ * @return devuelve el la primer tecla presionada
+ */
 char getKey(){
     if(bufferCount <= 0)
         return 0;
     
     return popBuffer();
 }
-
+/**
+ * @return el ultimo caracter presionado
+ */
 char getLastChar(){
     return keyBuffer[bufferCount-1];
 }
@@ -182,7 +190,11 @@ static int isLetter(int scancode){
 #define RSHIFT_RELEASED 0xB6
 #define CAPSLOCK 0x3A
 #define CAPSLOCK_RELEASED 0xBA 
-int storeKey(){
+
+/**
+ * @brief guarda el caracter q se presiono en el buffer 
+ */
+void storeKey(){
 
     int scancode  = inb(0x60);
     
@@ -205,30 +217,29 @@ int storeKey(){
             keyBuffer[bufferCount] = keyboards[language][scancode][shiftActivated ? 1: 0];   
         }
         bufferCount++;
-        //write(keyBuffer[bufferCount-1]); // ESTE WRITE DEBERIA SER DE SHELL.c EN USERLAND
-        return 1;
+        return;
     }
     if(scancode == SCANCODE_UP_ARROW){
         keyBuffer[bufferCount] = ASC_UP;
         bufferCount++;
-        return 2;
+        return;
     }
     if(scancode == SCANCODE_DOWN_ARROW){
         keyBuffer[bufferCount] = ASC_DOWN;
         bufferCount++;
-        return 3;
+        return;
     }
     if(scancode == SCANCODE_LEFT_ARROW){
         keyBuffer[bufferCount] = ASC_LEFT;
         bufferCount++;
-        return 4;
+        return;
     }
     if(scancode == SCANCODE_RIGHT_ARROW){
         keyBuffer[bufferCount] = ASC_RIGHT;
         bufferCount++;
-        return 5;
+        return;
     }
-    return 0;
+    return;
     
 }
 

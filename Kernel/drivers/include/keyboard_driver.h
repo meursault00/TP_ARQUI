@@ -8,7 +8,7 @@ extern unsigned char getkeyScancode();
 extern int keyboardActive();
 
 
-int storeKey();
+void storeKey();
 
 int isShiftActivated();
 

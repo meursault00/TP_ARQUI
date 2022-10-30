@@ -29,13 +29,16 @@ static uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,u
 void (*fun_inter[256])(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t);
 uint64_t (*fun_sys[256])(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t);
 
-
+/**
+ * @brief inicializa los vectores de funciones q se usaran para las interrupciones
+ * 
+ */
 void initialize(){
     (fun_inter[0])=int_20;
     (fun_inter[1])=int_21;
     (fun_inter[0x60])=int_80; // pasasr 60 en el asm
 
-    //agreago syscalls
+    //agrego syscalls
     (fun_sys[SYS_GETCHAR_ID])=sys_getchar;
     (fun_sys[SYS_WRITE_ID])=sys_write;
     (fun_sys[SYS_TICK_ID])=sys_tick;
@@ -64,7 +67,10 @@ void int_21(){
     storeKey();
 
 }
-
+/**
+ * @brief selecciona la syscall q se va a usar 
+ * 
+ */
 uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,uint64_t r8,uint64_t r9){
     return (*fun_sys[rdi])(rsi,rdx,rcx,r8,r9);
 }

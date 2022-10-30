@@ -1,8 +1,12 @@
 #include <video_driver.h>
 #include <fonts.h>
 
+#define ANCHO_PIX 1024
+#define ALTURA_PIX 768
+#define ANCHO_LETRA_PIX 8
+#define BACKROUND 0x002B36
 #define isMinusc(x) ((x)<='a'?(((x)>='z')?1:0):0)
-
+//esta estructura es de omar-> https://wiki.osdev.org/User:Omarrx024/VESA_Tutorial
 typedef struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
 	uint8_t window_a;			// deprecated
@@ -64,6 +68,8 @@ void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	put_rectangle(x,y,tam,tam,color);
 }
+
+// esta optimizado por recomendacion de osdev(un poco cambiado)->https://wiki.osdev.org/Drawing_In_Protected_Mode#Drawing_Text
 void put_rectangle(uint32_t x , uint32_t y,uint32_t tamX,uint32_t tamY, uint32_t color){
     uint8_t* screen=(uint8_t*) info->framebuffer;
     uint32_t pixel_offset =(y) * (info->pitch)  ;
@@ -82,26 +88,27 @@ void put_rectangle(uint32_t x , uint32_t y,uint32_t tamX,uint32_t tamY, uint32_t
 // entre "A" 65 - 33
 
 
-/* parametros: 
+/** parametros: 
 	@param letra 
 	@param x -> posicion horizontal inicial
 	@param y -> posicion vertical inicial
 	@param tamaño de la letra
 	@param color
 */
-// LA UNIICA FUNCION QUE IMPORTA DE VERDAD
 int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int a = x;
-	int start = letter -33;
+	int start = letter -FIRST_CHAR;
 	if(isMinusc(letter))
-		start=letter-65;
+		start=letter-'a';
 	if ( letter == ' ' ){
-		return a + tam*8;
+		return a + tam*ANCHO_LETRA_PIX;
 	}
+	//extended ascii table ñ y Ñ en el vector de fonts
 	if(letter == 255)
 		start = 29;
 	if(letter == 254)
 		start = 28;
+	
 	for ( int i = 0; i < 32; i++ ){
 		if ( i % 2 == 0 && i != 0){
 			y+= tam;
@@ -125,11 +132,14 @@ int put_letter( char letter,  uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 	}
 	return a+tam; //posicion horizontal final 
 }
-
+/**
+ * @brief encadena letras con put letter moviendose en x por lo q ocupa un caracter
+ * 
+ */
 void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 	int accum;
 	for ( int i = 0; string[i] != 0; i++ ){
-		accum=  i*tam*8;
+		accum=  i*tam*ANCHO_LETRA_PIX;
 		put_letter(string[i], x + accum, y, tam, color);
 
 	}
@@ -141,12 +151,6 @@ void put_word( char * string, uint32_t x , uint32_t y,uint32_t tam, uint32_t col
 // 1024 -> ancho pantalla
 // 768 -> alto pantalla
 void VideoClearScreen(){
-	/*
-	for(int i=0; i<3; i++){
-		for(int j=0; j<4; j++){
-			put_square((i*4+j)*256,i*256,256,0x000000);
-		}
-	}*/
-	put_square(0,0,1024,0x002B36);
+	put_square(0,0,ANCHO_PIX,BACKROUND);
 }
 
