@@ -25,6 +25,9 @@
 #define DOWNSIZE 235307405
 #define LANG_ES 3115062494 // lange=es
 #define LANG_EN 3115062489
+#define LANGUAGE 3857633481 // for help
+#define SIZE 2089538912 // for help
+
 
 //BUFFER DE COMANDOS PARA PODER HACER SCROLLING EN HISTORIAL DE EJECUCION
 #define MAX_COMMAND_LENGTH 64
@@ -245,7 +248,7 @@ void waitForKey(char key){
 void commandHelp(){
 	clearScreen();
 	restartCursor();
-	printColor("BIENVENIDO AL MENU HELP", 0x26A269, 0);
+	printColor("BIENVENIDO AL MENU HELP", 0xE9AD0C, 0);
 	newline();
 	appendstring("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
 	newline();
@@ -276,7 +279,7 @@ void commandHelp(){
 	appendstring("- LANGUAGE (EN o ES) ");
 	newline();
 	appendstring("Presione ");
-	printColor("'ESC'", 0x26A269, 0);
+	printColor("'ESC'", 0xE9AD0C, 0);
 	print(" para volver a la consola.\n", 0);
 	waitForKey(ESC);
 }
@@ -308,12 +311,11 @@ void commandTron(){
 }
 
 void commandPiano(){
-	appendstring("Usted se encuentra frente a un teclado especial.");
+	print("Usted se encuentra frente a un teclado especial.\n\n", 0);
+	print("Presione teclas...\n\n", 0);
 	newline();
-	appendstring("Presione teclas...");
 	newline();
-	newline();
-	appendstring("Para salir presione la SPACE bar.");
+	appendstring("Para salir presione la 'SPACE' bar.");
 
 	playPiano();
 	commandClear();
@@ -471,7 +473,11 @@ const unsigned long hash(unsigned char *str)
 
 	return hash;
 }
-
+void printExitHelp(){
+	appendstring("Presione ");
+	printColor("'ESC'", 0xE9AD0C, 0);
+	print(" para volver a la consola.\n", 0);
+}
 // CHEQUEAR CUAL ES EL COMANDO Y QUE EL COMANDO EXISTA CON LOS HASHCODES
 void checkCommand() {
 	char section[64]={0};
@@ -529,174 +535,123 @@ void checkCommand() {
 				printColor("'%s'", 0x420781,command);
 				print(" no es un comando valido.\n");
 		}
-		else if(streql(consoleBuffer, "HELP") || streql(consoleBuffer, "- HELP")){
-			if(streql(section,"HELP")||streql(section,"help")){
-				clearScreen();
-				restartCursor();
-				appendstring("En serio?");
-				newline();
-				newline();
-				appendstring("HELP\n\n");
-				appendstring("Ayuda.");
-				newline();
-				appendstring("De no ser seguido por nada, lista los comandos disponibles.");
-				newline();
-				appendstring("De ser seguido por un comando, da informacion sobre el mismo.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"TRON")||streql(section,"tron")){
-				clearScreen();
-				restartCursor();
-				appendstring("TRON\n\n");
-				appendstring("Juego de dos jugadores, al mejor de 5.");
-				newline();
-				appendstring("Pierde quien choque contra si mismo,\nel otro jugador, o los bordes.");
-				newline();
-				appendstring("El jugador 1 se mueve con las flechas.");
-				newline();
-				appendstring("El jugador 2 se mueve con las teclas W,A,S y D.");
-				newline();
-				appendstring("Sorpresa al final :)");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"SNAPSHOT")||streql(section,"snapshot")){
-				clearScreen();
-				restartCursor();
-				appendstring("SNAPSHOT\n\n");
-				appendstring("Imprime en pamtalla el valo de los registros\nal momento de ejecucion.");
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"MEMACCESS")||streql(section,"memaccess")){
-				clearScreen();
-				restartCursor();
-				appendstring("MEMACCESS (MEM ADRESS)\n\n");
-				appendstring("Imprime por pantalla los 32 bits posteriores\na la direccion de memoria especificada.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"CLEAR")||streql(section,"clear")){
-				clearScreen();
-				restartCursor();
-				appendstring("CLEAR\n\n");
-				appendstring("Limpia la pantalla.");
-				newline();
-				appendstring("AUSPICIADO POR MR MUSCULO");
-				newline();
-				appendstring("ANIQUILA LOS GERMENES, SUFRIMIENTO MAXIMO");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"BEEP")||streql(section,"beep")){
-				clearScreen();
-				restartCursor();
-				appendstring("BEEP\n\n");
-				appendstring("Emite un");
-				newline();
-				newline();
-				beep(440,1);
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"ANTHEM")||streql(section,"anthem")){
-				clearScreen();
-				restartCursor();
-				appendstring("ANTHEM\n\n");
-				appendstring("El himno de mi corazon, \npero no el de los abuelos de la nada.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"TIME")||streql(section,"time")){
-				clearScreen();
-				restartCursor();
-				appendstring("TIME\n\n");
-				appendstring("De encontrarse en una isla desierta \nsin medios para saber la hora,\nuse este comando");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"SIZE")||streql(section,"size")){
-				clearScreen();
-				restartCursor();
-				appendstring("SIZE\n\n");
-				appendstring("Agrande o achique el tamaño del texto en pantalla \nsiguiendo el comando con un + o un -,\nrespectivamente.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"INVOP")||streql(section,"invop")){
-				clearScreen();
-				restartCursor();
-				appendstring("INVOP\n\n");
-				appendstring("Envia un código de operación invalido.");
-				newline();
-				appendstring("Que puede salir mal?");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"DIVCERO")||streql(section,"divcero")){
-				clearScreen();
-				restartCursor();
-				appendstring("DIVCERO\n\n");
-				appendstring("Divide por cero.");
-				newline();
-				appendstring("Totalmente inocuo.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"PIANO")||streql(section,"piano")){
-				clearScreen();
-				restartCursor();
-				appendstring("PIANO\n\n");
-				appendstring("Componga su proxima obra maestra.");
-				newline();
-				appendstring("Piano de eleccion de: \nPablo Lescano, Paul McCartney y Wolfgang Amadeus Mozart.");
-				newline();
-				appendstring("Blancas: ASDFGHJ");
-				newline();
-				appendstring("Negras: WETYUOP");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-			if(streql(section,"LANGUAGE")||streql(section,"language")){
-				clearScreen();
-				restartCursor();
-				appendstring("LANGUAGE\n\n");
-				appendstring("Cambia de teclado.");
-				newline();
-				appendstring("Seguido por ES -> español");
-				newline();
-				appendstring("Seguido por EN -> ingles");
-				newline();
-				appendstring("Ruso y Klingon disponibles proximamente.");
-				newline();
-				newline();
-				appendstring("PRESIONE ESC PARA SALIR");
-				waitForKey(ESC);
-			}
-		}
 	}
+	else if(streql(consoleBuffer, "HELP") ){
+		clearScreen();
+		restartCursor();
+		switch(hash(section)) {
+			case HELP:{
+				appendstring("En serio?\n\n");
+				printColor("HELP: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Ayuda.\n");
+				appendstring("De no ser seguido por nada, lista los comandos disponibles.\n");
+				appendstring("De ser seguido por un comando, da informacion sobre el mismo.\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case TRON:{
+				printColor("TRON: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Juego de dos jugadores, al mejor de 5.\n");
+				appendstring("Pierde quien choque contra si mismo,\nel otro jugador, o los bordes.\n");
+				appendstring("El jugador 1 se mueve con las flechas.\n");
+				appendstring("El jugador 2 se mueve con las teclas W,A,S y D.\n");
+				appendstring("Sorpresa al final :)\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}	
+			case BEEP:{
+				printColor("BEEP: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Emite un beeeeep\n\n");
+				beep(440,1);
+				printExitHelp();
+				waitForKey(ESC);
+				}
+				break;	
+			case ANTHEM:{
+				printColor("ANTHEM: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("El himno de mi corazon, \npero no el de los abuelos de la nada.\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case SNAPSHOT:{
+				printColor("SNAPSHOT: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Imprime en pantalla el valo de los registros\nal momento de ejecucion.\n");
+				appendstring("Para realizar una toma de estado, presione alguna de las flechas '<-' o '->'.\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case TIME:{
+				printColor("TIME: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("De encontrarse en una isla desierta \nsin medios para saber la hora,\nuse este comando\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case INVOP:{
+				printColor("INVOP: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Envia un código de operación invalido.\n");
+				appendstring("Que puede salir mal?\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case DIVCERO:{
+				printColor("DIVCERO: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Divide por cero.\n");
+				appendstring("Totalmente inocuo.\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case PIANO:{
+				printColor("PIANO: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Componga su proxima obra maestra.\n");
+				appendstring("Piano de eleccion de: \nPablo Lescano, Paul McCartney y Wolfgang Amadeus Mozart.\n");
+				appendstring("Blancas: ASDFGHJ\n");
+				appendstring("Negras: WETYUOP\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case MEMACCESS:{
+				printColor("MEMACCESS (MEM ADRESS): <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Imprime por pantalla los 32 bits posteriores\na la direccion de memoria especificada.\n");
+				appendstring("Debe ser ingresada la zona de memoria a acceder luego del comando separado por una espacio.\n");
+				appendstring("Modo de uso: <memaccess [direccion]>\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case CLEAR:{
+				printColor("CLEAR: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Limpia la pantalla.\n");
+				appendstring("AUSPICIADO POR MR MUSCULO\n");
+				appendstring("ANIQUILA LOS GERMENES, SUFRIMIENTO MAXIMO\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;}
+			case LANGUAGE:{
+				printColor("LANGUAGE: <User Commands>\n\n",0x0F66151, 0);
+				appendstring("Cambia el teclado.\n");
+				appendstring("Seguido por '=es' -> español\n");
+				appendstring("Seguido por '=en' -> ingles\n");
+				appendstring("Modo de uso <language=es> o <language=en> \n");
+				appendstring("Ruso y Klingon disponibles proximamente.\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+				break;
+			}
+			case SIZE:{
+				printColor("SIZE: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Agrande o achique el tamaño del texto en pantalla \nsiguiendo el comando con un + o un -,\nrespectivamente.\n");
+				appendstring("Modo de uso: <size+>\n\n");
+				printExitHelp();
+				waitForKey(ESC);
+			break;
+			}
+			default:
+				print("Comando ", command);
+				printColor("'%s'", 0x420781,command);
+				print(" no es un comando valido.\n");
+
+		}
+	
+	}	
 	else if( streql(consoleBuffer, "MEMACCESS"))
 	{
 		int sectionLength;
