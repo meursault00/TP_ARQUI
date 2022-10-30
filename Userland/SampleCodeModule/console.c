@@ -100,139 +100,6 @@ void clearScreen(){
 	restartCursor();
 }
 
-char toHex( char character ){ // de la forma 0000 XXXX
-	switch (character)
-	{
-	case 15:
-		return 'F';
-		break;
-	case 14:
-		return 'E';
-		break;
-	case 13:
-		return 'D';
-		break;
-	case 12:
-		return 'C';
-		break;
-	case 11:
-		return 'B';
-		break;
-	case 10:
-		return 'A';
-		break;
-    case 9:
-		return '9';
-		break;
-	case 8:
-		return '8';
-		break;
-	case 7:
-		return '7';
-		break;
-	case 6:
-		return '6';
-		break;
-	case 5:
-		return '5';
-		break;
-	case 4:
-		return '4';
-		break;
-    case 3:
-		return '3';
-		break;
-	case 2:
-		return '2';
-		break;
-	case 1:
-		return '1';
-		break;
-	case 0:
-		return '0';
-		break;
-
-	default:
-		return character;
-	}
-}
-
-void printRegisters(){
-	for ( int i = 0; i < 128; i++ ){ 
-		switch (i)
-		{
-		case 0:
-			appendstring("RAX   ");
-			break;
-		case 8:
-			newline();
-			appendstring("RBX   ");
-			break;
-		case 16:
-			newline();
-			appendstring("RDX   ");
-			break;
-		case 24:
-			newline();
-			appendstring("RCX   ");
-			break;
-		case 32:
-			newline();
-			appendstring("RSI   ");
-			break;
-		case 40:
-			newline();
-			appendstring("RDI   ");
-			break;
-		case 48:
-			newline();
-			appendstring("RBP   ");
-			break;
-		case 56:
-			newline();
-			appendstring("RSP   ");
-			break;
-		case 64:
-			newline();
-			appendstring("R8    ");
-			break;
-		case 72:
-			newline();
-			appendstring("R9    ");
-			break;
-		case 80:
-			newline();
-			appendstring("R10   ");
-			break;
-		case 88:
-			newline();
-			appendstring("R11   ");
-			break;
-		case 96:
-			newline();
-			appendstring("R12   ");
-			break;
-		case 104:
-			newline();
-			appendstring("R13   ");
-			break;
-		case 112:
-			newline();
-			appendstring("R14   ");
-			break;
-		case 120:
-			newline();
-			appendstring("R15   ");
-			break;
-		default:
-			break;
-		}
-		appendchar(toHex((snapshotBuffer[i]&0xF0)>>4));
-		appendchar(toHex((snapshotBuffer[i]&0x0F)));
-
-
-	}
-}
 // pequeña funcion que espera a que se presione una tecla para salir
 void waitForKey(char key){
 	while(1){
@@ -292,10 +159,23 @@ void commandClear(){
 
 void commandSnapshot(){
 	clearScreen();
-	printRegisters();
+	printColor("REGISTROS ", 0x0F66151);
+	newline();
+	newline();
+
+	char registers[16][4] = { "RAX", "RBX", "RDX", "RCX", "RSI", "RDI", "RBP", "RSP", " R8", " R9", "R10", "R11", "R12", "R13", "R14", "R15"};
+	for ( int i = 0; i < 16; i++ ){
+		printColor("%s:  ", 0x0F66151,registers[i]);
+		for ( int j = 7; j >= 0; j-- ){
+			appendchar(inthextoa((snapshotBuffer[j+i*8]&0xF0)>>4));
+			appendchar(inthextoa((snapshotBuffer[j+i*8]&0x0F)));
+		}
+		newline();
+	}
 	newline();
 	appendstring("PRESIONE ESC PARA SALIR");
-	newline();
+	waitForKey(ESC);
+
 }
 void commandTime(){
 	printCurrentTime();
@@ -324,104 +204,41 @@ void commandBeep(){
 	beep(1000, 10);	
 }
 
-void printAddress( unsigned char * address ){
-	for ( int i = 0; i < 8 ; i++ ){
-		unsigned char a = toHex( ( ( address[i] >> 4 ) & 0x0F ) );
-		unsigned char b = toHex( ( address[i] & 0x0F ) );
-		appendchar(a);
-		appendchar(b);
-	}
-}
 
 void commandMemAccess( char * memdirHexa, int stringlen ){
-	// a esta altura ya se que es valida la memdir, o sea que tiene 16 caracteres como maximo
 
-	// EJEMPLO : memdirHexa = "403A1" 
-	// primero tengo que pasar esto para que cada char ocupe solo 4 bits como deberia ser
-	
-	// estos son 20 bits y puedo leer como maximo de a chars 
-	// entonces tengo que redondear a 24
-	// o sea a chars
+	newline();
+	printColor("Memoria Introducida : %s",0x0F66151 ,memdirHexa); 	
+	newline();
 
-	int lenchar = ((stringlen+1)/2); // de esta forma se me redondea a chars
-	// si recibo strlen de 5 se redondea a 3 chars ( 24 bits ),
-	// si recibo strlen de 4 se queda en 2 chars ( 16 bits )
-	// test de hextochar
-	//char* a = "41";
-	//print("hex to char %c",hexToChar(a[0],a[1]));
-	
-	// DEBERIA HABER UN CHEQUEO DE QUE LA DIR DE MEMORIA ESTE DENTRO 
-	// DEL GIGABYTE ASIGANDO AL OS
-
-	
-	unsigned char finalMemDir[8]; // las direcciones de memoria son de 64 bits 8 * 8bits(char)
-	
-	int i= 0, j = 0;
-	for (; i < 8; i++ ){
-		// tengo en memDirHexa = "403A1" ( podria haber algo de hasta 16 hexas que representan 64 bits)
-		// en en finalMemDir = 0x 0000 0000 0000 0000 = "0000 0000";
-		if ( i >= ( 8 - lenchar) ){
-			if ( (lenchar*2) > stringlen ){ // se fixio el tamaño de la direccion enviada
-				finalMemDir[i] = hexToChar('\0', memdirHexa[j++]); // tengo que rellenar para que mi funciocn pueda traducir
-				lenchar--; // decremento para que no ocurra de nuevo
-			}
-			else {
-				unsigned char a  = memdirHexa[j++];
-				unsigned char b  = memdirHexa[j++];
-				finalMemDir[i] = hexToChar(a,b); // tomo los dos hexa y los traduzco
-			}
-		}
-		else{
-			finalMemDir[i] = 0;
-		}
-	}
-	// para eso tengo que siempre poner los ultimos 4 bits en 0
-	// entonces 00000000000403A1 -> 00000000000403A0
-	// ALINEAR CON UNA MASCARA
-	finalMemDir[i-1] = finalMemDir[i-1] & 0xF0;
-	newline();
-	appendstring("Memoria Introducida : ");
-	print("%s", memdirHexa); 	
-	newline();
-	appendstring("Memoria Accedida : ");
-	printAddress(finalMemDir);
-	newline();
 	int num=hexstringToInt(memdirHexa);
-
-	// finalMemDir apunta a una direccion de memoria de 64 bits que contiene una direccion de memoria valida e alineada
 	unsigned char deposit[32] = {0};
     unsigned char * realAddress = (unsigned char*) num - ( num % 16 );
-
-	//memAccess(realAddress, deposit);
-	appendstring("32 bytes : ");
+	if ( (num - ( num % 16 )) == 0 )
+		printColor("Memoria Accedida : %c", 0x0F66151, '0');
+	else
+	printColor("Memoria Accedida : %x", 0x0F66151, num - ( num % 16 ) );
 	newline();
-	for(int i=0;i<4;i++){
+
+	newline();
+
+	for( int i = 0 ; i < 4 ; i++ ){
 		for(int j=0;j<8;j++){
 			uintToBase(*(realAddress+8*i+j),deposit,16);
+			if ( (*(realAddress+8*i+j) & 0xF0 ) == 0 )
+				appendchar('0');
 			print(deposit);
 			putchar(' ');
 		}
 		newline();
-	}	
-	//newline();
-	//printAddress(deposit);
-	//newline();
-	//printAddress(deposit+8);
-	//newline();
-	//printAddress(deposit+16);
-	//newline();
-	//printAddress(deposit+24);
-	//newline();
-
-
-	//for ( int k = 0; k < 32; k++ ){
-	//	if ( !(k % 4) )
-	//		newline();
-	//	appendchar(toHex(((deposit[i])>>4)&0x0F));
-	//	appendchar( toHex(deposit[i]&0x0F));
-//
-	//}
+	}
+	newline();
+	appendstring("Presione ");
+	printColor("'ESC'", 0xE9AD0C, 0);
+	print(" para volver a la consola.\n", 0);
+	waitForKey(ESC);	
 }
+
 void commandDivCero(){
 	clearScreen();
 	int x=1/0;
@@ -652,8 +469,8 @@ void checkCommand() {
 	}	
 	else if( streql(consoleBuffer, "MEMACCESS"))
 	{
-		int sectionLength;
-		if ( strlen(section) <= 16 && onlyHexChars(section )){
+		int sectionLength = strlen(section);
+		if ( sectionLength <= 16 && onlyHexChars(section )){
 			commandMemAccess(section, sectionLength);
 		}
     

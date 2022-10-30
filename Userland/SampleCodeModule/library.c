@@ -11,6 +11,24 @@ int lastEnter(){
 	return cursorY+16*fontsize > 736;
 }
 
+
+unsigned char inthextoa( unsigned char a ){
+	if ( a >= 0 && a <= 9 )
+		return a+'0';
+	else if ( a >= 10 && a <= 15 )
+		return a+'A'-10;
+	return a;
+}
+
+unsigned char atointhex( unsigned char a){
+    unsigned char returnChar = 0; // 0000 0000
+    if ( a >= 'A' && a <= 'F' )
+        returnChar = (a%'A')+10; // caso B seria 0000 1011
+    else if ( a >= '0' && a <= '9' )
+        returnChar =  a%'0';
+    return returnChar;
+}
+
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 	char *p = buffer;
 	char *p1, *p2;
@@ -44,17 +62,9 @@ uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
 }
 
 unsigned char hexToChar( unsigned char a, unsigned char b ){
-	unsigned char returnChar = 0; // 0000 0000
-	if ( a >= 'A' && a <= 'F' )
-		returnChar = (a%'A')+10; // caso B seria 0000 1011
-	else if ( a >= '0' && a <= '9' )
-		returnChar =  a%'0';
-	returnChar = returnChar<<4; // 1011 0000
-	if ( b >= 'A' && b <= 'F' )
-		returnChar = returnChar + (b%'A')+10; // caso b = F seria 1011 1111 
-	else if ( b >= '0' && b <= '9' )
-		returnChar = returnChar + (b%'0');
-	return returnChar;
+	unsigned char returnChar = atointhex(a);
+	returnChar = returnChar<<4; 
+	return returnChar + atointhex(b);
 }
 
 void memCopy( char * pointer1, char * pointer2, int chars ){
@@ -62,25 +72,18 @@ void memCopy( char * pointer1, char * pointer2, int chars ){
 		pointer1[i] = pointer2[i];
 }
 
-uint64_t hexstringToInt(char * s){
+uint64_t  hexstringToInt(char * s){
     int c;
-    uint64_t rta = 0;
+    unsigned long int rta = 0;
 
-    if(s == '0' &&(s+1) == 'x')
+    if(s[0] == '0' && s[1] == 'x')
         s += 2;
 
-    int len = strlen(s);
-
-    for (int i = 0; i < len; i++){
-        c = s[len - 1 - i] - '0';
-        if(c < 0 || c > 9){
-            c = s[len - 1 - i] - 'A' + 10;
-            if(c < 10 || c > 15)
-                return 0;
-        }
-        rta += c*pow(16, i);
-    }
-    return rta;
+    unsigned int len = strlen(s);
+	unsigned int result = 0;
+    for (int i = 0; i < len; i++)
+        result = result*16 + atointhex(s[i]);
+    return result;
 }
 
 int pow(int base, unsigned int exp){
@@ -89,7 +92,6 @@ int pow(int base, unsigned int exp){
 		rta*=base;
 	return rta;
 }
-
 
 char isHexChar(char c){
 	if ( (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') ){
@@ -123,7 +125,6 @@ void splitString( char * original, char * firstSplit, char splitter ){
 	original[k] = 0;
 	return;
 }
-
 
 int countDigits( int number ){
     int digits, limit;
@@ -183,7 +184,6 @@ static void updateCursor(){
 	}
 }
 
-
 void appendcharColor(char character, int color){
 	if(character == '\n'){
 		newline();
@@ -195,18 +195,20 @@ void appendcharColor(char character, int color){
 	updateCursor();
 	drawCursor(fontcolor);
 }
+
 void appendchar( char character ){
 	appendcharColor(character, fontcolor);
 }
+
 void appendstringColor( char * string , int color){
 	for ( int i = 0; string[i] != 0; i++ ){
 		appendcharColor(string[i], color);
 	}
 }
+
 void appendstring( char * string ){
 	appendstringColor(string, fontcolor);
 }
-
 
 void newline(){
 	drawCursor(currentCursorColor);
@@ -229,10 +231,10 @@ void backspace(){
 	}
 }
 
-
 void putchar(char c){
 	appendchar(c);
 }
+
 void putcharSpecifics(char character, int x, int y, int size,int color){
 	write(character,x,y,size,color);
 }
@@ -290,7 +292,7 @@ void printColor(char *foundation, int color, ...){
 	  	  // caso integer
 	  	  case 'd': {
 			// se toma un int, se lo pasa a decimal y luego a string guardandose en tmp
-	  	    _itoa(va_arg( vl, int ), tmp, 10);
+	  	    itoa(va_arg( vl, int ), tmp, 10);
 			// se copia tmp al buffer
 	  	    strcpy(&buff[j], tmp);
 			// se aumenta la posicion del string final
@@ -300,7 +302,7 @@ void printColor(char *foundation, int color, ...){
 	  	  // caso hexa
 	  	  case 'x': {
 			// identico al previo pero con base 16
-	  	    _itoa(va_arg( vl, int ), tmp, 16);
+	  	    itoa(va_arg( vl, int ), tmp, 16);
 	  	    strcpy(&buff[j], tmp);
 	  	    j += strlen(tmp);
 	  	    break;
@@ -308,7 +310,7 @@ void printColor(char *foundation, int color, ...){
 	  	  // caso octal
 	  	  case 'o': {
 			// identico al anterior pero con base 8
-	  	    _itoa(va_arg( vl, int ), tmp, 8);
+	  	    itoa(va_arg( vl, int ), tmp, 8);
 	  	    strcpy(&buff[j], tmp);
 	  	    j += strlen(tmp);
 	  	    break;
@@ -351,7 +353,7 @@ void strcpy( char * destination, char * origin ){
 	destination[i] = '\0';
 }
 
-char *_strrev (char *str){
+char *strrev (char *str){
   int i;
   int len = 0;
   char c;
@@ -369,7 +371,7 @@ char *_strrev (char *str){
   return str;
 }
 
-char * _itoa(int i, char *strout, int base){
+char * itoa(int i, char *strout, int base){
   char *str = strout;
   int digit, sign = 0;
   if (i < 0) {
@@ -386,10 +388,9 @@ char * _itoa(int i, char *strout, int base){
   *str++ = '-';
   }
   *str = '\0';
-  _strrev(strout);
+  strrev(strout);
   return strout;
 }
-
 
 void printf ( char * foundation, void * parameters[] ){
     int j = 0; // posicion en los parametros
@@ -432,6 +433,7 @@ void printInt(uint64_t integer){
 	uintToBase(integer,buffer,10);
 	appendstring(buffer);
 }
+
 void printHex(uint64_t integer){
 	char buffer[20] = {0};
 	uintToBase(integer,buffer,16);
@@ -443,18 +445,6 @@ void println(char * string){
 	newline();
 }
 
-
-/*
-
-
-void putnewline( void) {
-	int i = 0;
-	while( i < 256 ){
-		putchar(1,' ');
-		i++;
-	}
-}
-*/
 void setCursor( int x, int y ){
 	cursorX = x;
 	cursorY = y;
@@ -504,32 +494,6 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
-int stringToInt(char * string, int base){
-    int number = 0;
-    int i = 0;
-    int sign = 1;
-    if ( string[0] == '-' ){
-        sign = -1;
-        i++;
-    }
-    for ( ; string[i] != 0; i++ ){
-        if ( string[i] >= '0' && string[i] <= '9' ){
-            number = number*base + string[i] - '0';
-        }else if ( string[i] >= 'A' && string[i] <= 'F' ){
-            number = number*base + string[i] - 'A' + 10;
-        }
-    }
-    return number*sign;
-}
-
-static unsigned char atointhex( unsigned char a){
-    unsigned char returnChar = 0; // 0000 0000
-    if ( a >= 'A' && a <= 'F' )
-        returnChar = (a%'A')+10; // caso B seria 0000 1011
-    else if ( a >= '0' && a <= '9' )
-        returnChar =  a%'0';
-    return returnChar;
-}
 
 int scan (char * str, ...){
 	va_list vl;

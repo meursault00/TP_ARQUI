@@ -25,6 +25,8 @@ void scanf(char * format, void * parameters[]);
 void setCursor( int x, int y );
 int lastEnter();
 
+unsigned char inthextoa( unsigned char a );
+unsigned char atointhex( unsigned char a);
 void putchar(char c);
 void putcharSpecifics( char character, int x, int y, int size,int color);
 void putstringSpecifics(char * string, int x, int y, int size, int color);
@@ -36,8 +38,8 @@ void println(char * string);
 void print (char * foundation, ...);
 void printColor(char * foundation, int color, ...);
 
-char *_strrev (char *str);
-char * _itoa(int i, char *strout, int base);
+char * strrev (char *str);
+char * itoa(int i, char *strout, int base);
 void strcpy( char * destination, char * origin );
 void appendchar( char character );
 int countDigits( int number );

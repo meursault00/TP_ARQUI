@@ -73,7 +73,7 @@ snapshot:
 	; en rdi tengo el puntero al comienzo de donde tengo que llenar con las cosas
 
 
-	mov [rdi], rax
+	mov QWORD [rdi], rax
 	mov [rdi+8], rbx
 	mov [rdi+16], rdx
 	mov [rdi+24], rcx

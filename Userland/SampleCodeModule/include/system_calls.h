@@ -9,7 +9,7 @@ extern void halt();
 extern void putSquare(int x,int y,int tam,int color);
 extern int getTime(int code);
 extern char getLastKey();
-extern char* getRegisters();
+extern void getRegisters(char * registers);
 extern void beep(int freq, int time);
 extern void sleep(int seconds);
 extern void clearkeybuffer();

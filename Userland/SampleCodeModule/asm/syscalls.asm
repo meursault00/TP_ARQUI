@@ -98,7 +98,7 @@ sleep:
 clearkeybuffer:
 	sys_call 10
 
-changelanguage
+changelanguage:
 	sys_call 11
 
 ; sys_put_pixel
