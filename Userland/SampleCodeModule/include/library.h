@@ -2,10 +2,16 @@
 #define LIB_H_
 
 
+#include <system_calls.h>
 #include <stdint.h>
+#include <system_calls.h>
+#include <stdarg.h>
 
 #define BACKGROUND_COLOR 0x002B36
 #define USER_TEXT_COLOR 0x95CD28
+#define TERMINAL_BLUE 0x12488B
+#define ORANGY 0xF66151
+#define RED 0xC01C28
 static int fontcolor = 0xBFECF1;
 static int currentCursorColor = 0x002B36;
 

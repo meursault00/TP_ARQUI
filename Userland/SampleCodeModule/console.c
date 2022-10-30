@@ -250,7 +250,7 @@ void commandHelp(){
 	restartCursor();
 	printColor("BIENVENIDO AL MENU HELP", 0xE9AD0C, 0);
 	newline();
-	appendstring("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
+	appendstring("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS: <User commands>");
 	newline();
 	appendstring("- HELP");
 	newline();
@@ -260,24 +260,25 @@ void commandHelp(){
 	newline();
 	appendstring("- MEMACCESS ( MEM ADDRESS )");
 	newline();
-	appendstring("- CLEAR");
+	printColor("- INVOP", RED, 0);
+	newline();
+	printColor("- DIVCERO", RED, 0);
 	newline();
 	appendstring("- BEEP");
 	newline();
-	appendstring("- ANTHEM");
-	newline();
 	appendstring("- TIME");
 	newline();
-	appendstring("- SIZE (+ o -)");
+	appendstring("- SIZE(+ o -)");
 	newline();
-	appendstring("- INVOP");
+	printColor("- ANTHEM", TERMINAL_BLUE, 0);
 	newline();
-	appendstring("- DIVCERO");
+	printColor("- CLEAR", TERMINAL_BLUE, 0);
 	newline();
-	appendstring("- PIANO");
+	printColor("- PIANO", TERMINAL_BLUE, 0);
 	newline();
-	appendstring("- LANGUAGE (EN o ES) ");
+	printColor("- LANGUAGE=(EN o ES) ", TERMINAL_BLUE, 0);
 	newline();
+	printColor("Para mas informacion, ingrese HELP <command>.\n",0xE9AD0C, 0 );
 	appendstring("Presione ");
 	printColor("'ESC'", 0xE9AD0C, 0);
 	print(" para volver a la consola.\n", 0);
@@ -313,9 +314,7 @@ void commandTron(){
 void commandPiano(){
 	print("Usted se encuentra frente a un teclado especial.\n\n", 0);
 	print("Presione teclas...\n\n", 0);
-	newline();
-	newline();
-	appendstring("Para salir presione la 'SPACE' bar.");
+	appendstring("Para salir presione la 'SPACE' bar.\n\n");
 
 	playPiano();
 	commandClear();
@@ -429,7 +428,6 @@ void commandDivCero(){
 
 }
 
-
 void commandAnthem(){
 	beep(392 ,375 /50); 
 	beep(523 ,750 /50); 
@@ -532,7 +530,7 @@ void checkCommand() {
 				break;
 			default:
 				print("Comando ", command);
-				printColor("'%s'", 0x420781,command);
+				printColor("'%s'", ORANGY,command);
 				print(" no es un comando valido.\n");
 		}
 	}
@@ -646,7 +644,7 @@ void checkCommand() {
 			}
 			default:
 				print("Comando ", command);
-				printColor("'%s'", 0x420781,command);
+				printColor("'%s'", ORANGY,command);
 				print(" no es un comando valido.\n");
 
 		}
@@ -662,13 +660,13 @@ void checkCommand() {
     }
 	else {
 		print("Comando ", command);
-		printColor("'%s'", 0x420781,command);
+		printColor("'%s'", ORANGY,command);
 		print(" no es un comando valido.\n");
 
 	}
 }
 
-
+int lastUp = 0;
 // CARGA AL HISTORIAL DE COMANDOS
 static void loadHistory(const char *s){
 	int len = strlen(s);
@@ -681,16 +679,16 @@ static void loadHistory(const char *s){
 }
 // SUBE EN EL HISTORIAL A MAS VIEJOS
 static char * upHistory(){
+	printColor("%d : %d\n", 0x0F66151, historyIndex, historyDim);
 	if(historyIndex > 0){
 		return historyBuffer[--historyIndex];
 	}
-	else{
-		beep(100, 1);
-		return "";
-	}
+	beep(100, 1);
+	return "";
 }
 //BAJA EN EL HISTORIAL A MAS RECIENTES
 static char * downHistory(){
+	printColor("%d : %d\n", 0x0F66151, historyIndex, historyDim);
 	if(historyIndex < historyDim){
 		return historyBuffer[historyIndex++];
 	}
@@ -725,8 +723,7 @@ void upArrow(int arrowUp){
 }
 // RESETEA EL HISTORIAL
 void restartHistory(){
-	historyDim = 0;
-	historyIndex = historyDim;
+	historyDim = historyIndex =0;
 }
 
 // SE FIJA QUE TECLA HA SIDO ACCINOADA Y QUE HACER AL RESPECTO...
@@ -747,7 +744,8 @@ void checkKey( char c ){
 			clearScreen();
 			restartCursor();
 			restartHistory();
-			appendstringColor("> $ ", USER_TEXT_COLOR);
+			printColor("user@Qemu:", USER_TEXT_COLOR, 0);
+			printColor("> $ ", TERMINAL_BLUE, 0);
 			break;
 		}
 		case ENTER : {
@@ -759,7 +757,8 @@ void checkKey( char c ){
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
 			}
-			appendstringColor("> $ ", USER_TEXT_COLOR);
+			printColor("user@Qemu:", USER_TEXT_COLOR, 0);
+			printColor("> $ ", TERMINAL_BLUE, 0);
 			break;
 		}
 		case '\t':{

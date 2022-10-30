@@ -1,7 +1,7 @@
 
-#include <system_calls.h>
+
+
 #include <library.h>
-#include <stdarg.h>
 #define CURSOR_TICKS 9
 
 
@@ -91,9 +91,11 @@ int pow(int base, unsigned int exp){
 }
 
 
-
-char isHexChar( char character ){
-	return ( character == 'A' || character == 'B' ||character == 'C' ||character == 'D' ||character == 'E' ||character == 'F' ||character == '0' ||character == '1' ||character == '2' ||character == '3' ||character == '4' ||character == '5' ||character == '6' ||character == '7' || character == '8' ||character == '9' );
+char isHexChar(char c){
+	if ( (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') ){
+		return 1;
+	}
+	return 0;
 }
 
 char onlyHexChars( char * string ){
@@ -326,7 +328,7 @@ void printColor(char *foundation, int color, ...){
 	    	j++;
 	  	}
 	  i++;
-	} 
+	}
   appendstringColor(buff, color);
   va_end(vl);
 }
@@ -334,7 +336,12 @@ void printColor(char *foundation, int color, ...){
 void print (char * foundation, ...){
 	va_list vl;
 	va_start( vl, foundation );
+	va_end(vl);
+
 	printColor(foundation, fontcolor,vl);
+
+
+
 }
 
 void strcpy( char * destination, char * origin ){
