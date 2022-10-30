@@ -75,12 +75,34 @@ SECTION .text
 
 
 %macro exceptionHandler 1
-	pushState
+	mov qword[regist], rax
+	mov qword[regist+8], rbx
+	mov qword[regist+16], rdx
+	mov qword[regist+24], rcx
+	mov qword[regist+32], rsi
+	mov qword[regist+40], rdi
+	mov qword[regist+48], rbp
+	mov qword[regist+56], rsp
+	mov qword[regist+64], r8
+	mov qword[regist+72], r9
+	mov qword[regist+80], r10
+	mov qword[regist+88], r11
+	mov qword[regist+96], r12
+	mov qword[regist+104], r13
+	mov qword[regist+112], r14
+	mov qword[regist+120], r15
 
+	mov rax,[rsp] 
+	mov [regist+128],rax
+
+
+	pushState
 	mov rdi, %1 ; pasaje de parametro
+	mov rsi,regist
 	call exceptionDispatcher
 
 	popState
+
 	push rax
     mov rax, 0x00400000 ;cargo la direccion de user land
     mov [rsp+8],rax  ;cambio la dir de reotrno de iretq a user land
@@ -178,3 +200,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
+	regist resq 17

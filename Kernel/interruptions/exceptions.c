@@ -7,6 +7,7 @@
 
 static void zero_division();
 static void invalid_op_code();
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 /**
  * @brief selecciona el tipo de exception que se lanzo y vuelve a la consola
@@ -14,39 +15,81 @@ static void invalid_op_code();
  * @param exception numero de la exception
  */
 
-void exceptionDispatcher(int exception) {
+void exceptionDispatcher(int exception,uint64_t * stackFrame) {
     switch (exception)
     {
     case ZERO_EXCEPTION_ID:
-        zero_division();
+        zero_division(stackFrame);
         break;
     case INVALID_OP_CODE_EXCEPTION_ID:
-        invalid_op_code();
+        invalid_op_code(stackFrame);
         break;
     default:
         break;
     }
 
 }
-static void error_sign(char * message){
-    //dibujo contemporaneo de la exception
-        put_rectangle(100,100,800,300,MESSAGE_SHADOW);
-        put_rectangle(90,90,800,300,MESSAGE_BACKROUND);
 
-        put_word(message,100,100,3,MESSAGE_COLOR);
-        put_word("reiniciando consola en ",100,100+34*3,3,MESSAGE_COLOR);
-        put_word("5 segundos  !!!",100,100+68*3,3,MESSAGE_COLOR);
+static void error_sign(char * message,uint64_t * stackFrame){
+    //dibujo contemporaneo de la exception
+    char buffer[50];
+        put_rectangle(0,0,955,565,MESSAGE_SHADOW);
+        put_rectangle(0,0,935,545,MESSAGE_BACKROUND);
+
+        put_word(message,230,10,2,MESSAGE_COLOR);
+
+	char registers[17][4] = { "RAX", "RBX", "RDX", "RCX", "RSI", "RDI", "RBP", "RSP", " R8", " R9", "R10", "R11", "R12", "R13", "R14", "R15","RIP"};
+	for ( int i = 0; i < 17; i++ ){
+        put_word(registers[i],0,i*16*2,2,MESSAGE_COLOR);
+        uintToBase(*(stackFrame+i),buffer,16);
+        put_word(buffer,32*3,i*16*2,2,MESSAGE_COLOR);
+	}
+        put_word("reiniciando consola en ",230,10+34*2,2,MESSAGE_COLOR);
+        put_word("5 segundos  !!!",230,10+68*2,2,MESSAGE_COLOR);
         for(int i=0;i<(18*5);i++){ //espera 5 segundo o 18*5 ticks
             _hlt();
         }
 
 }      
 
-static void zero_division() {
-    error_sign("division por cero");
+static void zero_division(uint64_t * stackFrame) {
+    error_sign("division por cero",stackFrame);
 }
 
 
-static void invalid_op_code(){
-    error_sign("codigo de operaciones invalido");
+static void invalid_op_code(uint64_t * stackFrame){
+    error_sign("codigo de operaciones invalido",stackFrame);
+}
+
+
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
 }
