@@ -23,6 +23,11 @@ DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
 
 static void setup_IDT_entry (int index, uint64_t offset);
 
+/**
+ * @brief carga las interrupciones y excepciones en la tabla de idt
+ * las interrupciones arrancan en el 20 con timertick
+ * 
+ */
 void load_idt() {
   _cli();
 
@@ -30,7 +35,7 @@ void load_idt() {
   setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
   setup_IDT_entry(0x06,(uint64_t)&_exception6Handler);
   setup_IDT_entry(0x21, (uint64_t)&_irq01Handler);
-  setup_IDT_entry(0x80, (uint64_t)&_irq60Handler);
+  setup_IDT_entry(0x80, (uint64_t)&_irq60Handler); //syscalls
   
   initialize(); 
 

@@ -57,8 +57,6 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	//soviet_anthem(); //hola
-	 //nos vamos para user land amigos
 
-	return ((EntryPoint) sampleCodeModuleAddress)();
+	return ((EntryPoint) sampleCodeModuleAddress)(); //dirreccion del _start del userland
 }
