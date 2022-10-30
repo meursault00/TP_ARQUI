@@ -2,24 +2,44 @@
 #include <library.h>
 #include <system_calls.h>
 #include <tron.h>
+#include <keyboardPiano.h>
+
 #define ASC_UP    '\200'
 #define ASC_DOWN  '\201'
 #define ASC_LEFT  '\202'
 #define ASC_RIGHT '\203'
 
-#include <keyboardPiano.h>
+//hashcodes de los comandos en mayuscula
+#define HELP 2089138798
+#define TRON 2089584296
+#define CLEAR 216417516
+#define BEEP 2088922945
+#define ANTHEM 2771458114
+#define SNAPSHOT 650087221
+#define TIME 2089574420
+#define INVOP 223623889
+#define DIVCERO 649756593
+#define MEMACCESS 1829689142
+#define PIANO 231722748
+#define UPSIZE 235307403 // "size+"
+#define DOWNSIZE 235307405
+#define LANG_ES 3115062494 // lange=es
+#define LANG_EN 3115062489
 
-/**
- *  HELP NO SE EJECUTA APRETANDO BACKSPACE
- * 	NO DEJAR ESCRIBIR CUADNO SE EJECUTA UN COMANDO
- *  IMPRIMIR TIEMPO Y LUEGO SEGUIR ESCRIBIENDO
- *  
- * 
- */
- extern void INVALID_OP_CODE();
+//BUFFER DE COMANDOS PARA PODER HACER SCROLLING EN HISTORIAL DE EJECUCION
+#define MAX_COMMAND_LENGTH 64
+#define MAX_COMMANDS 64
+
+char historyBuffer[MAX_COMMANDS][MAX_COMMAND_LENGTH];
+unsigned int historyIndex = 0;
+unsigned int historyDim = 0;
 
 
-void toUpper(char * string){
+
+extern void INVALID_OP_CODE();
+
+
+char * toUpper(char * string){
 	int i = 0;
 	while(string[i] != 0){
 		if(string[i] >= 'a' && string[i] <= 'z')
@@ -27,15 +47,8 @@ void toUpper(char * string){
 		
 		i++;
 	}
+	return string;
 }
-
-/**
- *  HELP NO SE EJECUTA APRETANDO BACKSPACE
- * 	NO DEJAR ESCRIBIR CUADNO SE EJECUTA UN COMANDO
- *  IMPRIMIR TIEMPO Y LUEGO SEGUIR ESCRIBIENDO
- *  
- * 
- */
 
 
 
@@ -63,7 +76,7 @@ void printCurrentTime(){
 	else{
 		aux -= 3;
 	}
-	printInt(aux); // checkear
+	printInt(aux); 
 	putchar(':');
 	printInt(bcdToDec(getTime(0x02)));
 	putchar(':');
@@ -217,7 +230,7 @@ void printRegisters(){
 
 	}
 }
-
+// pequeña funcion que espera a que se presione una tecla para salir
 void waitForKey(char key){
 	while(1){
 		if(getchar() == key){
@@ -228,10 +241,11 @@ void waitForKey(char key){
 	clearScreen();
 	restartCursor();
 }
+
 void commandHelp(){
 	clearScreen();
 	restartCursor();
-	appendstring("BIENVENIDO AL MENU HELP");
+	printColor("BIENVENIDO AL MENU HELP", 0x26A269, 0);
 	newline();
 	appendstring("EL SISTEMA CUENTA CON LOS SIGUIENTES COMANDOS:");
 	newline();
@@ -263,7 +277,9 @@ void commandHelp(){
 	newline();
 	appendstring("- LANGUAGE (EN o ES) ");
 	newline();
-	appendstring("Presione ESC para volver a la consola.");
+	appendstring("Presione ");
+	printColor("'ESC'", 0x26A269, 0);
+	print(" para volver a la consola.\n", 0);
 	waitForKey(ESC);
 }
 
@@ -407,13 +423,14 @@ void commandMemAccess( char * memdirHexa, int stringlen ){
 //
 	//}
 }
-
- static void div_cero(){
-	
+void commandDivCero(){
+	clearScreen();
 	int x=1/0;
- }
 
-void soviet_anthem(){
+}
+
+
+void commandAnthem(){
 	beep(392 ,375 /50); 
 	beep(523 ,750 /50); 
 	beep(392 ,463 /50); 
@@ -436,77 +453,103 @@ void soviet_anthem(){
 	beep(440 ,750 /50); 
 	beep(494 ,375 /50); 
 	beep(523 ,375 /50); 
-	beep( 587,1125/50);
+	beep(587,1125/50);
+}
+void commandInvOp(){
+	clearScreen();
+	INVALID_OP_CODE();
 }
 
-void checkCommand(){
+
+
+// https://stackoverflow.com/questions/4014827/how-can-i-compare-strings-in-c-using-a-switch-statement
+const unsigned long hash(unsigned char *str)
+{
+	unsigned int hash = 5381;
+	int c;
+
+	while (c = *str++)
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+	return hash;
+}
+
+// CHEQUEAR CUAL ES EL COMANDO Y QUE EL COMANDO EXISTA CON LOS HASHCODES
+void checkCommand() {
 	char section[64]={0};
-	toUpper(consoleBuffer);
-
-	splitString( consoleBuffer, section, ' ' );
-
-	if ( section[0] == 0 ){ // no tiene segundo parametro
-		if(streql(consoleBuffer, "HELP") || streql(consoleBuffer, "- HELP") )
-			commandHelp();
-		else if(streql(consoleBuffer, "TRON") || streql(consoleBuffer, "- TRON") )
-			commandTron();
-		else if(streql(consoleBuffer, "CLEAR") || streql(consoleBuffer, "- CLEAR") )
-			commandClear();
-		else if(streql(consoleBuffer, "BEEP") || streql(consoleBuffer, "- BEEP") ){
-			commandBeep();
-		}
-		else if(streql(consoleBuffer, "ANTHEM") || streql(consoleBuffer, "- ANTHEM") ){
-			soviet_anthem();
-		}
-		else if( streql(consoleBuffer,"SNAPSHOT")|| streql(consoleBuffer, "- SNAPSHOT"))
-			commandSnapshot();
-		else if(streql(consoleBuffer, "TIME") || streql(consoleBuffer, "-TIME"))
-			commandTime();
-		else if(streql(consoleBuffer, "INVOP") || streql(consoleBuffer, "-INVOP")){
-			clearScreen();
-			INVALID_OP_CODE();
-		}
-		else if(streql(consoleBuffer, "DIVCERO") || streql(consoleBuffer, "-DIVCERO")){
-			clearScreen();
-			div_cero();
-		}
-		else if(streql(consoleBuffer, "PIANO")){
-			commandPiano();
-		}
-	
-	}else{
-		if(streql(consoleBuffer, "MEMACCESS") || streql(consoleBuffer, "- MEMACCESS") ){
-			int sectionLength;
-			if ( strlen(section) <= 16 && onlyHexChars(section )){
-				commandMemAccess(section, sectionLength);
-			}
-		}
-		// deberiamos agregar la de size aca porque tambien recibe un parametro
-		else if(streql(consoleBuffer, "SIZE") || streql(consoleBuffer, "- SIZE")){
-			if(streql(section,"+")){
+	char * command = toUpper(consoleBuffer);
+	splitString( command, section, ' ' );
+		
+	if(section[0]==0){
+		switch(hash(command)) {
+			case HELP:
+				commandHelp();
+				break;
+			case TRON:
+				commandTron();
+				break;
+			case CLEAR:
+				commandClear();
+				break;
+			case BEEP:
+				commandBeep();
+				break;
+			case ANTHEM:
+				commandAnthem();
+				break;
+			case SNAPSHOT:
+				commandSnapshot();
+				break;
+			case TIME:
+				commandTime();
+				break;
+			case INVOP:
+				commandInvOp();
+				break;
+			case DIVCERO:
+				commandDivCero();
+				break;
+			case PIANO:
+				commandPiano();
+				break;
+			case UPSIZE:
+				clearScreen();
 				changeFontSize(1);
+				break;
+			case DOWNSIZE:
 				clearScreen();
-			}
-			else if(streql(section,"-"))
 				changeFontSize(-1);
-				clearScreen();
-		}
-		else if(streql(consoleBuffer, "LANGUAGE") || streql(consoleBuffer, "- LANGUAGE")){
-			if(streql(section,"EN")||streql(section,"en")){
-				changelanguage(0);
-			}
-			else if(streql(section,"ES"),streql(section,"es"))
+				break;
+			case LANG_ES:
 				changelanguage(1);
+				break;
+			case LANG_EN:
+				changelanguage(0);
+				break;
+			default:
+				print("Comando ", command);
+				printColor("'%s'", 0x420781,command);
+				print(" no es un comando valido.\n");
 		}
 	}
-	
-}
-#define MAX_COMMAND_LENGTH 64
-#define MAX_COMMANDS 64
-char historyBuffer[MAX_COMMANDS][MAX_COMMAND_LENGTH];
-unsigned int historyIndex = 0;
-unsigned int historyDim = 0;
+	else if( streql(consoleBuffer, "MEMACCESS"))
+	{
+		int sectionLength;
+		if ( strlen(section) <= 16 && onlyHexChars(section )){
+			commandMemAccess(section, sectionLength);
+		}
+    
+    }
+	else {
+		print("Comando ", command);
+		printColor("'%s'", 0x420781,command);
+		print(" no es un comando valido.\n");
 
+	}
+}
+
+
+// CARGA AL HISTORIAL DE COMANDOS
 static void loadHistory(const char *s){
 	int len = strlen(s);
 	if(historyDim > 0 && strcmp(historyBuffer[historyDim-1],s) == 0)
@@ -516,7 +559,7 @@ static void loadHistory(const char *s){
 	historyIndex = historyDim;
 
 }
-
+// SUBE EN EL HISTORIAL A MAS VIEJOS
 static char * upHistory(){
 	if(historyIndex > 0){
 		return historyBuffer[--historyIndex];
@@ -526,7 +569,7 @@ static char * upHistory(){
 		return "";
 	}
 }
-
+//BAJA EN EL HISTORIAL A MAS RECIENTES
 static char * downHistory(){
 	if(historyIndex < historyDim){
 		return historyBuffer[historyIndex++];
@@ -534,7 +577,7 @@ static char * downHistory(){
 	beep(100, 1);
 	return "";
 }
-
+//RESETEA LA LINEA
 static void inLineReset(){
 	int i = 0;
 	while(i <= strlen(consoleBuffer)-1){
@@ -543,10 +586,10 @@ static void inLineReset(){
 	}
 	clearconsoleBuffer();
 }
-
+//FUNCION QUE EJECUTA UP OR DOWN
 void upArrow(int arrowUp){
 	inLineReset();
-	char *aux ;
+	char *aux;
 	if(arrowUp){
 		aux =  upHistory();
 	}
@@ -560,22 +603,13 @@ void upArrow(int arrowUp){
 		consoleBuffer[lastChar++] = aux[i];
 	}
 }
+// RESETEA EL HISTORIAL
 void restartHistory(){
 	historyDim = 0;
 	historyIndex = historyDim;
 }
 
-
-void leftArrow(){
-	if(lastChar > 0){
-		rollLeft();
-
-
-		
-		lastChar--;
-	}
-}
-
+// SE FIJA QUE TECLA HA SIDO ACCINOADA Y QUE HACER AL RESPECTO...
 void checkKey( char c ){
 	switch (c)
 		{
@@ -593,7 +627,7 @@ void checkKey( char c ){
 			clearScreen();
 			restartCursor();
 			restartHistory();
-			appendstring("> $ ");
+			appendstringColor("> $ ", USER_TEXT_COLOR);
 			break;
 		}
 		case ENTER : {
@@ -605,11 +639,7 @@ void checkKey( char c ){
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
 			}
-			appendstring("> $ ");
-			break;
-		}
-		case '=':{
-			getRegisters(snapshotBuffer); 
+			appendstringColor("> $ ", USER_TEXT_COLOR);
 			break;
 		}
 		case '\t':{
@@ -629,11 +659,11 @@ void checkKey( char c ){
 			break;
 		}
 		case ASC_RIGHT:{ // right arrow key ascii
-
+			getRegisters(snapshotBuffer); 
 			break;
 		}
 		case ASC_LEFT:{ // left arrow key ascii
-			leftArrow();
+			getRegisters(snapshotBuffer); 
 			break;
 		}
 		default:{

@@ -90,25 +90,6 @@ int pow(int base, unsigned int exp){
 	return rta;
 }
 
-// char strcmp( const char* stringA,const char* stringB)  
-// {  
-//     char flag = 0;
-// 	int i = 0;
-//     while(stringA[i]!='\0' && stringB[i]!='\0')  {  
-//        if(stringA[i]!=stringB[i])  
-//        {  
-//            flag=1;  
-//            break;  
-//        }  
-//        i++;  
-//     }  
-// 	if(stringA[i] != 0 || stringB[i] != 0){
-// 		return 0;
-// 	}
-//     if(flag==0)  
-//     	return 1;  
-//  	return 0;  
-// }  
 
 
 char isHexChar( char character ){
@@ -200,32 +181,37 @@ static void updateCursor(){
 	}
 }
 
-void appendchar( char character ){
+
+void appendcharColor(char character, int color){
 	if(character == '\n'){
 		newline();
 		return;
 	}
 	
 	drawCursor(currentCursorColor);
-	putcharSpecifics(character,cursorX,cursorY,fontsize,fontcolor);
+	putcharSpecifics(character,cursorX,cursorY,fontsize,color);
 	updateCursor();
 	drawCursor(fontcolor);
 }
+void appendchar( char character ){
+	appendcharColor(character, fontcolor);
+}
+void appendstringColor( char * string , int color){
+	for ( int i = 0; string[i] != 0; i++ ){
+		appendcharColor(string[i], color);
+	}
+}
+void appendstring( char * string ){
+	appendstringColor(string, fontcolor);
+}
+
 
 void newline(){
 	drawCursor(currentCursorColor);
 	cursorX = 4;
 	cursorY += 16*fontsize;
 }
-void rollLeft(){
-	drawCursor(currentCursorColor);
-	cursorX -= 8*fontsize;
-	if(cursorX < 4){
-		cursorX = 1024 - 8*fontsize;
-		cursorY -= 16*fontsize;
-	}
-	drawCursor(fontcolor);
-}
+
 void backspace(){
 	if(cursorX != 4){
 		drawCursor(currentCursorColor);
@@ -271,7 +257,7 @@ int strlen(const char *str){
 	return s;
 }
 
-void print (char * foundation, ...){
+void printColor(char *foundation, int color, ...){
 
 	// se inicializa la lista de parametros indefinidos
 	va_list vl;
@@ -283,7 +269,7 @@ void print (char * foundation, ...){
 	char * str_arg;
 
 	// macro de inicializacion
-	va_start( vl, foundation );
+	va_start( vl, color );
 
 	// mientras haya caracteres y argumentos
 	while (foundation && foundation[i])
@@ -341,8 +327,14 @@ void print (char * foundation, ...){
 	  	}
 	  i++;
 	} 
-  appendstring(buff);
+  appendstringColor(buff, color);
   va_end(vl);
+}
+
+void print (char * foundation, ...){
+	va_list vl;
+	va_start( vl, foundation );
+	printColor(foundation, fontcolor,vl);
 }
 
 void strcpy( char * destination, char * origin ){
@@ -442,11 +434,6 @@ void printHex(uint64_t integer){
 void println(char * string){
 	appendstring(string);
 	newline();
-}
-void appendstring( char * string ){
-	for ( int i = 0; string[i] != 0; i++ ){
-		appendchar( string[i]);
-	}
 }
 
 

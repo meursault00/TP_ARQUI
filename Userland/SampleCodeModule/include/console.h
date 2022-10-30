@@ -20,7 +20,7 @@ void commandClear();
 void commandTron();
 void printRegisters();
 char toHex( char character );
-void toUpper(char * string);
+char *toUpper(char * string);
 void clearScreen();
 void checkKey( char c );
 void printCurrentTime();

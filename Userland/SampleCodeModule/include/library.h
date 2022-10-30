@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 #define BACKGROUND_COLOR 0x002B36
-static int fontcolor = 0x95CD28;
+#define USER_TEXT_COLOR 0x95CD28
+static int fontcolor = 0xBFECF1;
 static int currentCursorColor = 0x002B36;
 
 static int fontsize = 2;
@@ -27,6 +28,8 @@ void printInt(uint64_t );
 void printHex(uint64_t );
 void println(char * string);
 void print (char * foundation, ...);
+void printColor(char * foundation, int color, ...);
+
 char *_strrev (char *str);
 char * _itoa(int i, char *strout, int base);
 void strcpy( char * destination, char * origin );
@@ -47,7 +50,7 @@ int strcmp(const char* s1, const char* s2);
 int strlen(const char *str);
 
 void appendstring( char * string );
-
+void appendstringColor(char * string, int color);
 char isHexChar( char character );
 char onlyHexChars( char * string );
 void splitString( char * original, char * firstSplit, char splitter );
