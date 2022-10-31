@@ -123,6 +123,10 @@ int checkPlayersPosition(){
     if(!insideBoard(p2.currX,p2.currY) || board[p2.currX][p2.currY]){
         p2.alive =0;
     }
+    if(p1.currX == p2.currX && p1.currY == p2.currY){
+        p1.alive = 0;
+        p2.alive = 0;
+    }
 
     if(p1.alive && p2.alive)
         return 1;
@@ -244,6 +248,14 @@ void playTron(){
         initialize_players();
         //lastKey = 0;
         printScore();
+
+        putstringSpecifics("PRESS SPACE TO BEGIN",352,736,2,0x381f34);
+
+        while(getchar()!= ' ');
+
+        for(int i=0; i<10; i++)
+            putSquare(352+i*32,736,32,0x90ADC6);
+
         gameOn = 1;
         while(gameOn){
             //getchar();
