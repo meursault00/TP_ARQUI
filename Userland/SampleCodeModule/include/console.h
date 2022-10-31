@@ -7,7 +7,8 @@
 
 extern char* snapshot();
 
-static char consoleBuffer[256] = {0};
+#define MAX_CONSOLE_BUFFER 256
+static char consoleBuffer[MAX_CONSOLE_BUFFER] = {0};
 static char snapshotBuffer[128] = {0};
 static int lastChar = 0;
 

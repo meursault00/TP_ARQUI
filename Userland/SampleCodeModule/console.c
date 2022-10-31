@@ -300,9 +300,9 @@ void checkCommand() {
 				changelanguage(0);
 				break;
 			default:
-				print("Comando ", command);
+				
 				printColor("'%s'", ORANGY,command);
-				print(" no es un comando valido.\n");
+				print(" : comando no encontrado.\n");
 		}
 	}
 	else if(streql(consoleBuffer, "HELP") ){
@@ -414,9 +414,8 @@ void checkCommand() {
 			break;
 			}
 			default:
-				print("Comando ", command);
-				printColor("'%s'", ORANGY,command);
-				print(" no es un comando valido.\n");
+				printColor("'%s %s'", ORANGY,command, section);
+				print(" : comando no encontrado.\n");
 
 		}
 	
@@ -429,9 +428,9 @@ void checkCommand() {
     
     }
 	else {
-		print("Comando ", command);
+		
 		printColor("'%s'", ORANGY,command);
-		print(" no es un comando valido.\n");
+		print(" : comando no encontrado.\n");
 
 	}
 }
@@ -440,16 +439,17 @@ int lastUp = 0;
 // CARGA AL HISTORIAL DE COMANDOS
 static void loadHistory(const char *s){
 	int len = strlen(s);
-	if(historyDim > 0 && strcmp(historyBuffer[historyDim-1],s) == 0)
+	if(historyDim > 0 && strcmp(historyBuffer[historyDim-1],s) == 0){
 		return;
+	}
 	strcpy(historyBuffer[historyDim], s);
+
 	historyBuffer[historyDim++][len] = 0;
 	historyIndex = historyDim;
 
 }
 // SUBE EN EL HISTORIAL A MAS VIEJOS
 static char * upHistory(){
-	printColor("%d : %d\n", 0x0F66151, historyIndex, historyDim);
 	if(historyIndex > 0){
 		return historyBuffer[--historyIndex];
 	}
@@ -458,7 +458,6 @@ static char * upHistory(){
 }
 //BAJA EN EL HISTORIAL A MAS RECIENTES
 static char * downHistory(){
-	printColor("%d : %d\n", 0x0F66151, historyIndex, historyDim);
 	if(historyIndex < historyDim){
 		return historyBuffer[historyIndex++];
 	}
@@ -467,12 +466,13 @@ static char * downHistory(){
 }
 //RESETEA LA LINEA
 static void inLineReset(){
-	int i = 0;
-	while(i <= strlen(consoleBuffer)-1){
-		backspace();
-		i++;
-	}
-	clearconsoleBuffer();
+		int i = 0;
+		while(i <= strlen(consoleBuffer)-1){
+			backspace();
+			i++;
+		}
+		clearconsoleBuffer();
+	
 }
 //FUNCION QUE EJECUTA UP OR DOWN
 void upArrow(int arrowUp){
@@ -485,14 +485,21 @@ void upArrow(int arrowUp){
 		aux = downHistory();
 
 	}
-	appendstring(aux);
+	printColor("%s", fontcolor, aux);
 	lastChar =0;
 	for(int i = 0; i < strlen(aux); i++){
 		consoleBuffer[lastChar++] = aux[i];
 	}
 }
 // RESETEA EL HISTORIAL
-void restartHistory(){
+void clearHistoryBuffer(){
+	for(int i = 0; i < MAX_COMMANDS; i++){
+		for (int j = 0; j < MAX_COMMAND_LENGTH; j++)
+		{
+			historyBuffer[i][j] = 0;
+		}
+		
+	}
 	historyDim = historyIndex =0;
 }
 
@@ -506,24 +513,29 @@ void checkKey( char c ){
 				consoleBuffer[--lastChar] = 0;
 
 			}else{
-				beep(80, 1);
+				//beep(80, 1);
 			}
 			break;
 		}
 		case ESC:{
 			clearScreen();
+			clearconsoleBuffer();
+			clearHistoryBuffer();
 			restartCursor();
-			restartHistory();
 			printColor("user@Qemu:", USER_TEXT_COLOR, 0);
 			printColor("> $ ", TERMINAL_BLUE, 0);
+			
+
 			break;
 		}
 		case ENTER : {
 			newline();
+			if(lastEnter()){
+				clearScreen();
+			}
 
 			if ( consoleBuffer != 0 && consoleBuffer[0] ){	
 				loadHistory(consoleBuffer);
-
 				checkCommand(consoleBuffer);
 				clearconsoleBuffer();
 			}
@@ -544,6 +556,7 @@ void checkKey( char c ){
 			break;
 		}
 		case ASC_DOWN:{ // down arrow key ascii
+
 			upArrow(0);
 			break;
 		}
@@ -556,8 +569,14 @@ void checkKey( char c ){
 			break;
 		}
 		default:{
-			consoleBuffer[lastChar++] = c;
-			appendchar(c);
+			if(lastChar < MAX_CONSOLE_BUFFER){
+				consoleBuffer[lastChar++] = c;
+				putchar(c);
+			}
+			else{
+				beep(80, 1);
+			}
+			
 			break;
 		}
 			

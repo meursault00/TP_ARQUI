@@ -5,10 +5,11 @@
 #define CURSOR_TICKS 9
 
 
-
+static int cursorX = 4; 				// por que estaba la hora
+static int cursorY = 4; 
 #define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
 int lastEnter(){
-	return cursorY+16*fontsize > 736;
+	return cursorY+16*fontsize >= 800;
 }
 
 
@@ -217,11 +218,11 @@ void newline(){
 }
 
 void backspace(){
-	if(cursorX != 4){
+	if(cursorX != 0){
 		drawCursor(currentCursorColor);
-		if(cursorX-fontsize*8 < 0){
+		if(cursorX-fontsize*8 < 4){
 			cursorY -= fontsize*16;
-			cursorX = 1023;
+			cursorX = 1024-8*fontsize;
 		}
 		else
 			cursorX -= fontsize * 8;

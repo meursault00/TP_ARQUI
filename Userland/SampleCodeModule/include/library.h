@@ -12,14 +12,13 @@
 #define TERMINAL_BLUE 0x12488B
 #define ORANGY 0xF66151
 #define RED 0xC01C28
+
 static int fontcolor = 0xBFECF1;
 static int currentCursorColor = 0x002B36;
 
 static int fontsize = 2;
 static char buffer[64] = {0};
-
-static int cursorX = 4; 				// por que estaba la hora
-static int cursorY = 4; 			// 16 que es la cantidad de bits * fontsize
+			// 16 que es la cantidad de bits * fontsize
 
 void scanf(char * format, void * parameters[]);
 void setCursor( int x, int y );
