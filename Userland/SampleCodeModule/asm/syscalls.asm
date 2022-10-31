@@ -10,6 +10,8 @@ GLOBAL beep
 GLOBAL sleep
 GLOBAL clearkeybuffer
 GLOBAL changelanguage
+GLOBAL storeRegisters
+GLOBAL memAccess
 section .text
 
 %macro pushState 0
@@ -101,24 +103,8 @@ clearkeybuffer:
 changelanguage:
 	sys_call 11
 
-; sys_put_pixel
-;
-;
-;
-; sys_getTime
-;
-;
-;
-;
-;
-;
-; sys_Beep
-;
-;
-;
-;
-;
-;
-;
-;
-;
+storeRegisters:
+	sys_call 12
+
+memAccess:
+	sys_call 13

@@ -159,36 +159,18 @@ void commandClear(){
 
 void commandSnapshot(){
 	clearScreen();
-	printColor("REGISTROS ", 0x0F66151);
-	newline();
-	newline();
-
-	char registers[16][4] = { "RAX", "RBX", "RDX", "RCX", "RSI", "RDI", "RBP", "RSP", " R8", " R9", "R10", "R11", "R12", "R13", "R14", "R15"};
-	for ( int i = 0; i < 16; i++ ){
-		printColor("%s:  ", 0x0F66151,registers[i]);
-		for ( int j = 7; j >= 0; j-- ){
-			appendchar(inthextoa((snapshotBuffer[j+i*8]&0xF0)>>4));
-			appendchar(inthextoa((snapshotBuffer[j+i*8]&0x0F)));
-		}
-		newline();
-	}
-	newline();
-	appendstring("PRESIONE ESC PARA SALIR");
+	getRegisters();
 	waitForKey(ESC);
-
 }
 void commandTime(){
 	printCurrentTime();
 }
 
 void commandTron(){
-	//bufferOn = 0;
 	playTron();
 	restartCursor();
 	getchar();
-	//clearkeybuffer();
 	clearScreen();
-	//bufferOn = 1;
 }
 
 void commandPiano(){
@@ -205,37 +187,9 @@ void commandBeep(){
 }
 
 
-void commandMemAccess( char * memdirHexa, int stringlen ){
-
-	newline();
-	printColor("Memoria Introducida : %s",0x0F66151 ,memdirHexa); 	
-	newline();
-
-	int num=hexstringToInt(memdirHexa);
-	unsigned char deposit[32] = {0};
-    unsigned char * realAddress = (unsigned char*) num - ( num % 16 );
-	if ( (num - ( num % 16 )) == 0 )
-		printColor("Memoria Accedida : %c", 0x0F66151, '0');
-	else
-	printColor("Memoria Accedida : %x", 0x0F66151, num - ( num % 16 ) );
-	newline();
-
-	newline();
-
-	for( int i = 0 ; i < 4 ; i++ ){
-		for(int j=0;j<8;j++){
-			uintToBase(*(realAddress+8*i+j),deposit,16);
-			if ( (*(realAddress+8*i+j) & 0xF0 ) == 0 )
-				appendchar('0');
-			print(deposit);
-			putchar(' ');
-		}
-		newline();
-	}
-	newline();
-	appendstring("Presione ");
-	printColor("'ESC'", 0xE9AD0C, 0);
-	print(" para volver a la consola.\n", 0);
+void commandMemAccess( char * memdirHexa ){
+	clearScreen();
+	memAccess(hexstringToInt(memdirHexa));
 	waitForKey(ESC);	
 }
 
@@ -469,9 +423,8 @@ void checkCommand() {
 	}	
 	else if( streql(consoleBuffer, "MEMACCESS"))
 	{
-		int sectionLength = strlen(section);
-		if ( sectionLength <= 16 && onlyHexChars(section )){
-			commandMemAccess(section, sectionLength);
+		if ( strlen(section) <= 16 && onlyHexChars(section )){
+			commandMemAccess(section);
 		}
     
     }
@@ -595,11 +548,11 @@ void checkKey( char c ){
 			break;
 		}
 		case ASC_RIGHT:{ // right arrow key ascii
-			getRegisters(snapshotBuffer); 
+			storeRegisters(); // saca el screenshot de los registros
 			break;
 		}
 		case ASC_LEFT:{ // left arrow key ascii
-			getRegisters(snapshotBuffer); 
+			storeRegisters(); // saca el screenshot de los registros
 			break;
 		}
 		default:{

@@ -23,7 +23,8 @@ static uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t  rdx ,uint64_t rcx,u
 #define SYS_SLEEP_ID 9
 #define SYS_CLEARKEYBUFFER_ID 10
 #define SYS_CHANGELANGUAGE_ID 11
-
+#define SYS_STOREREGISTERS_ID 12
+#define SYS_MEMACCESS_ID 13
 
 //static void int_22(uint64_t rdi, uint64_t rsi, uint64_t rdx ,uint64_t rcx, uint64_t r8, uint64_t r9);
 void (*fun_inter[256])(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t);
@@ -51,6 +52,8 @@ void initialize(){
     (fun_sys[SYS_SLEEP_ID])=sys_sleep;
     (fun_sys[SYS_CLEARKEYBUFFER_ID])=sys_clearkeybuffer;
     (fun_sys[SYS_CHANGELANGUAGE_ID])=sys_changeLanguage;
+    (fun_sys[SYS_STOREREGISTERS_ID])=sys_storeRegisters;
+    (fun_sys[SYS_MEMACCESS_ID])=sys_memAccess;
 }
 
 

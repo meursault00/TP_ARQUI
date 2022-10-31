@@ -70,26 +70,28 @@ outb:
 
 snapshot:
 
-	; en rdi tengo el puntero al comienzo de donde tengo que llenar con las cosas
 
 
-	mov QWORD [rdi], rax
-	mov [rdi+8], rbx
-	mov [rdi+16], rdx
-	mov [rdi+24], rcx
-	mov [rdi+32], rsi
-	mov [rdi+40], rdi
-	mov [rdi+48], rbp
-	mov [rdi+56], rsp
-	mov [rdi+64], r8
-	mov [rdi+72], r9
-	mov [rdi+80], r10
-	mov [rdi+88], r11
-	mov [rdi+96], r12
-	mov [rdi+104], r13
-	mov [rdi+112], r14
-	mov [rdi+120], r15
+	mov [regsBuffer], rax
+	mov [regsBuffer+8], rbx
+	mov [regsBuffer+16], rdx
+	mov [regsBuffer+24], rcx
+	mov [regsBuffer+32], rsi
+	mov [regsBuffer+40], rdi
+	mov [regsBuffer+48], rbp
+	mov [regsBuffer+56], rsp
+	mov [regsBuffer+64], r8
+	mov [regsBuffer+72], r9
+	mov [regsBuffer+80], r10
+	mov [regsBuffer+88], r11
+	mov [regsBuffer+96], r12
+	mov [regsBuffer+104], r13
+	mov [regsBuffer+112], r14
+	mov [regsBuffer+120], r15
 
-	mov rax, rdi
+	mov rax, regsBuffer
 
 	ret
+
+section .bss 
+regsBuffer resb 128

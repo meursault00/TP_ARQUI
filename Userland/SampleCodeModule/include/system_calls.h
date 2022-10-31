@@ -9,9 +9,11 @@ extern void halt();
 extern void putSquare(int x,int y,int tam,int color);
 extern int getTime(int code);
 extern char getLastKey();
-extern void getRegisters(char * registers);
+extern void getRegisters();
 extern void beep(int freq, int time);
 extern void sleep(int seconds);
 extern void clearkeybuffer();
 extern void changelanguage(int lan);
+extern void storeRegisters();
+extern void memAccess( unsigned long int memDir);
 #endif
