@@ -14,6 +14,9 @@ static int cursorY = 4;
 int lastEnter(){
 	return cursorY+16*fontsize >= 780;
 }
+int canWrite(){
+	return cursorX+fontsize*8+16 < 1024 ;
+}
 
 
 unsigned char inthextoa( unsigned char a ){
@@ -81,7 +84,7 @@ uint64_t  hexstringToInt(char * s){
         s += 2;
 
     unsigned int len = strlen(s);
-	unsigned int result = 0;
+	unsigned long int result = 0;
     for (int i = 0; i < len; i++)
         result = result*16 + atointhex(s[i]);
     return result;
@@ -261,20 +264,14 @@ int strlen(const char *str){
 	for (s = 0; str[s] != 0; ++s);
 	return s;
 }
+static void wrapperprint(char* foundation, int color, va_list vl){
 
-void printColor(char *foundation, int color, ...){
-
-	// se inicializa la lista de parametros indefinidos
-	va_list vl;
 	int i = 0, j=0;
 	// el buffer final y el buffer temporal para las conversiones numericas
 	// buff deberia ser dinamico pero no tenemos malloc :/
 	char buff[100]={0}, tmp[20];
 	// buffer para el string
 	char * str_arg;
-
-	// macro de inicializacion
-	va_start( vl, color );
 
 	// mientras haya caracteres y argumentos
 	while (foundation && foundation[i])
@@ -333,20 +330,23 @@ void printColor(char *foundation, int color, ...){
 	  i++;
 	}
   appendstringColor(buff, color);
-  va_end(vl);
+}
+
+void printColor(char* foundation, int color, ...){
+	va_list args;
+	va_start( args, color );
+	wrapperprint(foundation,color,args);
+	va_end(args);
 }
 
 void print (char * foundation, ...){
-	va_list vl;
-	va_start( vl, foundation );
-	va_end(vl);
-
-	printColor(foundation, FONTCOLOR,vl);
-
-
+	va_list args;
+	va_start( args, foundation );
+	wrapperprint(foundation,FONTCOLOR,args);
+	va_end(args);
 
 }
-
+//copia el string de origian a destination
 void strcpy( char * destination,const char * origin ){
 	int i;
 	for (  i = 0; origin[i]!='\0'; i++ )
@@ -354,6 +354,7 @@ void strcpy( char * destination,const char * origin ){
 	destination[i] = '\0';
 }
 
+// da vuelta el string ABC -> CBA
 char *strrev (char *str){
   int i;
   int len = 0;
@@ -371,7 +372,12 @@ char *strrev (char *str){
   }
   return str;
 }
-
+/**
+* @brief pasa a ascii un numero en cualquier base
+* @param i numero a transformar
+* @param strout donde se guarda el string de asciis
+* @param base en que base esta el numero
+*/
 char * itoa(int i, char *strout, int base){
   char *str = strout;
   int digit, sign = 0;
@@ -393,6 +399,7 @@ char * itoa(int i, char *strout, int base){
   return strout;
 }
 
+// joaco es la bestia asesina
 void printf ( char * foundation, void * parameters[] ){
     int j = 0; // posicion en los parametros
     for ( int i = 0; foundation[i] != 0; i++ ){
@@ -428,35 +435,32 @@ void printf ( char * foundation, void * parameters[] ){
         } 
     }
 }
-
+//print para numeros en base 10
 void printInt(uint64_t integer){
 	char buffer[20] = {0};
 	uintToBase(integer,buffer,10);
 	appendstring(buffer);
 }
 
+//print para hexadecimales
 void printHex(uint64_t integer){
 	char buffer[20] = {0};
 	uintToBase(integer,buffer,16);
 	appendstring(buffer);
 }
-
+//print que termina con un newline
 void println(char * string){
 	appendstring(string);
 	newline();
 }
-
+//cambia de lugar el cursor
 void setCursor( int x, int y ){
 	cursorX = x;
 	cursorY = y;
 }
 
+// CURSOR TERMINAL
 void drawCursor(int color){
-	/* cursor editor de texto
-	for(int i=0; i<8; i++){
-		put_square(cursorX+fontSize*2,cursorY+fontSize*2*i,fontSize*2,color);
-	*/
-	// CURSOR TERMINAL
 	putSquare(cursorX,cursorY,fontsize*8,color);
 	putSquare(cursorX,cursorY+fontsize*8,fontsize*8,color);	
 }
@@ -470,7 +474,9 @@ void changeFontSize(int increment){
 	if((fontsize + increment) > 0 && (fontsize + increment) <= 64)
 		fontsize+=increment;
 }
-
+/**
+* @brief comapra dos strings para ver si son iguales
+*/
 char streql( const char* stringA,const char* stringB)  
 {  
 	int i = 0;
@@ -483,7 +489,12 @@ char streql( const char* stringA,const char* stringB)
 		return 0;
     return 1;
 } 
-
+/**
+* @param str este es el string que formatea usando % para usar variables
+* @param variadics direcciones a variables a ser cargadas
+* @brief sirve para leer de stdin y cargar variables desde ahi
+*
+*/
 int scan (char * str, ...){
 	va_list vl;
     int i, ret = 0;

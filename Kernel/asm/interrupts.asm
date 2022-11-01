@@ -73,8 +73,9 @@ SECTION .text
 %endmacro
 
 
-
+; se guarda el stack para poder devolverlo cuando ocurre una excepcion
 %macro exceptionHandler 1
+
 	mov qword[regist], rax
 	mov qword[regist+8], rbx
 	mov qword[regist+16], rdx
@@ -92,6 +93,7 @@ SECTION .text
 	mov qword[regist+112], r14
 	mov qword[regist+120], r15
 
+	; accedo al rip por medio del stack
 	mov rax,[rsp] 
 	mov [regist+128],rax
 
@@ -103,6 +105,7 @@ SECTION .text
 
 	popState
 
+	; se pisa la direccion de retorno, muy parecido a lo hicimos que en el parcial
 	push rax
     mov rax, 0x00400000 ;cargo la direccion de user land
     mov [rsp+8],rax  ;cambio la dir de reotrno de iretq a user land
@@ -169,6 +172,8 @@ _irq05Handler:
 ;syscalls	
 _irq60Handler:
 
+	;se pasan 7 parametros ya que existe una syscall que recibe 6 parametros, debido al
+	; corrimiento se tiene que pasar uno de esos parametros por stack
 	push r9
 	mov r9, r8
 	mov r8,rcx
@@ -199,5 +204,4 @@ haltcpu:
 
 
 SECTION .bss
-	aux resq 1
 	regist resq 17

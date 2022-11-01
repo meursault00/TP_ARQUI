@@ -17,6 +17,7 @@ static void keyboardHandler();
 static void resetScore();
 static void printScore();
 static void daleBo();
+void waitForKey(char a);
 
 //se usa para evitar switchs al mover jugadores
 static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema

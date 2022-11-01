@@ -42,24 +42,10 @@ extern char* snapshot();
 #define LANG_EN 3115062489
 #define LANGUAGE 3857633481 // for help
 #define SIZE 2089538912 // for help
+#define INFOREG 2989276335
 
 
-
-void memMoveChar( char* array1, char* array2, int charsToMove );
-char strcmp2( const char* stringA,const char* stringB);
 void checkCommand();
-void commandHelp();
-void commandSnapshot();
-void commandClear();
-void commandTron();
-void printRegisters();
-char toHex( char character );
-char *toUpper(char * string);
-void clearScreen();
 void checkKey( char c );
-void printCurrentTime();
-void printRTC(int code);
-void commandMemAccess( char * memdirHexa);
-void printAddress( unsigned char * address );
 
 #endif

@@ -8,6 +8,7 @@
 
 ;CONFIG
 cfg_smpinit:		db 1	; By default SMP is enabled. Set to 0 to disable.
+;activacion de modo video
 cfg_vesa:		db 1	; By default VESA is disabled. Set to 1 to enable.
 cfg_default:		db 0	; By default we don't need a config file so set to 0. If a config file is found set to 1.
 cfg_e820:		db 1	; By default E820 should be present. Pure64 will set this to 0 if not found/usable.

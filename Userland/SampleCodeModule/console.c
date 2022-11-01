@@ -24,19 +24,6 @@ char * toUpper(char * string){
 	return string;
 }
 
-
-
-
-// INVIERTE POR UN TEMA DE LITTLE ENDIAN, Y COMO NO PUEDO TRABAJAR OCN LAS DIRECCIONES DE MEMORIA HAGO UN MEMCOPY
-void memMoveChar( char* array1, char* array2, int charsToMove  ){ 
-	for ( int i = 0; i < charsToMove/8; i++){
-		for ( int j = 0; j < 8; j++ ){
-			array1[7-j+8*i] = array2[j+8*i];
-		}
-	}
-}
-
-
 // funcion que convierte un bcd en decimal
 static int bcdToDec(int bcd){
 	return ((bcd/16)*10 + (bcd%16));
@@ -157,11 +144,22 @@ void commandBeep(){
 	beep(1000, 10);	
 }
 
-
 void commandMemAccess( char * memdirHexa ){
 	clearScreen();
-	memAccess(hexstringToInt(memdirHexa));
-	waitForKey(ESC);	
+	uint64_t num = hexstringToInt(memdirHexa);
+	// tal vez por la cantidad de memoria asignada para el proceso, o a la VM
+	// del so o algo de paginacion, pero no se me permite desreferenciar direcciones
+	// mayores al 0xFFFFFFFE0
+	if ( num <= 0xFFFFFFFE0)
+		memAccess(num);
+	else{
+		printColor("Se esta accediendo a una direccion demasiado grande.", ORANGY);
+		newline();
+		appendstring("Presione ");
+		printColor("'ESC'", 0xE9AD0C, 0);
+		print(" para volver a la consola.\n", 0);
+		waitForKey(ESC);
+	}	
 }
 
 void commandDivCero(){
@@ -202,11 +200,8 @@ void commandInvOp(){
 	INVALID_OP_CODE();
 }
 
-
-
 // https://stackoverflow.com/questions/4014827/how-can-i-compare-strings-in-c-using-a-switch-statement
-const unsigned long hash(char *str)
-{
+const unsigned long hash(char *str){
 	unsigned int hash = 5381;
 	int c;
 
@@ -243,7 +238,7 @@ void checkCommand() {
 			case ANTHEM:
 				commandAnthem();
 				break;
-			case SNAPSHOT:
+			case INFOREG:
 				commandSnapshot();
 				break;
 			case TIME:
@@ -398,6 +393,9 @@ void checkCommand() {
 		if ( strlen(section) <= 16 && onlyHexChars(section )){
 			commandMemAccess(section);
 		}
+		else{
+			printColor("Error : ingrese una direccion en hexadecimal de 64 bits.\n", ORANGY);
+		}
     
     }
 	else {
@@ -408,7 +406,6 @@ void checkCommand() {
 	}
 }
 
-int lastUp = 0;
 // CARGA AL HISTORIAL DE COMANDOS
 static void loadHistory(const char *s){
 	int len = strlen(s);
@@ -533,15 +530,14 @@ void checkKey( char c ){
 			upArrow(0);
 			break;
 		}
-		case ASC_RIGHT:{ // right arrow key ascii
-			storeRegisters(); // saca el screenshot de los registros
-			break;
-		}
-		case ASC_LEFT:{ // left arrow key ascii
+		case ':':{ // right arrow key ascii
 			storeRegisters(); // saca el screenshot de los registros
 			break;
 		}
 		default:{
+			if(!canWrite()){
+				break;
+			}
 			if(lastChar < MAX_CONSOLE_BUFFER){
 				consoleBuffer[lastChar++] = c;
 				putchar(c);

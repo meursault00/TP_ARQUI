@@ -67,17 +67,18 @@ outb:
 	leave
 	ret
 
-
+; retorna un puntero a una zona de memoria donde se encuentra el estado de todo los registros
 snapshot:
 
-
+	; es inevitable que algunos registros tengan valores fijos porque para llegar aca 
+	; hay que invitablemente usar registros, entonces no es un snapshot real
 
 	mov [regsBuffer], rax
 	mov [regsBuffer+8], rbx
 	mov [regsBuffer+16], rdx
 	mov [regsBuffer+24], rcx
 	mov [regsBuffer+32], rsi
-	mov [regsBuffer+40], rdi
+	mov [regsBuffer+40], rdi 
 	mov [regsBuffer+48], rbp
 	mov [regsBuffer+56], rsp
 	mov [regsBuffer+64], r8

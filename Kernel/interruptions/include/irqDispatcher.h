@@ -1,6 +1,7 @@
 #ifndef IRQDISPATCHER_H
 #define IRQDISPATCHER_H
 
+#include <stdarg.h>
 #include <syscalls.h>
 #include <stdint.h>
 #include <keyboard_driver.h>

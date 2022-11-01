@@ -14,5 +14,6 @@ extern uint8_t inb( uint16_t port);
 // out de mapa de entrada y salida
 extern void outb( uint16_t port, uint8_t value);
 
+uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 #endif
 

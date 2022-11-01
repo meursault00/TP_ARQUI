@@ -1,10 +1,9 @@
 #include <syscalls.h>
-
+#include <lib.h>
 
 extern int getTime(int op);
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
-static int regsBuffer[128] = {0};
+static unsigned char regsBuffer[128] = {0};
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
     put_letter(character, x, y, size, color );
 }
@@ -43,8 +42,10 @@ void sys_getRegisters(){
     char buffer[50];
     for ( int i = 0; i < 16; i++ ){
         put_word(registers[i],0,32+i*16*2,2,0xf66151);
-        uintToBase(*(regsBuffer+i),buffer,16);
-        put_word(buffer,32*3,32+i*16*2,2,0xf6b351);
+        for ( int j = 0; j < 8; j++ ){
+            uintToBase(*(regsBuffer+i*8+(8-j-1)),buffer,16);
+            put_word(buffer,32*3+j*32,32+i*16*2,2,0xf6b351);
+        }
 	}
     put_word("Presione ESC para salir",0,32+16*16*2,2,0xf65194);
 }
@@ -76,7 +77,7 @@ void sys_storeRegisters(){
 }
 
 void sys_memAccess( uint64_t memDir ){
-    char buffer[50];
+    char buffer[128];
 
 
     put_word("Direccion Introducida : ",0,32,2,0xf66151);
@@ -87,7 +88,9 @@ void sys_memAccess( uint64_t memDir ){
     uintToBase(memDir - (memDir%16),buffer,16);
     put_word(buffer,0,120,2,0xf65194);
     
+    // aca podria haber una validacion que evitara memorias del kernel
     unsigned char * realAddress = (unsigned char*) (memDir - (memDir%16)) ;
+//
 
     for ( int i = 0; i < 4; i++ ){
         for ( int j = 0; j < 8; j++ ){
@@ -96,36 +99,4 @@ void sys_memAccess( uint64_t memDir ){
         }
 	}
     put_word("Presione ESC para salir",0,212+4*16*2,2,0xf65194);
-}
-
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in buffer.
-	*p = 0;
-
-	//Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
 }

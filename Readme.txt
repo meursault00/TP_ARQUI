@@ -29,3 +29,16 @@ From the x64BareBones project directory run:
 
 Author: Rodrigo Rearden (RowDaBoat)
 Collaborator: Augusto Nizzo McIntosh
+
+# Manual de usuario:
+
+Seguir el manual de instrucciones descripto previamente por los autores de RowDaBoat 
+Una vez compilado el proyecto correr el programa escribiendo en la terminal:
+```
+./run.sh
+```
+en caso de que requiera permisos especiales utilizar
+```
+sudo ./run.sh
+```
+

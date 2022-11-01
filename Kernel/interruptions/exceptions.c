@@ -1,5 +1,6 @@
 #include <video_driver.h>
 #include <interrupts.h>
+#include <lib.h>
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OP_CODE_EXCEPTION_ID 6
 #define MESSAGE_COLOR 0xFFFFFF
@@ -8,7 +9,6 @@
 
 static void zero_division();
 static void invalid_op_code();
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 /**
  * @brief selecciona el tipo de exception que se lanzo y vuelve a la consola
@@ -62,35 +62,3 @@ static void invalid_op_code(uint64_t * stackFrame){
     error_sign("codigo de operaciones invalido",stackFrame);
 }
 
-
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base){
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in buffer.
-	*p = 0;
-
-	//Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
-}

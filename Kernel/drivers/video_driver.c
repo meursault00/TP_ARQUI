@@ -50,7 +50,7 @@ typedef struct vbe_mode_info_structure {
 
 void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 	uint32_t pixel_offset =(y) * (info->pitch) + ((x) * ((info->bpp)/8)) ;
-	uint8_t* screen=(uint8_t*) info->framebuffer;
+	uint8_t* screen=(uint8_t*)(uint64_t) info->framebuffer;
 
 	screen[pixel_offset]=(uint8_t)color & 0xFF; // B 
 	screen[pixel_offset+1]=(uint8_t)((color>>8) & 0xFF); // G
@@ -71,7 +71,7 @@ void put_square(uint32_t x , uint32_t y,uint32_t tam, uint32_t color){
 
 // esta optimizado por recomendacion de osdev(un poco cambiado)->https://wiki.osdev.org/Drawing_In_Protected_Mode#Drawing_Text
 void put_rectangle(uint32_t x , uint32_t y,uint32_t tamX,uint32_t tamY, uint32_t color){
-    uint8_t* screen= (uint8_t*) info->framebuffer;
+    uint8_t* screen= (uint8_t*)(uint64_t) info->framebuffer;
     uint32_t pixel_offset =(y) * (info->pitch)  ;
     for(int j =0;j<tamY;j++){
         for(int i=0;i<tamX;i++){
