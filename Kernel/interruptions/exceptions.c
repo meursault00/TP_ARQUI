@@ -1,4 +1,5 @@
 #include <video_driver.h>
+#include <interrupts.h>
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OP_CODE_EXCEPTION_ID 6
 #define MESSAGE_COLOR 0xFFFFFF

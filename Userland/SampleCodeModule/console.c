@@ -1,47 +1,18 @@
 #include <console.h>
-#include <library.h>
-#include <system_calls.h>
-#include <tron.h>
-#include <keyboardPiano.h>
 
-#define ASC_UP    '\200'
-#define ASC_DOWN  '\201'
-#define ASC_LEFT  '\202'
-#define ASC_RIGHT '\203'
-
-//hashcodes de los comandos en mayuscula
-#define HELP 2089138798
-#define TRON 2089584296
-#define CLEAR 216417516
-#define BEEP 2088922945
-#define ANTHEM 2771458114
-#define SNAPSHOT 650087221
-#define TIME 2089574420
-#define INVOP 223623889
-#define DIVCERO 649756593
-#define MEMACCESS 1829689142
-#define PIANO 231722748
-#define UPSIZE 235307403 // "size+"
-#define DOWNSIZE 235307405
-#define LANG_ES 3115062494 // lange=es
-#define LANG_EN 3115062489
-#define LANGUAGE 3857633481 // for help
-#define SIZE 2089538912 // for help
+extern void INVALID_OP_CODE();
 
 
-//BUFFER DE COMANDOS PARA PODER HACER SCROLLING EN HISTORIAL DE EJECUCION
-#define MAX_COMMAND_LENGTH 64
-#define MAX_COMMANDS 64
+static char consoleBuffer[MAX_CONSOLE_BUFFER] = {0};
+static int lastChar = 0;
+
 
 char historyBuffer[MAX_COMMANDS][MAX_COMMAND_LENGTH];
 unsigned int historyIndex = 0;
 unsigned int historyDim = 0;
 
 
-
-extern void INVALID_OP_CODE();
-
-
+// pasa a mayusculas
 char * toUpper(char * string){
 	int i = 0;
 	while(string[i] != 0){
@@ -195,8 +166,10 @@ void commandMemAccess( char * memdirHexa ){
 
 void commandDivCero(){
 	clearScreen();
-	int x=1/0;
-
+	int x = 1;
+	int y = 0;
+	int z = x/y;
+	while(z) break;
 }
 
 void commandAnthem(){
@@ -232,14 +205,14 @@ void commandInvOp(){
 
 
 // https://stackoverflow.com/questions/4014827/how-can-i-compare-strings-in-c-using-a-switch-statement
-const unsigned long hash(unsigned char *str)
+const unsigned long hash(char *str)
 {
 	unsigned int hash = 5381;
 	int c;
 
-	while (c = *str++)
+	while ((c = *str++)){
 		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
+	}
 	return hash;
 }
 void printExitHelp(){
@@ -485,7 +458,7 @@ void upArrow(int arrowUp){
 		aux = downHistory();
 
 	}
-	printColor("%s", fontcolor, aux);
+	printColor("%s", FONTCOLOR, aux);
 	lastChar =0;
 	for(int i = 0; i < strlen(aux); i++){
 		consoleBuffer[lastChar++] = aux[i];

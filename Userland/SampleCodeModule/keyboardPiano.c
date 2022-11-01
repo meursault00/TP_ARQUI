@@ -2,8 +2,7 @@
 
 
 #include <keyboardPiano.h>
-#include <system_calls.h>
-#include <library.h>
+
 static int playingPiano = 0;
 
 
@@ -71,17 +70,19 @@ static int keyChordMap[MAXCHORDS][2] ={
     
 
 
-void playPiano(){
-    playingPiano = 1;
-
-    while(playingPiano){
-        pianoKeyboardHandler();
+static void playSound(int key){   
+    for(int i = 0; i < MAXCHORDS; i++){
+        if(keyChordMap[i][0] == key){
+            beep(keyChordMap[i][1], 1);
+            break;
+        }
     }
+
 }
 
 
 
-void pianoKeyboardHandler(){
+static void pianoKeyboardHandler(){
     int aux = getchar();
     if(aux != -1){
         if(aux == ' '){
@@ -93,13 +94,11 @@ void pianoKeyboardHandler(){
     }
 }
 
-void playSound(int key){   
-    for(int i = 0; i < MAXCHORDS; i++){
-        if(keyChordMap[i][0] == key){
-            beep(keyChordMap[i][1], 1);
-            break;
-        }
+
+void playPiano(){
+    playingPiano = 1;
+
+    while(playingPiano){
+        pianoKeyboardHandler();
     }
-
 }
-

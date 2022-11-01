@@ -12,13 +12,9 @@
 #define TERMINAL_BLUE 0x12488B
 #define ORANGY 0xF66151
 #define RED 0xC01C28
+#define FONTCOLOR 0xBFECF1
+#define CURRENT_CURSOR_COLOR 0x002B36
 
-static int fontcolor = 0xBFECF1;
-static int currentCursorColor = 0x002B36;
-
-static int fontsize = 2;
-static char buffer[64] = {0};
-			// 16 que es la cantidad de bits * fontsize
 
 void scanf(char * format, void * parameters[]);
 void setCursor( int x, int y );
@@ -39,7 +35,7 @@ void printColor(char * foundation, int color, ...);
 
 char * strrev (char *str);
 char * itoa(int i, char *strout, int base);
-void strcpy( char * destination, char * origin );
+void strcpy( char * destination,const char * origin );
 void appendchar( char character );
 int countDigits( int number );
 void numLoader( int number, char * buffer, int digits );

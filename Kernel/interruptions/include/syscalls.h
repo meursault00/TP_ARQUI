@@ -1,8 +1,16 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
-#include <naiveConsole.h>
-#include <irqDispatcher.h>
+
 #include <stdint.h>
+#include <irqDispatcher.h>
+#include <keyboard_driver.h>
+#include <sound_driver.h>
+#include <interrupts.h>
+#include <lib.h>
+#define STDOUT 1
+#define STDRED 2
+#define MAXBUFFER 500
+
 char sys_getchar();
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color);
 int sys_tick();

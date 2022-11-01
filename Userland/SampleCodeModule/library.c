@@ -5,11 +5,14 @@
 #define CURSOR_TICKS 9
 
 
+static int fontsize = 2;
 static int cursorX = 4; 				// por que estaba la hora
-static int cursorY = 4; 
+static int cursorY = 4;
+
 #define IN_BOUNDS ((cursorX+fontsize*8)/1024)*16*fontsize < 736 // no termino de entender porque con 768 se pasa, REVISAR
+
 int lastEnter(){
-	return cursorY+16*fontsize >= 800;
+	return cursorY+16*fontsize >= 780;
 }
 
 
@@ -74,9 +77,6 @@ void memCopy( char * pointer1, char * pointer2, int chars ){
 }
 
 uint64_t  hexstringToInt(char * s){
-    int c;
-    unsigned long int rta = 0;
-
     if(s[0] == '0' && s[1] == 'x')
         s += 2;
 
@@ -191,14 +191,14 @@ void appendcharColor(char character, int color){
 		return;
 	}
 	
-	drawCursor(currentCursorColor);
+	drawCursor(CURRENT_CURSOR_COLOR);
 	putcharSpecifics(character,cursorX,cursorY,fontsize,color);
 	updateCursor();
-	drawCursor(fontcolor);
+	drawCursor(FONTCOLOR);
 }
 
 void appendchar( char character ){
-	appendcharColor(character, fontcolor);
+	appendcharColor(character, FONTCOLOR);
 }
 
 void appendstringColor( char * string , int color){
@@ -208,18 +208,18 @@ void appendstringColor( char * string , int color){
 }
 
 void appendstring( char * string ){
-	appendstringColor(string, fontcolor);
+	appendstringColor(string, FONTCOLOR);
 }
 
 void newline(){
-	drawCursor(currentCursorColor);
+	drawCursor(CURRENT_CURSOR_COLOR);
 	cursorX = 4;
 	cursorY += 16*fontsize;
 }
 
 void backspace(){
 	if(cursorX != 0){
-		drawCursor(currentCursorColor);
+		drawCursor(CURRENT_CURSOR_COLOR);
 		if(cursorX-fontsize*8 < 4){
 			cursorY -= fontsize*16;
 			cursorX = 1024-8*fontsize;
@@ -228,7 +228,7 @@ void backspace(){
 			cursorX -= fontsize * 8;
 		putSquare(cursorX,cursorY,fontsize*8,BACKGROUND_COLOR);
 		putSquare(cursorX,cursorY+fontsize*8,fontsize*8,BACKGROUND_COLOR);
-		drawCursor(fontcolor);
+		drawCursor(FONTCOLOR);
 	}
 }
 
@@ -341,13 +341,13 @@ void print (char * foundation, ...){
 	va_start( vl, foundation );
 	va_end(vl);
 
-	printColor(foundation, fontcolor,vl);
+	printColor(foundation, FONTCOLOR,vl);
 
 
 
 }
 
-void strcpy( char * destination, char * origin ){
+void strcpy( char * destination,const char * origin ){
 	int i;
 	for (  i = 0; origin[i]!='\0'; i++ )
 		destination[i] = origin[i];
@@ -471,18 +471,6 @@ void changeFontSize(int increment){
 		fontsize+=increment;
 }
 
-void refreshCursor(){
-	if(gettick() % CURSOR_TICKS == 0){
-		if(currentCursorColor == fontcolor){
-			currentCursorColor = BACKGROUND_COLOR;
-		}
-		else{
-			currentCursorColor = fontcolor;
-		}
-		drawCursor(currentCursorColor);
-	}
-}
-
 char streql( const char* stringA,const char* stringB)  
 {  
 	int i = 0;
@@ -498,8 +486,7 @@ char streql( const char* stringA,const char* stringB)
 
 int scan (char * str, ...){
 	va_list vl;
-    int i = 0, j=0, ret = 0;
-    char buff[100] = {0};
+    int i, ret = 0;
  	va_start( vl, str );
  	i = 0;
  	while (str && str[i])

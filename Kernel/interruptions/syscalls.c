@@ -1,17 +1,10 @@
 #include <syscalls.h>
-#include <naiveConsole.h>
-#include <keyboard_driver.h>
-#include <sound_driver.h>
-#include <interrupts.h>
-#include <lib.h>
-#define STDOUT 1
-#define STDRED 2
-#define MAXBUFFER 500
+
 
 extern int getTime(int op);
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
-static regsBuffer[128] = {0};
+static int regsBuffer[128] = {0};
 void sys_write(uint8_t character, uint32_t x, uint32_t y, uint32_t size, uint32_t color){
     put_letter(character, x, y, size, color );
 }

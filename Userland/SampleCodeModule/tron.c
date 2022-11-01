@@ -1,36 +1,11 @@
-#include <system_calls.h>
-#include <library.h>
+#include <tron.h>
 
 static int tronOn = 0;
 static int gameOn = 0;
 static char lastKey = 0;
 static int lastTick = 0;
 
-#define BESTOF 3
-#define ESC 27
-#define SQUARE_SIDE 8 //largo del lado del cuadrado con el cual se dibujan las lineas
 
-#define BOARD_WIDTH 119 // 1000 (ancho seccion pantalla usada para el juego) / SQUARE_SIDE
-#define BOARD_HEIGHT 87 // 744 (alto seccion pantalla usada para el juego) / SQUARE_SIDE
-
-// para que se imprima en la porrcion de pantalla elegida
-// estaria centrada y los margenes (para poner menu y etc) serian de 12 pixeles
-#define OFFSET_X 36
-#define OFFSET_Y 36
-
-
-#define P1_STARTING_X 60
-#define P1_STARTING_Y 10
-#define P2_STARTING_X 60
-#define P2_STARTING_Y 70
-
-#define P1_COLOR 0x333652 //azul
-#define P2_COLOR 0xFAD02C //amarillo
-
-#define UP 0
-#define RIGHT 1
-#define DOWN 2
-#define LEFT 3
 
 #define MOD(x) ((x)>0? (x) : (x)*(-1))
 
