@@ -140,7 +140,6 @@ void commandTime(){
 void commandTron(){
 	playTron();
 	restartCursor();
-	getchar();
 	clearScreen();
 }
 
