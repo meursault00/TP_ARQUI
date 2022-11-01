@@ -129,10 +129,7 @@ void changePlayerDirection(int player, int direction){ //solo recibira 1 o 2
     if(aux != 2 && aux != 0)
         p2.direction = direction;
 }
-#define ASC_UP    '\200'
-#define ASC_DOWN  '\201'
-#define ASC_LEFT  '\202'
-#define ASC_RIGHT '\203'
+
 void keyboardHandler(){
     int aux = getLastKey();
     if(lastKey != aux){
@@ -208,9 +205,10 @@ void resetScore(){
 }
 
 void printScore(){
+    putstringSpecifics("[Player 1]",40,0,2,P1_COLOR);
     putcharSpecifics(p1.score,492,0,2,P1_COLOR);
     putcharSpecifics(p2.score,532,0,2,P2_COLOR);
-
+    putstringSpecifics("[Player 2]",532+33*9,0,2,P2_COLOR);
 }
 
 void playTron(){
@@ -255,9 +253,9 @@ void playTron(){
         }
     }
     if(p1.score == '3')
-        putstringSpecifics("1 WINS",32,256,20,0x333652);
+        putstringSpecifics("P1 WINS",(1024/2)-270,300,10,0x333652);
     else
-        putstringSpecifics("2 WINS",32,256,20,0x333652);
+        putstringSpecifics("P2 WINS",(1024/2)-270,300,10,0x333652);
     
     daleBo(4);
 

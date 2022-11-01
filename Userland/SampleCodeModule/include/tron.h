@@ -29,6 +29,10 @@
 #define RIGHT 1
 #define DOWN 2
 #define LEFT 3
+#define ASC_UP    '\200'
+#define ASC_DOWN  '\201'
+#define ASC_LEFT  '\202'
+#define ASC_RIGHT '\203'
 
 void playTron(); //prende el tron, despues se borra
 
