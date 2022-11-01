@@ -2,7 +2,6 @@
 //OS DEV
 #include <sound_driver.h>
 
-
  //Play sound using built in speaker
 static void play_sound(uint32_t nFrequence) {
 	uint32_t Div;

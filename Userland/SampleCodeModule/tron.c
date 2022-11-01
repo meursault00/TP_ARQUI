@@ -51,24 +51,24 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
 
     for(int i=OFFSET_X; i<1024-OFFSET_X; i+=SQUARE_SIDE){
         for(int j=OFFSET_Y; j<768 - OFFSET_Y; j++){
-            putSquare(i,j,1,0x90ADC6);
+            putSquare(i,j,1,0x90ADA6);
         }
     }
 
     for(int i=OFFSET_Y; i<768-OFFSET_Y; i+=SQUARE_SIDE){
         for(int j=OFFSET_X; j<1024 - OFFSET_X; j++){
-            putSquare(j,i,1,0x90ADC6);
+            putSquare(j,i,1,0x90ADA6);
         }
     }
 
     for(int i=0; i<1024; i+=OFFSET_X){
-        putSquare(i,0,OFFSET_X,0x90ADC6);
-        putSquare(0,i,OFFSET_X,0x90ADC6);
+        putSquare(i,0,OFFSET_X,0x90ADA6);
+        putSquare(0,i,OFFSET_X,0x90ADA6);
     }
 
     for(int i=0; i<1024; i+=OFFSET_X){
-        putSquare(i,768-OFFSET_X,OFFSET_X,0x90ADC6);
-        putSquare(1024-OFFSET_X,i,OFFSET_X,0x90ADC6);
+        putSquare(i,768-OFFSET_X,OFFSET_X,0x90ADA6);
+        putSquare(1024-OFFSET_X,i,OFFSET_X,0x90ADA6);
     }
 
     for(int i=0; i<BOARD_WIDTH; i++){
@@ -212,22 +212,33 @@ void printScore(){
 }
 
 void playTron(){
+    putSquare(0,0,1024,0x90ADA6);
+    putstringSpecifics("Tron Game",100,100,11,0x381f34);
+    putstringSpecifics("Player 1 can move with WASD keys",250,400,2,P1_COLOR); 
+    putstringSpecifics("Player 2 can move with arrow keys",250,500,2,P2_COLOR); 
+    putstringSpecifics("Press space to begin",160,300,4,0x381f34);
+    waitForKey(' ');
     tronOn = 1;
     putSquare(0,0,1024,0xE9EAEC);
     lastTick = gettick();
-
+    int i = 0;
     resetScore();
     while((p1.score - '0' < BESTOF) && (p2.score - '0' < BESTOF) && tronOn){
         initialize_players();
         //lastKey = 0;
         printScore();
+        if(i != 0){
+            putstringSpecifics("PRESS SPACE TO BEGIN",352,736,2,0x381f34);
 
-        putstringSpecifics("PRESS SPACE TO BEGIN",352,736,2,0x381f34);
+            while(getchar()!= ' ');
 
-        while(getchar()!= ' ');
+            for(int i=0; i<10; i++){
+                putSquare(352+i*32,736,32,0x90ADA6);
 
-        for(int i=0; i<10; i++)
-            putSquare(352+i*32,736,32,0x90ADC6);
+            }
+        }
+        i++;
+        
 
         gameOn = 1;
         while(gameOn){

@@ -3,6 +3,7 @@
 
 #include <system_calls.h>
 #include <library.h>
+#include <console.h>
 
 #define BESTOF 3
 #define ESC 27
