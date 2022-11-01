@@ -147,29 +147,29 @@ void keyboardHandler(){
             break;
         */
         case 'w':
-            changePlayerDirection(1,UP);
+            changePlayerDirection(2,UP);
             break;
         case 'a':
-            changePlayerDirection(1,LEFT);
+            changePlayerDirection(2,LEFT);
             break;
         case 's':
-            changePlayerDirection(1,DOWN);
+            changePlayerDirection(2,DOWN);
             break;
         case 'd':
-            changePlayerDirection(1,RIGHT);
+            changePlayerDirection(2,RIGHT);
             break;
         
         case ASC_UP:
-            changePlayerDirection(2,UP);
+            changePlayerDirection(1,UP);
             break;
         case ASC_LEFT:
-            changePlayerDirection(2,LEFT);
+            changePlayerDirection(1,LEFT);
             break;
         case ASC_DOWN:
-            changePlayerDirection(2,DOWN);
+            changePlayerDirection(1,DOWN);
             break;
         case ASC_RIGHT:
-            changePlayerDirection(2,RIGHT);
+            changePlayerDirection(1,RIGHT);
             break;
         default:
             break;
@@ -215,8 +215,8 @@ void printScore(){
 void playTron(){
     putSquare(0,0,1024,0x90ADA6);
     putstringSpecifics("Tron Game",100,100,11,0x381f34);
-    putstringSpecifics("Player 1 can move with WASD keys",250,400,2,P1_COLOR); 
-    putstringSpecifics("Player 2 can move with arrow keys",250,500,2,P2_COLOR); 
+    putstringSpecifics("Player 1 can move with arrow keys",250,400,2,P1_COLOR); 
+    putstringSpecifics("Player 2 can move with WASD keys",250,500,2,P2_COLOR); 
     putstringSpecifics("Press space to begin",160,300,4,0x381f34);
     waitForKey(' ');
     tronOn = 1;
@@ -242,7 +242,7 @@ void playTron(){
         
 
         gameOn = 1;
-        while(gameOn){
+        while(gameOn && tronOn){
             //getchar();
             keyboardHandler();
             if(gettick() != lastTick){
@@ -253,23 +253,25 @@ void playTron(){
         beep(440,2);
     }
     
-    for(int i=0; i<1024; i+=8){
-        for(int j=0; j<256; j+=8){
-            putSquare(i,j,8,0x333652);
+    if(tronOn){
+        for(int i=0; i<1024; i+=8){
+            for(int j=0; j<256; j+=8){
+                putSquare(i,j,8,0x333652);
+            }
+            for(int j=256; j<512; j+=8){
+                putSquare(i,j,8,0xFAD02C);
+            }
+            for(int j=512; j<768; j+=8){
+                putSquare(i,j,8,0x333652);
+            }
         }
-        for(int j=256; j<512; j+=8){
-            putSquare(i,j,8,0xFAD02C);
-        }
-        for(int j=512; j<768; j+=8){
-            putSquare(i,j,8,0x333652);
-        }
+        if(p1.score == '3')
+            putstringSpecifics("P1 WINS",(1024/2)-270,300,10,0x333652);
+        else
+            putstringSpecifics("P2 WINS",(1024/2)-270,300,10,0x333652);
+        
+        daleBo(4);
     }
-    if(p1.score == '3')
-        putstringSpecifics("P1 WINS",(1024/2)-270,300,10,0x333652);
-    else
-        putstringSpecifics("P2 WINS",(1024/2)-270,300,10,0x333652);
-    
-    daleBo(4);
 
     clearkeybuffer();
 
