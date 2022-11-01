@@ -20,7 +20,7 @@ static void daleBo();
 void waitForKey(char a);
 
 //se usa para evitar switchs al mover jugadores
-static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}}; //potencial problema
+static const int mover[4][2] = {{0,-1},{1,0},{0,1},{-1,0}};
 
 // BOARD_WIDTH x BOARD_HEIGHT
 static int board[BOARD_WIDTH][BOARD_HEIGHT] = {{0}}; 
@@ -48,7 +48,6 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
     p2.currY=P2_STARTING_Y;
     p2.alive=1;
     p2.direction=UP;
-    //board = {{0}}; causa un error
 
     for(int i=OFFSET_X; i<1024-OFFSET_X; i+=SQUARE_SIDE){
         for(int j=OFFSET_Y; j<768 - OFFSET_Y; j++){
@@ -80,7 +79,6 @@ void initialize_players(){ // se pasan los parametros default a cada jugador
 }
 
 // chequeo si jugador se encuentra en la matriz (que representa la pantalla)
-// la macro usada anteriormente no terminaba de convencer
 
 int insideBoard(int x, int y){
     return (x >= 0) && (x < BOARD_WIDTH) && (y >= 0) && (y < BOARD_HEIGHT);
@@ -137,15 +135,9 @@ void keyboardHandler(){
         lastKey = aux;
         switch(aux){
         case ESC:
-            //gameSwitch(0);
             tronOn = 0;
             putSquare(0,0,1024,0);
 
-        /*
-        case ' ':
-            gameSwitch(1); // al apretar la barra espaciadora se inicia el juego
-            break;
-        */
         case 'w':
             changePlayerDirection(2,UP);
             break;
@@ -276,7 +268,6 @@ void playTron(){
     clearkeybuffer();
 
     tronOn = 0;
-    //putSquare(0,0,1024,0);
 
 }
 

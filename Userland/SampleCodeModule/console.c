@@ -149,8 +149,10 @@ void commandMemAccess( char * memdirHexa ){
 	// tal vez por la cantidad de memoria asignada para el proceso, o a la VM
 	// del so o algo de paginacion, pero no se me permite desreferenciar direcciones
 	// mayores al 0xFFFFFFFE0
-	if ( num <= 0xFFFFFFFE0)
+	if ( num <= 0xFFFFFFFE0){
 		memAccess(num);
+		waitForKey(ESC);
+	}
 	else{
 		printColor("Se esta accediendo a una direccion demasiado grande.", ORANGY);
 		newline();
@@ -216,7 +218,7 @@ void printExitHelp(){
 }
 // CHEQUEAR CUAL ES EL COMANDO Y QUE EL COMANDO EXISTA CON LOS HASHCODES
 void checkCommand() {
-	char section[64]={0};
+	char section[128]={0};
 	char * command = toUpper(consoleBuffer);
 	splitString( command, section, ' ' );
 		
@@ -267,9 +269,9 @@ void checkCommand() {
 				changelanguage(0);
 				break;
 			default:
-				
 				printColor("'%s'", ORANGY,command);
 				print(" : comando no encontrado.\n");
+				break;
 		}
 	}
 	else if(streql(consoleBuffer, "HELP") ){
@@ -309,9 +311,9 @@ void checkCommand() {
 				printExitHelp();
 				waitForKey(ESC);
 				break;}
-			case SNAPSHOT:{
-				printColor("SNAPSHOT: <User Commands>\n\n", 0x0F66151, 0);
-				appendstring("Imprime en pantalla el valo de los registros\nal momento de ejecucion.\n");
+			case INFOREG:{
+				printColor("INFOREG: <User Commands>\n\n", 0x0F66151, 0);
+				appendstring("Imprime en pantalla el valor de los registros\nal momento de ejecucion.\n");
 				appendstring("Para realizar una toma de estado, presione alguna de las flechas '<-' o '->'.\n\n");
 				printExitHelp();
 				waitForKey(ESC);
@@ -324,7 +326,7 @@ void checkCommand() {
 				break;}
 			case INVOP:{
 				printColor("INVOP: <User Commands>\n\n", 0x0F66151, 0);
-				appendstring("Envia un código de operación invalido.\n");
+				appendstring("Envia un codigo de operacion invalido.\n");
 				appendstring("Que puede salir mal?\n\n");
 				printExitHelp();
 				waitForKey(ESC);
@@ -364,7 +366,7 @@ void checkCommand() {
 			case LANGUAGE:{
 				printColor("LANGUAGE: <User Commands>\n\n",0x0F66151, 0);
 				appendstring("Cambia el teclado.\n");
-				appendstring("Seguido por '=es' -> español\n");
+				appendstring("Seguido por '=es' -> espa~ol\n");
 				appendstring("Seguido por '=en' -> ingles\n");
 				appendstring("Modo de uso <language=es> o <language=en> \n");
 				appendstring("Ruso y Klingon disponibles proximamente.\n\n");
@@ -374,15 +376,16 @@ void checkCommand() {
 			}
 			case SIZE:{
 				printColor("SIZE: <User Commands>\n\n", 0x0F66151, 0);
-				appendstring("Agrande o achique el tamaño del texto en pantalla \nsiguiendo el comando con un + o un -,\nrespectivamente.\n");
+				appendstring("Agrande o achique el tama~o del texto en pantalla \nsiguiendo el comando con un + o un -,\nrespectivamente.\n");
 				appendstring("Modo de uso: <size+>\n\n");
 				printExitHelp();
 				waitForKey(ESC);
-			break;
+				break;
 			}
 			default:
 				printColor("'%s %s'", ORANGY,command, section);
 				print(" : comando no encontrado.\n");
+				break;
 
 		}
 	

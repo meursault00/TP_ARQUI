@@ -15,7 +15,7 @@ int lastEnter(){
 	return cursorY+16*fontsize >= 780;
 }
 int canWrite(){
-	return cursorX+fontsize*8+16 < 1024 ;
+	return cursorX+fontsize*8+16 < 1000 ;
 }
 
 
@@ -179,7 +179,7 @@ void floatToString( float number, char * buffer, int digits  ){
 }
 
 static void updateCursor(){
-	if(cursorX + fontsize * 8 >= 1024){
+	if(cursorX + fontsize * 8 >= 1000){
 		cursorY += fontsize*16;
 		cursorX = 4;
 	}
@@ -269,7 +269,7 @@ static void wrapperprint(char* foundation, int color, va_list vl){
 	int i = 0, j=0;
 	// el buffer final y el buffer temporal para las conversiones numericas
 	// buff deberia ser dinamico pero no tenemos malloc :/
-	char buff[100]={0}, tmp[20];
+	char buff[128]={0}, tmp[20];
 	// buffer para el string
 	char * str_arg;
 
@@ -471,6 +471,8 @@ void restartCursor(){
 }
 
 void changeFontSize(int increment){
+	if ( fontsize + increment > 5 )
+		return;
 	if((fontsize + increment) > 0 && (fontsize + increment) <= 64)
 		fontsize+=increment;
 }
