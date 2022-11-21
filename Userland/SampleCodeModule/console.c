@@ -81,7 +81,7 @@ void commandHelp(){
 	newline();
 	appendstring("- TRON");
 	newline();
-	appendstring("- SNAPSHOT");
+	appendstring("- INFOREG");
 	newline();
 	appendstring("- MEMACCESS ( MEM ADDRESS )");
 	newline();
@@ -314,7 +314,7 @@ void checkCommand() {
 			case INFOREG:{
 				printColor("INFOREG: <User Commands>\n\n", 0x0F66151, 0);
 				appendstring("Imprime en pantalla el valor de los registros\nal momento de ejecucion.\n");
-				appendstring("Para realizar una toma de estado, presione alguna de las flechas '<-' o '->'.\n\n");
+				appendstring("Para realizar una toma de estado, presione ':' .\n\n");
 				printExitHelp();
 				waitForKey(ESC);
 				break;}
