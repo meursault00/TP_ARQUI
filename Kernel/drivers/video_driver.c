@@ -48,6 +48,7 @@ typedef struct vbe_mode_info_structure {
  VbeModeInfo *info= (VbeModeInfo*) 0x0000000000005C00; // en sysvar.asm linea 21 se carga el struct en el bootloader
 
 
+
 void put_pixel(uint32_t x , uint32_t y, uint32_t color){
 	uint32_t pixel_offset =(y) * (info->pitch) + ((x) * ((info->bpp)/8)) ;
 	uint8_t* screen=(uint8_t*)(uint64_t) info->framebuffer;

@@ -76,41 +76,15 @@ SECTION .text
 ; se guarda el stack para poder devolverlo cuando ocurre una excepcion
 %macro exceptionHandler 1
 
-	mov qword[regist], rax
-	mov qword[regist+8], rbx
-	mov qword[regist+16], rdx
-	mov qword[regist+24], rcx
-	mov qword[regist+32], rsi
-	mov qword[regist+40], rdi
-	mov qword[regist+48], rbp
-	mov qword[regist+56], rsp
-	mov qword[regist+64], r8
-	mov qword[regist+72], r9
-	mov qword[regist+80], r10
-	mov qword[regist+88], r11
-	mov qword[regist+96], r12
-	mov qword[regist+104], r13
-	mov qword[regist+112], r14
-	mov qword[regist+120], r15
-
-	; accedo al rip por medio del stack
-	mov rax,[rsp] 
-	mov [regist+128],rax
-
-
 	pushState
 	mov rdi, %1 ; pasaje de parametro
-	mov rsi,regist
+	mov rsi,rsp
 	call exceptionDispatcher
 
 	popState
 
-	; se pisa la direccion de retorno, muy parecido a lo hicimos que en el parcial
-	push rax
-    mov rax, 0x00400000 ;cargo la direccion de user land
-    mov [rsp+8],rax  ;cambio la dir de reotrno de iretq a user land
-    pop rax
 	iretq
+
 %endmacro
 
 

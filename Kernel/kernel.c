@@ -6,7 +6,7 @@
 #include <interrupts.h>
 #include <sound_driver.h>
 #include <video_driver.h>
-
+#include <exceptions.h>
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -57,6 +57,6 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-
+    exceptionsBackupValues((uint64_t)sampleCodeModuleAddress, getSP()); 
 	return ((EntryPoint) sampleCodeModuleAddress)(); //dirreccion del _start del userland
 }

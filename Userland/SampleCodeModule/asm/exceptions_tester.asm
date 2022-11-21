@@ -42,6 +42,8 @@ section .text
 
 
 INVALID_OP_CODE:
+mov rax, 10
+	
     mov cr6, rax ;mueve a un registro q no existe
 
     ret

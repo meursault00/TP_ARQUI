@@ -4,7 +4,7 @@ GLOBAL getkey
 GLOBAL inb
 GLOBAL outb
 GLOBAL snapshot
-
+GLOBAL getSP
 section .text
 	
 cpuVendor:
@@ -92,6 +92,9 @@ snapshot:
 
 	mov rax, regsBuffer
 
+	ret
+getSP:
+	mov rax, rsp
 	ret
 
 section .bss 
