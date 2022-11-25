@@ -1,4 +1,5 @@
 #include <tron.h>
+#include <console.h>
 
 static int tronOn = 0;
 static int gameOn = 0;
@@ -137,7 +138,9 @@ void keyboardHandler(){
         case ESC:
             tronOn = 0;
             putSquare(0,0,1024,0);
-
+        case ':':
+            storeRegisters();
+            break;
         case 'w':
             changePlayerDirection(2,UP);
             break;

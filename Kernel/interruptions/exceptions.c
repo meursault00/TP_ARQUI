@@ -48,7 +48,7 @@ static void error_sign(char * message,uint64_t * stackFrame){
 
     put_word("reiniciando consola en ",230,10+34*2,2,MESSAGE_COLOR);
     put_word("5 segundos  !!!",230,10+68*2,2,MESSAGE_COLOR);
-    for(int i=0;i<(18*10);i++){ //espera 5 segundo o 18*5 ticks
+    for(int i=0;i<(18*5);i++){ //espera 5 segundo o 18*5 ticks
         _hlt();
     }
 

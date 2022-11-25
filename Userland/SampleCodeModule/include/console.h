@@ -47,5 +47,5 @@ extern char* snapshot();
 
 void checkCommand();
 void checkKey( char c );
-
+void storeRegisters();
 #endif
